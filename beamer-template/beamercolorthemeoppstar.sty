@@ -1,0 +1,70 @@
+% Oppstar Beamer Color Theme
+% Based on the professional design shown in the reference image
+\ProvidesPackage{beamercolorthemeoppstar}[2025/01/01 Oppstar Beamer Color Theme]
+
+\mode<presentation>
+
+% Define the main colors based on the design
+\definecolor{oppstarblue}{RGB}{25,55,109}      % Dark blue for headers
+\definecolor{oppstarlightblue}{RGB}{65,105,225} % Lighter blue for accents
+\definecolor{oppstarwhite}{RGB}{255,255,255}    % Pure white
+\definecolor{oppstargray}{RGB}{128,128,128}     % Gray for secondary text
+\definecolor{oppstarlightgray}{RGB}{245,245,245} % Light gray for backgrounds
+\definecolor{oppstardarkgray}{RGB}{64,64,64}    % Dark gray for text
+
+% Set the main color palette
+\setbeamercolor{structure}{fg=oppstarblue}
+\setbeamercolor{normal text}{fg=oppstardarkgray,bg=oppstarwhite}
+\setbeamercolor{alerted text}{fg=oppstarlightblue}
+\setbeamercolor{example text}{fg=oppstarblue}
+
+% Title page colors - white background with dark text
+\setbeamercolor{title}{fg=oppstarblue,bg=}
+\setbeamercolor{subtitle}{fg=oppstardarkgray,bg=}
+\setbeamercolor{author}{fg=oppstardarkgray,bg=}
+\setbeamercolor{institute}{fg=oppstardarkgray,bg=}
+\setbeamercolor{date}{fg=oppstardarkgray,bg=}
+
+% Frame title colors - transparent background
+\setbeamercolor{frametitle}{fg=oppstarblue,bg=}
+\setbeamercolor{framesubtitle}{fg=oppstardarkgray,bg=}
+
+% Header and footer colors - transparent backgrounds
+\setbeamercolor{headline}{fg=oppstarwhite,bg=}
+\setbeamercolor{footline}{fg=oppstargray,bg=}
+
+% Block colors
+\setbeamercolor{block title}{fg=oppstarwhite,bg=oppstarblue}
+\setbeamercolor{block body}{fg=oppstardarkgray,bg=oppstarlightgray}
+
+\setbeamercolor{block title alerted}{fg=oppstarwhite,bg=oppstarlightblue}
+\setbeamercolor{block body alerted}{fg=oppstardarkgray,bg=oppstarlightgray}
+
+\setbeamercolor{block title example}{fg=oppstarwhite,bg=oppstarblue}
+\setbeamercolor{block body example}{fg=oppstardarkgray,bg=oppstarlightgray}
+
+% Navigation colors
+\setbeamercolor{navigation symbols}{fg=oppstargray}
+\setbeamercolor{navigation symbols dimmed}{fg=oppstarlightgray}
+
+% Item colors
+\setbeamercolor{item}{fg=oppstarblue}
+\setbeamercolor{subitem}{fg=oppstarlightblue}
+\setbeamercolor{subsubitem}{fg=oppstargray}
+
+% Table of contents colors
+\setbeamercolor{section in toc}{fg=oppstarblue}
+\setbeamercolor{subsection in toc}{fg=oppstarlightblue}
+
+% Bibliography colors
+\setbeamercolor{bibliography entry author}{fg=oppstarblue}
+\setbeamercolor{bibliography entry title}{fg=oppstardarkgray}
+\setbeamercolor{bibliography entry location}{fg=oppstargray}
+\setbeamercolor{bibliography entry note}{fg=oppstargray}
+
+% Caption colors
+\setbeamercolor{caption}{fg=oppstargray}
+\setbeamercolor{caption name}{fg=oppstarblue}
+
+\mode<all>
+

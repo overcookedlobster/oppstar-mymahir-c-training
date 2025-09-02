@@ -1,0 +1,141 @@
+% Oppstar Beamer Outer Theme
+% Defines headers, footers, and navigation elements
+\ProvidesPackage{beamerouterthemeoppstar}[2025/01/01 Oppstar Beamer Outer Theme]
+
+\mode<presentation>
+
+% Remove default navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Header/headline template - empty to remove blue line
+\defbeamertemplate*{headline}{oppstar}
+{
+  % Empty headline - no blue line
+}
+
+% Background template with decorative elements
+\setbeamertemplate{background}
+{
+  \begin{tikzpicture}[remember picture,overlay]
+    % Blue square in upper left corner (1cm x 1cm)
+    \fill[oppstarblue] (current page.north west) rectangle ++(0.75cm,-0.75cm);
+
+    % Upper right corner image - check if custom image is defined
+    \ifdefined\oppstarupperright
+      \node[anchor=north east] at ([xshift=-0.05cm,yshift=-0cm]current page.north east)
+        {\includegraphics[height=0.7cm]{\oppstarupperright}};
+    \else
+      \node[anchor=north east] at ([xshift=-0.05cm,yshift=-0cm]current page.north east)
+        {\includegraphics[height=0.7cm]{images/systems-oppstar-logo.png}};
+      % \node[anchor=north east,fill=oppstarlightblue,text=white,font=\Large\bfseries,minimum width=2cm,minimum height=2cm]
+      %   at ([xshift=-0.1cm,yshift=-0.1cm]current page.north east) {UR};
+    \fi
+
+    % Upper middle image - precisely attached to right side of blue square, scaled to match
+    \ifdefined\oppstaruppermiddle
+      \node[anchor=north west] at ([xshift=0.75cm,yshift=-0.05cm]current page.north west)
+        {\includegraphics[height=0.5cm]{\oppstaruppermiddle}};
+    \else
+      \node[anchor=north west] at ([xshift=0.75cm,yshift=-0.05cm]current page.north west)
+        {\includegraphics[height=0.5cm]{images/my-mahir-logo.png}};
+      % \node[anchor=north west,fill=oppstarlightblue,text=white,font=\small\bfseries,minimum width=1cm,minimum height=1cm]
+      %   at ([xshift=0.8cm,yshift=0cm]current page.north west) {UM};
+    \fi
+
+    % Bottom right corner image - check if custom image is defined
+    \ifdefined\oppstarbottomright
+      \node[anchor=south east,inner sep=0pt,outer sep=0pt] at (current page.south east)
+        {\includegraphics[height=1.5cm]{\oppstarbottomright}};
+    \else
+      % \node[anchor=south east,fill=oppstarlightblue,text=white,font=\small\bfseries,minimum width=1.5cm,minimum height=1.5cm]
+      %   at (current page.south east) {BR};
+      \node[anchor=south east,inner sep=0pt,outer sep=0pt] at (current page.south east)
+        {\includegraphics[height=1.5cm]{images/wintel-block.png}};
+    \fi
+
+    % Bottom left corner image - check if custom image is defined
+    \ifdefined\oppstarbottomleft
+      \node[anchor=south west,inner sep=0pt,outer sep=0pt] at (current page.south west)
+        {\includegraphics[height=2.7cm]{\oppstarbottomleft}};
+    \else
+      \node[anchor=south west,inner sep=0pt,outer sep=0pt] at (current page.south west)
+        {\includegraphics[height=2.7cm]{images/quarter-chip.png}};
+      % \node[anchor=south west,fill=oppstarblue,text=white,font=\small\bfseries,minimum width=1.5cm,minimum height=1.5cm]
+      %   at (current page.south west) {BL};
+    \fi
+  \end{tikzpicture}
+}
+
+% Footer/footline template with custom text
+\defbeamertemplate*{footline}{oppstar}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,left,leftskip=.3cm]{footline}%
+    \usebeamerfont{footline}INTERNAL USE Only
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.34\paperwidth,ht=2.25ex,dp=1ex,center]{footline}%
+    \usebeamerfont{footline}Transforming Talent. Powering Malaysia's Silicon Future
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,right,rightskip=.3cm]{footline}%
+    \usebeamerfont{footline}\insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Sidebar templates (empty for clean look)
+\defbeamertemplate*{sidebar left}{oppstar}
+{
+}
+
+\defbeamertemplate*{sidebar right}{oppstar}
+{
+}
+
+% Logo placement (can be customized)
+\defbeamertemplate*{logo}{oppstar}
+{
+  \vbox{%
+    \hbox to \paperwidth{%
+      \hfil%
+      \insertlogo%
+      \hspace{0.3cm}%
+    }%
+    \vskip2pt%
+  }%
+}
+
+% Section page template
+\defbeamertemplate*{section page}{oppstar}[1][]{%
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,#1]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+
+% Subsection page template
+\defbeamertemplate*{subsection page}{oppstar}[1][]{%
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,#1]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+
+% Part page template
+\defbeamertemplate*{part page}{oppstar}[1][]{%
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,#1]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+
+% Customize the frame title continuation
+\defbeamertemplate*{frametitle continuation}{oppstar}[1][]{%
+  (\insertcontinuationcount)%
+}
+
+% Background template is already defined above with decorative elements
+% No need for a second definition
+
+\mode<all>
+
