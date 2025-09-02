@@ -46,7 +46,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/riscv-toolchain.cmake
 make
 
 # QEMU testing
-qemu-system-riscv32 -M amd-microblaze-v-generic -kernel program_riscv -nographic -serial mon:stdio
+qemu-system-riscv32 -M virt -kernel program_riscv -nographic -serial mon:stdio
 ```
 
 ## Hardware Abstraction Concepts

@@ -49,7 +49,7 @@ riscv32-unknown-elf-gdb program_riscv
 (gdb) continue
 
 # QEMU debugging
-qemu-system-riscv32 -M amd-microblaze-v-generic -kernel program_riscv -s -S -nographic
+qemu-system-riscv32 -M virt -kernel program_riscv -s -S -nographic
 # In another terminal:
 riscv32-unknown-elf-gdb program_riscv
 (gdb) target remote localhost:1234

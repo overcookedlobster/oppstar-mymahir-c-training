@@ -43,7 +43,7 @@ gcc -Wall -Wextra -std=c99 -g -o program program.c
 riscv32-unknown-elf-gcc -march=rv32imafczicsr_zifencei -mabi=ilp32f -Wall -g -o program_mbv program.c
 
 # Test in QEMU
-qemu-system-riscv32 -M amd-microblaze-v-generic -kernel program_mbv -nographic -serial mon:stdio
+qemu-system-riscv32 -M virt -kernel program_mbv -nographic -serial mon:stdio
 ```
 
 ## Memory Concepts for Hardware Engineers

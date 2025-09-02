@@ -7,7 +7,7 @@ This document outlines the comprehensive refactoring plan for the C Retraining r
 
 ### ✅ Documentation Updates (Commit: e8477ea)
 - **Hardware Platform Migration**: Updated all references from RP2040 to FPGA development boards
-- **QEMU Target Update**: Changed from generic ARM emulation to `amd-microblaze-v-generic`
+- **QEMU Target Update**: Changed from generic ARM emulation to RISC-V `virt` machine
 - **Toolchain Updates**: Replaced ARM cross-compiler references with RISC-V toolchain
 - **Software Requirements**: Added Vivado/Quartus FPGA development tools
 - **Course Content**: Modified syllabus and manual to reflect FPGA validation focus
@@ -122,7 +122,7 @@ Development Environment
 │   ├── riscv64-unknown-elf-gdb
 │   └── riscv64-unknown-elf-objdump
 ├── QEMU Emulation
-│   └── qemu-system-riscv32 (amd-microblaze-v-generic)
+│   └── qemu-system-riscv32 (virt machine)
 ├── Build System
 │   ├── CMake (cross-platform)
 │   └── Make (traditional)
@@ -169,7 +169,7 @@ Development Environment
 - [x] All code examples compile without warnings (Day 1-6 completed)
 - [x] 100% test coverage for training modules (comprehensive test suite implemented)
 - [x] Cross-compilation success on target platforms (RISC-V toolchain configured)
-- [x] QEMU emulation compatibility (target updated to amd-microblaze-v-generic)
+- [x] QEMU emulation compatibility (target updated to RISC-V virt machine)
 
 ### Educational Metrics
 - [x] Clear learning objectives for each module (Day 1-6 completed)
