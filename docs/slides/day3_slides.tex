@@ -8,9 +8,18 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 
-% Theme
-\usetheme{Madrid}
-\usecolortheme{default}
+% Theme - Import oppstar theme from beamer-template directory
+% Add beamer-template directory to LaTeX search path
+\makeatletter
+\def\input@path{{./beamer-template/}}
+\makeatother
+
+% Now load the theme components
+\usepackage{./beamer-template/beamercolorthemeoppstar}
+\usepackage{./beamer-template/beamerfontthemeoppstar}
+\usepackage{./beamer-template/beamerinnerthemeoppstar}
+\usepackage{./beamer-template/beamerouterthemeoppstar}
+\usepackage{./beamer-template/beamerthemeoppstar}
 
 % Colors
 \definecolor{codeblue}{RGB}{0,102,204}
@@ -258,7 +267,7 @@ int main() {
 
 int main() {
     // Different ways to declare strings
-    char chip_id[] = "RP2040";
+    char chip_id[] = "MicroBlaze-V";
     char test_result[10];
     char *status_msg = "PASS";
 
@@ -303,7 +312,7 @@ int main() {
     chip1.control_reg = 0x12345678;
     chip1.status_reg = 0x00000001;
     chip1.error_reg = 0x00000000;
-    strcpy(chip1.chip_id, "RP2040-001");
+    strcpy(chip1.chip_id, "MicroBlaze-V-001");
     chip1.temperature = 45.5;
     chip1.test_count = 0;
 
@@ -616,8 +625,8 @@ printf("%d", x);
 \begin{itemize}
     \item Advanced function organization
     \item Header files and modular programming
-    \item Cross-compilation for ARM targets
-    \item Introduction to Raspberry Pi Pico SDK
+    \item Cross-compilation for RISC-V targets
+    \item Introduction to MicroBlaze-V SDK
     \item CMake build system setup
     \item First embedded program compilation
 \end{itemize}

@@ -19,7 +19,7 @@
 \setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Development Environment Setup Guide}
+\fancyhead[L]{MicroBlaze-V Development Environment Setup Guide}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
 
@@ -85,11 +85,11 @@ This guide provides step-by-step instructions for setting up your development en
 \subsection{What You'll Install}
 \begin{itemize}
     \item \textbf{GCC Compiler:} Native C compiler for desktop development
-    \item \textbf{ARM Cross-Compiler:} For RP2040 embedded development
+    \item \textbf{RISC-V Cross-Compiler:} For MicroBlaze-V embedded development
     \item \textbf{CMake:} Build system for managing complex projects
     \item \textbf{Git:} Version control system
     \item \textbf{VS Code:} Primary development environment
-    \item \textbf{Raspberry Pi Pico SDK:} Embedded development framework
+    \item \textbf{MicroBlaze-V SDK:} Embedded development framework
     \item \textbf{GDB:} Debugger for troubleshooting code
     \item \textbf{Python 3:} For build scripts and utilities
 \end{itemize}
@@ -149,9 +149,9 @@ pacman -S mingw-w64-x86_64-cmake
 pacman -S git
 pacman -S make
 
-# Install ARM cross-compiler
-pacman -S mingw-w64-x86_64-arm-none-eabi-gcc
-pacman -S mingw-w64-x86_64-arm-none-eabi-gdb
+# Install RISC-V cross-compiler for MicroBlaze-V
+pacman -S mingw-w64-x86_64-riscv64-unknown-elf-gcc
+pacman -S mingw-w64-x86_64-riscv64-unknown-elf-gdb
 
 # Install Python
 pacman -S mingw-w64-x86_64-python
@@ -183,29 +183,29 @@ Add MSYS2 tools to your Windows PATH:
         \item C/C++ (Microsoft)
         \item CMake Tools (Microsoft)
         \item GitLens (GitKraken)
-        \item Raspberry Pi Pico (Raspberry Pi Foundation)
+        \item RISC-V (Zihao Yu)
     \end{itemize}
 \end{enumerate}
 
-\subsection{Step 5: Install Raspberry Pi Pico SDK}
+\subsection{Step 5: Install MicroBlaze-V SDK}
 \begin{enumerate}
     \item Open Command Prompt or PowerShell as Administrator
     \item Navigate to your development directory (e.g., \texttt{C:\textbackslash dev})
-    \item Clone the Pico SDK:
+    \item Clone the MicroBlaze-V SDK:
 \end{enumerate}
 
 \begin{lstlisting}[language=bash]
-git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+git clone --recursive https://github.com/Xilinx/embeddedsw.git
 \end{lstlisting}
 
 \begin{enumerate}
     \setcounter{enumi}{3}
-    \item Set the PICO\_SDK\_PATH environment variable:
+    \item Set the MICROBLAZE\_SDK\_PATH environment variable:
     \begin{itemize}
         \item Go to Environment Variables (as in Step 3)
         \item Create a new System Variable:
-        \item Name: \texttt{PICO\_SDK\_PATH}
-        \item Value: \texttt{C:\textbackslash dev\textbackslash pico-sdk} (adjust path as needed)
+        \item Name: \texttt{MICROBLAZE\_SDK\_PATH}
+        \item Value: \texttt{C:\textbackslash dev\textbackslash embeddedsw} (adjust path as needed)
     \end{itemize}
 \end{enumerate}
 
@@ -228,12 +228,8 @@ brew install cmake
 brew install git
 brew install python3
 
-# Install ARM cross-compiler
-brew install --cask gcc-arm-embedded
-
-# Alternative ARM toolchain (if above doesn't work)
-brew tap ArmMbed/homebrew-formulae
-brew install arm-none-eabi-gcc
+# Install RISC-V cross-compiler for MicroBlaze-V
+brew install riscv-gnu-toolchain
 \end{lstlisting}
 
 \subsection{Step 3: Install VS Code}
@@ -245,17 +241,17 @@ Or download directly from \url{https://code.visualstudio.com/}
 
 Install the same extensions as listed in the Windows section.
 
-\subsection{Step 4: Install Raspberry Pi Pico SDK}
+\subsection{Step 4: Install MicroBlaze-V SDK}
 \begin{lstlisting}[language=bash]
 # Navigate to your development directory
 cd ~/Development  # or wherever you keep projects
 mkdir -p ~/Development  # create if it doesn't exist
 
-# Clone the Pico SDK
-git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+# Clone the MicroBlaze-V SDK
+git clone --recursive https://github.com/Xilinx/embeddedsw.git
 
 # Set environment variable
-echo 'export PICO_SDK_PATH=~/Development/pico-sdk' >> ~/.zshrc
+echo 'export MICROBLAZE_SDK_PATH=~/Development/embeddedsw' >> ~/.zshrc
 # For bash users, use ~/.bash_profile instead of ~/.zshrc
 
 # Reload your shell configuration
@@ -275,8 +271,8 @@ sudo apt upgrade -y
 # Install essential development tools
 sudo apt install -y build-essential gcc gdb cmake git python3 python3-pip
 
-# Install ARM cross-compiler
-sudo apt install -y gcc-arm-none-eabi gdb-arm-none-eabi
+# Install RISC-V cross-compiler for MicroBlaze-V
+sudo apt install -y gcc-riscv64-unknown-elf gdb-multiarch
 
 # Install additional utilities
 sudo apt install -y curl wget unzip
@@ -300,17 +296,17 @@ sudo apt update
 sudo apt install code
 \end{lstlisting}
 
-\subsection{Step 4: Install Raspberry Pi Pico SDK}
+\subsection{Step 4: Install MicroBlaze-V SDK}
 \begin{lstlisting}[language=bash]
 # Navigate to your development directory
 cd ~/Development
 mkdir -p ~/Development  # create if it doesn't exist
 
-# Clone the Pico SDK
-git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+# Clone the MicroBlaze-V SDK
+git clone --recursive https://github.com/Xilinx/embeddedsw.git
 
 # Set environment variable
-echo 'export PICO_SDK_PATH=~/Development/pico-sdk' >> ~/.bashrc
+echo 'export MICROBLAZE_SDK_PATH=~/Development/embeddedsw' >> ~/.bashrc
 source ~/.bashrc
 \end{lstlisting}
 
@@ -324,9 +320,9 @@ Open a terminal/command prompt and run these commands to verify installation:
 gcc --version
 # Expected: gcc (GCC) 11.x.x or newer
 
-# Check ARM cross-compiler
-arm-none-eabi-gcc --version
-# Expected: arm-none-eabi-gcc (GNU Arm Embedded Toolchain) 10.x.x or newer
+# Check RISC-V cross-compiler
+riscv64-unknown-elf-gcc --version
+# Expected: riscv64-unknown-elf-gcc (GCC) 10.x.x or newer
 
 # Check CMake
 cmake --version
@@ -344,9 +340,9 @@ python3 --version
 gdb --version
 # Expected: GNU gdb (GDB) 10.x.x or newer
 
-# Check Pico SDK
-echo $PICO_SDK_PATH
-# Expected: Path to your pico-sdk directory
+# Check MicroBlaze-V SDK
+echo $MICROBLAZE_SDK_PATH
+# Expected: Path to your embeddedsw directory
 \end{lstlisting}
 
 \subsection{Step 2: Test Basic Compilation}

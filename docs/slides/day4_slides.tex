@@ -9,9 +9,18 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 
-% Theme
-\usetheme{Madrid}
-\usecolortheme{default}
+% Theme - Import oppstar theme from beamer-template directory
+% Add beamer-template directory to LaTeX search path
+\makeatletter
+\def\input@path{{./beamer-template/}}
+\makeatother
+
+% Now load the theme components
+\usepackage{./beamer-template/beamercolorthemeoppstar}
+\usepackage{./beamer-template/beamerfontthemeoppstar}
+\usepackage{./beamer-template/beamerinnerthemeoppstar}
+\usepackage{./beamer-template/beamerouterthemeoppstar}
+\usepackage{./beamer-template/beamerthemeoppstar}
 
 % Colors
 \definecolor{codeblue}{RGB}{0,102,204}
@@ -62,7 +71,7 @@
     \item \textbf{Yesterday:} Mastered pointers, structures, and memory
     \item \textbf{Today's Mission:} Modular programming and cross-compilation
     \item \textbf{Validation Focus:} Scalable test architectures
-    \item \textbf{New Platform:} ARM Cortex-M0+ (RP2040)
+    \item \textbf{New Platform:} RISC-V RV32I (MicroBlaze-V)
     \item \textbf{Outcome:} First embedded validation program!
 \end{itemize}
 
@@ -212,7 +221,7 @@ $\xrightarrow{\text{Source Code}}$ &
 \end{frame}
 
 \begin{frame}
-\frametitle{Meet the RP2040}
+\frametitle{Meet the MicroBlaze-V}
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \textbf{Raspberry Pi Pico Specifications:}
@@ -246,17 +255,17 @@ $\xrightarrow{\text{Source Code}}$ &
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Pico SDK Introduction}
-\textbf{What is the Pico SDK?}
+\frametitle{MicroBlaze-V SDK Introduction}
+\textbf{What is the MicroBlaze-V SDK?}
 \begin{itemize}
-    \item Official C/C++ development kit for RP2040
+    \item Official C/C++ development kit for MicroBlaze-V
     \item Hardware abstraction layer (HAL)
     \item Standard library implementations
     \item CMake-based build system
     \item Extensive examples and documentation
 \end{itemize}
 
-\textbf{Basic Pico program structure:}
+\textbf{Basic MicroBlaze-V program structure:}
 \begin{lstlisting}[language=C]
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
@@ -286,16 +295,16 @@ int main() {
 \begin{lstlisting}[basicstyle=\tiny]
 cmake_minimum_required(VERSION 3.13)
 
-# Include the Pico SDK
-include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+# Include the MicroBlaze-V SDK
+include($ENV{MICROBLAZE_SDK_PATH}/cmake/microblaze_sdk_import.cmake)
 
 project(validation_suite C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Initialize the Pico SDK
-pico_sdk_init()
+# Initialize the MicroBlaze-V SDK
+microblaze_sdk_init()
 
 # Add executable
 add_executable(validation_suite
@@ -307,18 +316,17 @@ add_executable(validation_suite
 
 # Link libraries
 target_link_libraries(validation_suite
-    pico_stdlib          # Standard library
-    hardware_gpio        # GPIO control
-    hardware_timer       # Timing functions
-    hardware_adc         # Analog-to-digital converter
+    microblaze_stdlib    # Standard library
+    microblaze_gpio      # GPIO control
+    microblaze_timer     # Timing functions
+    microblaze_adc       # Analog-to-digital converter
 )
 
-# Enable USB output (for printf)
-pico_enable_stdio_usb(validation_suite 1)
-pico_enable_stdio_uart(validation_suite 0)
+# Enable UART output (for printf)
+microblaze_enable_stdio_uart(validation_suite 1)
 
-# Create map/bin/hex/uf2 files
-pico_add_extra_outputs(validation_suite)
+# Create map/bin/hex files
+microblaze_add_extra_outputs(validation_suite)
 \end{lstlisting}
 \end{frame}
 
@@ -586,7 +594,7 @@ int main(void);
 \textbf{This afternoon you'll build:}
 \begin{itemize}
     \item Modular validation library with headers
-    \item Cross-compilation setup for RP2040
+    \item Cross-compilation setup for MicroBlaze-V
     \item CMake build configuration
     \item GPIO-based hardware testing
     \item Portable code that runs on both desktop and Pico
@@ -609,8 +617,8 @@ int main(void);
 \textbf{Common issues and solutions:}
 
 \begin{itemize}
-    \item \textbf{SDK not found:} Check \texttt{PICO\_SDK\_PATH} environment variable
-    \item \textbf{Compiler errors:} Verify \texttt{arm-none-eabi-gcc} installation
+    \item \textbf{SDK not found:} Check \texttt{MICROBLAZE\_SDK\_PATH} environment variable
+    \item \textbf{Compiler errors:} Verify \texttt{riscv64-unknown-elf-gcc} installation
     \item \textbf{CMake fails:} Ensure CMake version 3.13+
     \item \textbf{Linking errors:} Check library dependencies in CMakeLists.txt
     \item \textbf{Upload fails:} Hold BOOTSEL button when connecting Pico
@@ -632,7 +640,7 @@ int main(void);
 \begin{itemize}
     \item \textbf{Modular design scales:} Header files enable code reuse
     \item \textbf{Cross-compilation opens doors:} Same code, different targets
-    \item \textbf{RP2040 is powerful:} Real ARM platform for validation
+    \item \textbf{MicroBlaze-V is powerful:} Real RISC-V platform for validation
     \item \textbf{CMake manages complexity:} Automated build processes
     \item \textbf{Static allocation is safer:} Predictable memory usage
     \item \textbf{Layered architecture works:} Organize by abstraction level
@@ -662,7 +670,7 @@ int main(void);
     \item Implement hardware abstraction layer
     \item Add configuration management
     \item Create automated test reporting
-    \item Explore Pico SDK advanced features
+    \item Explore MicroBlaze-V SDK advanced features
 \end{itemize}
 \end{frame}
 
@@ -675,7 +683,7 @@ int main(void);
 \textbf{Day 5 topics:}
 \begin{itemize}
     \item Advanced GDB techniques for embedded systems
-    \item RP2040 peripheral programming (ADC, timers, UART)
+    \item MicroBlaze-V peripheral programming (ADC, timers, UART)
     \item Hardware-in-the-loop testing concepts
     \item Fault injection and detection methods
     \item Real-time debugging strategies
@@ -698,7 +706,7 @@ Tomorrow you'll be programming real silicon!
     \item Cross-compilation setup questions?
     \item CMake configuration challenges?
     \item Modular programming concepts unclear?
-    \item RP2040 hardware questions?
+    \item MicroBlaze-V hardware questions?
     \item Excited about tomorrow's hardware programming?
 \end{itemize}
 

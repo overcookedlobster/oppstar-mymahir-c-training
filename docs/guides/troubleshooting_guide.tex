@@ -90,7 +90,7 @@
 \begin{enumerate}
     \item Compilation errors (syntax, missing headers)
     \item Cross-compilation toolchain problems
-    \item RP2040 flashing and connection issues
+    \item MicroBlaze-V flashing and connection issues
     \item Git/GitHub workflow problems
     \item VS Code configuration issues
 \end{enumerate}
@@ -218,11 +218,11 @@ ls $PICO_SDK_PATH
 git clone --recursive https://github.com/raspberrypi/pico-sdk.git
 \end{lstlisting}
 
-\section{RP2040 Hardware Issues}
+\section{MicroBlaze-V Hardware Issues}
 
 \subsection{Flashing and Connection Problems}
 
-\subsubsection{Issue: "RP2040 not detected as USB drive"}
+\subsubsection{Issue: "MicroBlaze-V not detected as USB drive"}
 \textbf{Symptoms:} Pico doesn't appear as RPI-RP2 drive when connected.
 
 \textbf{Solutions:}
@@ -263,23 +263,19 @@ make
 
 \subsection{Serial Communication Issues}
 
-\subsubsection{Issue: "No serial output from RP2040"}
+\subsubsection{Issue: "No serial output from MicroBlaze-V"}
 \textbf{Symptoms:} Program runs but no printf output visible.
 
 \textbf{Solutions:}
 \begin{lstlisting}[language=bash]
-# Verify USB stdio is enabled in CMakeLists.txt
-pico_enable_stdio_usb(program_name 1)
-pico_enable_stdio_uart(program_name 0)
+# Verify UART stdio is enabled in your platform configuration
+# For MicroBlaze-V, configure UART peripheral
 
 # Add stdio initialization in code
-#include "pico/stdlib.h"
-stdio_init_all();
-
-# Wait for USB connection (optional)
-while (!stdio_usb_connected()) {
-    sleep_ms(100);
-}
+#include <stdio.h>
+// Initialize UART for your specific MicroBlaze-V configuration
+// uart_init(UART_ID, BAUD_RATE);
+// stdio_set_driver_enabled(&stdio_uart, true);
 \end{lstlisting}
 
 \textbf{Terminal Setup:}
@@ -293,13 +289,13 @@ while (!stdio_usb_connected()) {
 # Find the correct serial port
 # Windows: Check Device Manager for COM port
 # macOS/Linux:
-ls /dev/tty*  # Look for /dev/ttyACM0 or similar
+ls /dev/tty*  # Look for /dev/ttyUSB0, /dev/ttyACM0, or similar
 
 # Connect using screen (macOS/Linux)
-screen /dev/ttyACM0 115200
+screen /dev/ttyUSB0 115200
 
 # Connect using minicom
-minicom -D /dev/ttyACM0 -b 115200
+minicom -D /dev/ttyUSB0 -b 115200
 \end{lstlisting}
 
 \section{Development Environment Issues}
@@ -325,7 +321,7 @@ minicom -D /dev/ttyACM0 -b 115200
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${env:PICO_SDK_PATH}/src/**"
+                "${env:MICROBLAZE_SDK_PATH}/src/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
@@ -435,7 +431,7 @@ brew upgrade cmake
 cmake -DCMAKE_C_COMPILER=gcc ..
 
 # For cross-compilation
-cmake -DCMAKE_C_COMPILER=arm-none-eabi-gcc ..
+cmake -DCMAKE_C_COMPILER=riscv64-unknown-elf-gcc ..
 
 # Clear CMake cache and reconfigure
 rm -rf build/
@@ -596,14 +592,14 @@ gprof program gmon.out > analysis.txt
 \subsection{Linux-Specific Problems}
 
 \subsubsection{Issue: "Permission denied" for USB devices}
-\textbf{Symptoms:} Cannot access RP2040 or serial ports.
+\textbf{Symptoms:} Cannot access MicroBlaze-V or serial ports.
 
 \textbf{Solutions:}
 \begin{lstlisting}[language=bash]
 # Add user to dialout group
 sudo usermod -a -G dialout $USER
 
-# Set udev rules for RP2040
+# Set udev rules for MicroBlaze-V
 sudo tee /etc/udev/rules.d/99-pico.rules << 'EOF'
 SUBSYSTEM=="usb", ATTRS{idVendor}=="2e8a", MODE="0666"
 EOF
@@ -631,14 +627,14 @@ If your development environment is completely broken:
 
 \subsection{Hardware Failure}
 
-If your RP2040 board stops working:
+If your MicroBlaze-V board stops working:
 
 \begin{enumerate}
     \item Try different USB cable and port
     \item Test with known-good UF2 file (blink example)
     \item Check for physical damage
     \item Request replacement board from instructor
-    \item Use QEMU emulation as temporary fallback
+    \item Use QEMU RISC-V virt machine emulation as temporary fallback
 \end{enumerate}
 
 \subsection{Data Recovery}

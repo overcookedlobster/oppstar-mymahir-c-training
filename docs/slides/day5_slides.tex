@@ -8,9 +8,18 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 
-% Theme
-\usetheme{Madrid}
-\usecolortheme{default}
+% Theme - Import oppstar theme from beamer-template directory
+% Add beamer-template directory to LaTeX search path
+\makeatletter
+\def\input@path{{./beamer-template/}}
+\makeatother
+
+% Now load the theme components
+\usepackage{./beamer-template/beamercolorthemeoppstar}
+\usepackage{./beamer-template/beamerfontthemeoppstar}
+\usepackage{./beamer-template/beamerinnerthemeoppstar}
+\usepackage{./beamer-template/beamerouterthemeoppstar}
+\usepackage{./beamer-template/beamerthemeoppstar}
 
 % Colors
 \definecolor{codeblue}{RGB}{0,102,204}
@@ -41,7 +50,7 @@
 \lstset{style=cstyle}
 
 % Title page info
-\title{Day 5: Hardware Debugging and RP2040 Peripherals}
+\title{Day 5: Hardware Debugging and MicroBlaze-V Peripherals}
 \subtitle{C Programming for Post-Silicon Validation Engineers}
 \author{Course Instructor}
 \date{6-Day Intensive Bootcamp}
@@ -61,7 +70,7 @@
     \item \textbf{Yesterday:} Cross-compilation and modular programming
     \item \textbf{Today's Mission:} Master hardware debugging and peripherals
     \item \textbf{Validation Focus:} Hardware-in-the-loop testing
-    \item \textbf{Real Hardware:} RP2040 GPIO, ADC, timers, and more
+    \item \textbf{Real Hardware:} MicroBlaze-V GPIO, ADC, timers, and more
     \item \textbf{Outcome:} Complete embedded validation system!
 \end{itemize}
 
@@ -77,7 +86,7 @@ By the end of Day 5, you will:
 
 \begin{enumerate}
     \item Use advanced GDB techniques for embedded debugging
-    \item Program RP2040 peripherals (GPIO, ADC, timers)
+    \item Program MicroBlaze-V peripherals (GPIO, ADC, timers)
     \item Implement hardware-in-the-loop testing
     \item Create fault injection and detection systems
     \item Optimize code for real-time constraints
@@ -113,21 +122,22 @@ Today we validate real silicon with real constraints!
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Printf Debugging on RP2040}
+\frametitle{Printf Debugging on MicroBlaze-V}
 \begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
 #include <stdio.h>
+// Include MicroBlaze-V standard library
+#include "microblaze/stdlib.h"
 
 int main() {
-    // Initialize USB serial for printf
-    stdio_init_all();
+    // Initialize UART for printf
+    uart_init();
 
-    // Wait for USB connection (optional)
-    while (!stdio_usb_connected()) {
+    // Wait for UART connection (optional)
+    while (!uart_connected()) {
         sleep_ms(100);
     }
 
-    printf("RP2040 Validation System Starting...\n");
+    printf("MicroBlaze-V Validation System Starting...\n");
 
     int test_count = 0;
     while (true) {
@@ -189,10 +199,10 @@ void debug_signal_error(void) {
 \end{frame}
 
 \begin{frame}
-\frametitle{RP2040 Peripheral Overview}
+\frametitle{MicroBlaze-V Peripheral Overview}
 
 \begin{center}
-\textbf{RP2040 Microcontroller Peripherals}
+\textbf{MicroBlaze-V Microcontroller Peripherals}
 \end{center}
 
 \begin{columns}
@@ -440,7 +450,7 @@ int run_fault_detection_test(void) {
 \begin{column}{0.5\textwidth}
 \textbf{Test System:}
 \begin{itemize}
-    \item RP2040 Controller
+    \item MicroBlaze-V Controller
     \item Control Signals
     \item Data Acquisition
     \item Automated Testing
@@ -708,7 +718,7 @@ void check_reset_reason(void) {
 \frametitle{Lab Preview: Complete Hardware Validator}
 \textbf{This afternoon you'll build:}
 \begin{itemize}
-    \item Comprehensive RP2040 peripheral validation suite
+    \item Comprehensive MicroBlaze-V peripheral validation suite
     \item Advanced debugging with printf and LED indicators
     \item Hardware-in-the-loop testing framework
     \item Fault injection and recovery testing
@@ -731,7 +741,7 @@ void check_reset_reason(void) {
 \frametitle{Hardware Safety Considerations}
 \textbf{Protecting your hardware:}
 \begin{itemize}
-    \item \textbf{Voltage limits:} Never exceed 3.3V on RP2040 pins
+    \item \textbf{Voltage limits:} Never exceed 3.3V on MicroBlaze-V pins
     \item \textbf{Current limits:} Maximum 12mA per GPIO pin
     \item \textbf{ESD protection:} Use anti-static precautions
     \item \textbf{Power sequencing:} Proper startup/shutdown procedures
@@ -784,7 +794,7 @@ void check_reset_reason(void) {
     \item Implement interrupt-based testing
     \item Add statistical analysis of test results
     \item Create automated test report generation
-    \item Explore advanced RP2040 features (PIO, DMA)
+    \item Explore advanced MicroBlaze-V features (PIO, DMA)
 \end{itemize}
 \end{frame}
 
@@ -818,7 +828,7 @@ Tomorrow you'll demonstrate your validation engineering skills!
 
 \begin{itemize}
     \item Hardware debugging techniques questions?
-    \item RP2040 peripheral programming challenges?
+    \item MicroBlaze-V peripheral programming challenges?
     \item Real-time optimization strategies?
     \item Fault injection implementation ideas?
     \item Excited about tomorrow's capstone project?

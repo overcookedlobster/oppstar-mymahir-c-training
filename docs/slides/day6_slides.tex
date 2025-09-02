@@ -9,9 +9,18 @@
 \usepackage{hyperref}
 \usepackage{bookmark}
 
-% Theme
-\usetheme{Madrid}
-\usecolortheme{default}
+% Theme - Import oppstar theme from beamer-template directory
+% Add beamer-template directory to LaTeX search path
+\makeatletter
+\def\input@path{{./beamer-template/}}
+\makeatother
+
+% Now load the theme components
+\usepackage{./beamer-template/beamercolorthemeoppstar}
+\usepackage{./beamer-template/beamerfontthemeoppstar}
+\usepackage{./beamer-template/beamerinnerthemeoppstar}
+\usepackage{./beamer-template/beamerouterthemeoppstar}
+\usepackage{./beamer-template/beamerthemeoppstar}
 
 % Colors
 \definecolor{codeblue}{RGB}{0,102,204}
@@ -89,7 +98,7 @@
 \node[above, align=center] at (1,0.5) {C Basics\\GCC};
 \node[above, align=center] at (2.5,0.5) {Control Flow\\GDB};
 \node[above, align=center] at (4,0.5) {Pointers\\Structures};
-\node[above, align=center] at (5.5,0.5) {Cross-Compile\\RP2040};
+ \node[above, align=center] at (5.5,0.5) {Cross-Compile\\MicroBlaze-V};
 \node[above, align=center] at (7,0.5) {Hardware\\Debugging};
 \node[above, align=center] at (8.5,0.5) {Integration\\Portfolio};
 
@@ -158,7 +167,7 @@ Today you prove you're ready for post-silicon validation roles!
 \begin{enumerate}
     \item Multi-peripheral validation (GPIO, ADC, timers)
     \item Modular code architecture with headers
-    \item Cross-compilation for RP2040
+    \item Cross-compilation for MicroBlaze-V
     \item Hardware-in-the-loop testing
     \item Error handling and recovery
     \item Professional documentation
@@ -181,7 +190,7 @@ Today you prove you're ready for post-silicon validation roles!
 \textbf{Suggested Project Themes:}
 
 \begin{enumerate}
-    \item \textbf{Multi-Chip Validation Suite:} Test multiple RP2040 boards simultaneously
+    \item \textbf{Multi-Chip Validation Suite:} Test multiple MicroBlaze-V boards simultaneously
     \item \textbf{Environmental Stress Tester:} Validate under temperature/voltage variations
     \item \textbf{Communication Protocol Validator:} Test UART/SPI/I2C interfaces
     \item \textbf{Power Management Tester:} Validate sleep modes and power consumption
@@ -287,7 +296,7 @@ int run_fault_injection_suite(test_result_t results[]);
 \textbf{Suggested Roles:}
 \begin{itemize}
     \item \textbf{Project Lead:} Overall coordination and integration
-    \item \textbf{Hardware Specialist:} RP2040 programming and debugging
+    \item \textbf{Hardware Specialist:} MicroBlaze-V programming and debugging
     \item \textbf{Software Architect:} Code structure and optimization
     \item \textbf{Quality Engineer:} Testing and validation
     \item \textbf{Documentation Lead:} README, comments, and presentation
@@ -336,7 +345,7 @@ int run_fault_injection_suite(test_result_t results[]);
 \begin{itemize}
     \item \textbf{Unit testing:} Test individual functions
     \item \textbf{Integration testing:} Test module interactions
-    \item \textbf{Hardware testing:} Validate on actual RP2040
+    \item \textbf{Hardware testing:} Validate on actual MicroBlaze-V
     \item \textbf{Performance testing:} Measure execution times
     \item \textbf{Documentation:} Keep README updated
 \end{itemize}
@@ -372,7 +381,7 @@ int run_fault_injection_suite(test_result_t results[]);
     \item \textbf{Problem Statement (1 min):} What validation challenge you solved
     \item \textbf{Solution Architecture (2 min):} High-level design and approach
     \item \textbf{Technical Implementation (3 min):} Key code and algorithms
-    \item \textbf{Demonstration (2 min):} Live demo on RP2040 hardware
+    \item \textbf{Demonstration (2 min):} Live demo on MicroBlaze-V hardware
     \item \textbf{Results \& Lessons (1 min):} What worked, what you learned
 \end{enumerate}
 
@@ -401,7 +410,7 @@ int run_fault_injection_suite(test_result_t results[]);
 \begin{itemize}
     \item Creative approach to validation challenges
     \item Advanced feature implementation
-    \item Novel use of RP2040 capabilities
+    \item Novel use of MicroBlaze-V capabilities
     \item AI integration effectiveness
 \end{itemize}
 
@@ -473,7 +482,7 @@ int run_fault_injection_suite(test_result_t results[]);
 \frametitle{Troubleshooting and Support}
 \textbf{Common Challenges and Solutions:}
 \begin{itemize}
-    \item \textbf{Hardware Issues:} Backup RP2040 boards available
+    \item \textbf{Hardware Issues:} Backup MicroBlaze-V boards available
     \item \textbf{Compilation Problems:} TAs for build system help
     \item \textbf{Git Conflicts:} Pair programming and merge assistance
     \item \textbf{Time Management:} Scope adjustment guidance

@@ -281,6 +281,26 @@ int main() {
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{QEMU MicroBlaze Development Environment}
+\textbf{Why QEMU for Validation?}
+\begin{itemize}
+    \item Test MicroBlaze code without hardware
+    \item Consistent development environment
+    \item Backup when FPGA boards unavailable
+    \item Automated testing and CI/CD integration
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{QEMU MicroBlaze features:}
+\begin{itemize}
+    \item 32-bit MicroBlaze processor emulation
+    \item UART console for I/O
+    \item Memory-mapped devices
+    \item Timer and interrupt support
+\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]
 \frametitle{GCC in Action}
 \textbf{Compile and run:}
@@ -298,6 +318,29 @@ Power consumption: 1.650 W
     \item \texttt{-g} - Include debug symbols
     \item \texttt{-O2} - Optimize for performance
     \item \texttt{-std=c11} - Use C11 standard
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{MicroBlaze Cross-Compilation}
+\textbf{For FPGA deployment:}
+\begin{verbatim}
+$ microblaze-elf-gcc -mcpu=v11.0 -mxl-soft-mul \
+  -Wall -g voltage_check.c -o voltage_check_mb
+\end{verbatim}
+
+\textbf{QEMU testing:}
+\begin{verbatim}
+$ qemu-system-microblaze -M microblaze-fdt-plnx \
+  -kernel voltage_check_mb -nographic
+\end{verbatim}
+
+\textbf{MicroBlaze GCC flags:}
+\begin{itemize}
+    \item \texttt{-mcpu=v11.0} - MicroBlaze v11.0 architecture
+    \item \texttt{-mxl-soft-mul} - Software multiplication
+    \item \texttt{-nostdlib} - No standard library (bare metal)
+    \item \texttt{-T link.ld} - Custom linker script
 \end{itemize}
 \end{frame}
 

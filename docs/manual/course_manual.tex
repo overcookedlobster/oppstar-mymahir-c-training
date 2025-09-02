@@ -83,7 +83,7 @@
         \node at (4,3) {\Large\textbf{From Zero to Embedded}};
         \node at (4,2.3) {C Fundamentals};
         \node at (4,1.7) {Cross-Compilation};
-        \node at (4,1.1) {RP2040 Hardware};
+        \node at (4,1.1) {MicroBlaze-V Hardware};
         \node at (4,0.5) {Validation Techniques};
     \end{tikzpicture}
 
@@ -96,7 +96,7 @@
 
     {\large Course Duration: 6 Days (42 Hours)\\
     Target Audience: Post-Silicon Validation Engineers\\
-    Hardware Platform: Raspberry Pi Pico (RP2040)\par}
+    Hardware Platform: AMD MicroBlaze-V (RISC-V)\par}
 \end{titlepage}
 
 \newpage
@@ -105,14 +105,14 @@
 
 \section{Executive Summary}
 
-This comprehensive 6-day course transforms engineers with no coding experience into proficient C programmers capable of developing embedded validation tools for semiconductor post-silicon testing. The curriculum emphasizes hands-on learning with real hardware (RP2040-based Raspberry Pi Pico) and industry-standard tooling.
+This comprehensive 6-day course transforms engineers with no coding experience into proficient C programmers capable of developing embedded validation tools for semiconductor post-silicon testing. The curriculum emphasizes hands-on learning with real hardware (MicroBlaze-V-based FPGA) and industry-standard tooling.
 
 \subsection{Course Objectives}
 By the end of this course, participants will be able to:
 \begin{itemize}
     \item Write, compile, and debug C programs using GCC and GDB
     \item Cross-compile code for ARM Cortex-M0+ microcontrollers
-    \item Develop embedded applications for the RP2040 platform
+    \item Develop embedded applications for the MicroBlaze-V platform
     \item Implement validation routines simulating post-silicon testing scenarios
     \item Use GitHub for version control and collaborative development
     \item Apply AI tools responsibly for code assistance and debugging
@@ -152,11 +152,11 @@ Participants must complete the following setup 1 week before the course:
         \item VS Code with C/C++ extension
     \end{itemize}
 
-    \item \textbf{RP2040 Development Tools}
+    \item \textbf{MicroBlaze-V Development Tools}
     \begin{itemize}
         \item Pico SDK (latest version)
         \item Python 3.x for build scripts
-        \item QEMU for emulation (fallback option)
+        \item QEMU RISC-V emulator (virt machine) for fallback simulation
     \end{itemize}
 
     \item \textbf{Debugging Tools}
@@ -428,12 +428,12 @@ pico_enable_stdio_uart(validation_suite 0)
 pico_add_extra_outputs(validation_suite)
 \end{lstlisting}
 
-\subsection{Day 5: Hardware Debugging and RP2040 Peripherals}
+\subsection{Day 5: Hardware Debugging and MicroBlaze-V Peripherals}
 
 \textbf{Learning Objectives:}
 \begin{itemize}
     \item Advanced GDB debugging techniques
-    \item RP2040 GPIO and peripheral control
+    \item MicroBlaze-V GPIO and peripheral control
     \item Hardware-in-the-loop testing concepts
     \item Fault injection and detection
 \end{itemize}
@@ -448,7 +448,7 @@ pico_add_extra_outputs(validation_suite)
 \end{itemize}
 
 \textbf{Validation Context:}
-Implement actual hardware tests using RP2040 peripherals to simulate post-silicon validation scenarios.
+Implement actual hardware tests using MicroBlaze-V peripherals to simulate post-silicon validation scenarios.
 
 \begin{lstlisting}[language=C, caption=Day 5 Example: GPIO Validation Test]
 #include "pico/stdlib.h"
@@ -532,7 +532,7 @@ int main() {
 
     init_test_hardware();
 
-    printf("RP2040 GPIO Validation Suite v1.0\n");
+    printf("MicroBlaze-V GPIO Validation Suite v1.0\n");
     printf("Testing %d GPIO pins...\n", TEST_PIN_COUNT);
 
     int passed = run_gpio_validation_suite(test_results);
@@ -612,7 +612,7 @@ All assignments are distributed and submitted through GitHub Classroom:
 
 \subsection{Hardware Requirements}
 \begin{itemize}
-    \item Raspberry Pi Pico (RP2040) - 1 per participant
+    \item AMD MicroBlaze-V FPGA board - 1 per participant
     \item USB-A to micro-USB cables
     \item Breadboards and jumper wires (optional for advanced projects)
     \item LEDs and resistors for visual feedback
@@ -631,7 +631,7 @@ All assignments are distributed and submitted through GitHub Classroom:
 \subsection{Reference Materials}
 \begin{itemize}
     \item C Programming Language (K\&R) - selected chapters
-    \item RP2040 Datasheet and SDK documentation
+    \item MicroBlaze-V Datasheet and SDK documentation
     \item Post-silicon validation best practices
     \item GitHub Classroom instructor guides
 \end{itemize}
