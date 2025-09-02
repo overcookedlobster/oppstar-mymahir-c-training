@@ -1,0 +1,623 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 4 Assignment: Cross-Compilation and Modular Programming Lab}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 4 Assignment - Cross-Compilation and Modular Programming Lab},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 4 ASSIGNMENT}\\[0.5cm]
+    {\Large Cross-Compilation and Modular Programming Lab}\\[0.3cm]
+    {\large RP2040 Embedded Validation System}\\[0.2cm]
+    {\normalsize Due: End of Day 4 + Homework Extension}
+\end{center}
+
+\vspace{1cm}
+
+\section{Assignment Overview}
+
+\subsection{Learning Objectives}
+By completing this assignment, you will:
+\begin{itemize}
+    \item Design modular code architecture with header files and libraries
+    \item Master cross-compilation for ARM Cortex-M0+ embedded targets
+    \item Configure and use CMake build systems for embedded projects
+    \item Develop portable code that runs on both desktop and embedded platforms
+    \item Create professional-grade validation libraries for reuse
+\end{itemize}
+
+\subsection{Assignment Context}
+You will transform your validation system into a professional, modular codebase that can be cross-compiled for the RP2040 microcontroller. This assignment focuses on software engineering best practices, build system configuration, and the transition from desktop to embedded development.
+
+\section{Part 1: In-Class Lab (3.5 hours)}
+
+\subsection{Setup and Environment Verification}
+\begin{enumerate}
+    \item Accept the Day 4 GitHub Classroom assignment
+    \item Verify cross-compilation toolchain: \texttt{arm-none-eabi-gcc --version}
+    \item Check Pico SDK installation: \texttt{echo \$PICO\_SDK\_PATH}
+    \item Test CMake version: \texttt{cmake --version} (should be 3.13+)
+    \item Create new branch: \texttt{git checkout -b day4-embedded-port}
+\end{enumerate}
+
+\subsection{Task 1: Modular Architecture Design (60 minutes)}
+
+\textbf{Objective:} Refactor existing code into a professional modular structure.
+
+\textbf{Required File Structure:}
+\begin{verbatim}
+validation_suite/
+├── src/
+│   ├── main.c
+│   ├── validation_core.c
+│   ├── register_access.c
+│   ├── bit_operations.c
+│   ├── chip_monitor.c
+│   └── hardware_abstraction.c
+├── include/
+│   ├── validation_core.h
+│   ├── register_access.h
+│   ├── bit_operations.h
+│   ├── chip_monitor.h
+│   ├── hardware_abstraction.h
+│   └── common_types.h
+├── tests/
+│   └── unit_tests.c
+├── CMakeLists.txt
+└── README.md
+\end{verbatim}
+
+\textbf{Header File Requirements:}
+\begin{lstlisting}[language=C]
+// validation_core.h - Main validation interface
+#ifndef VALIDATION_CORE_H
+#define VALIDATION_CORE_H
+
+#include "common_types.h"
+
+// Core validation functions
+int initialize_validation_system(void);
+int run_comprehensive_validation(validation_summary_t *summary);
+int run_test_suite(test_suite_type_t suite_type);
+void shutdown_validation_system(void);
+
+// Configuration functions
+int load_validation_config(const char *config_file);
+void set_validation_parameters(const validation_params_t *params);
+validation_params_t* get_current_parameters(void);
+
+// Reporting functions
+void generate_validation_report(const validation_summary_t *summary);
+void export_results_csv(const char *filename, const test_result_t *results, int count);
+
+#endif // VALIDATION_CORE_H
+\end{lstlisting}
+
+\subsection{Task 2: Hardware Abstraction Layer (60 minutes)}
+
+\textbf{File:} \texttt{include/hardware\_abstraction.h} and \texttt{src/hardware\_abstraction.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create platform-independent hardware interface
+    \item Support both desktop simulation and RP2040 hardware
+    \item Implement conditional compilation for different targets
+    \item Provide consistent API across platforms
+\end{itemize}
+
+\textbf{HAL Interface Design:}
+\begin{lstlisting}[language=C]
+// hardware_abstraction.h
+#ifndef HARDWARE_ABSTRACTION_H
+#define HARDWARE_ABSTRACTION_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+// Platform detection
+#ifdef PICO_BUILD
+    #define PLATFORM_EMBEDDED 1
+    #include "pico/stdlib.h"
+    #include "hardware/gpio.h"
+#else
+    #define PLATFORM_DESKTOP 1
+#endif
+
+// HAL function prototypes
+int hal_init(void);
+void hal_deinit(void);
+
+// GPIO abstraction
+int hal_gpio_init(uint8_t pin);
+void hal_gpio_set_direction(uint8_t pin, bool output);
+void hal_gpio_write(uint8_t pin, bool value);
+bool hal_gpio_read(uint8_t pin);
+
+// Timing abstraction
+void hal_delay_ms(uint32_t milliseconds);
+void hal_delay_us(uint32_t microseconds);
+uint64_t hal_get_time_us(void);
+
+// Register simulation abstraction
+uint32_t hal_read_register(uint32_t address);
+void hal_write_register(uint32_t address, uint32_t value);
+
+// Debug output abstraction
+void hal_debug_print(const char *format, ...);
+
+#endif // HARDWARE_ABSTRACTION_H
+\end{lstlisting}
+
+\subsection{Task 3: CMake Build System Configuration (60 minutes)}
+
+\textbf{File:} \texttt{CMakeLists.txt}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Support both native and cross-compilation builds
+    \item Configure Pico SDK integration
+    \item Set up proper compiler flags and optimizations
+    \item Enable conditional compilation based on target
+\end{itemize}
+
+\textbf{CMake Configuration:}
+\begin{lstlisting}[language=cmake]
+cmake_minimum_required(VERSION 3.13)
+
+# Detect if building for Pico
+if(DEFINED ENV{PICO_SDK_PATH})
+    # Include Pico SDK
+    include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+    set(PICO_BUILD ON)
+endif()
+
+project(validation_suite C CXX ASM)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+# Initialize Pico SDK if available
+if(PICO_BUILD)
+    pico_sdk_init()
+    add_compile_definitions(PICO_BUILD=1)
+endif()
+
+# Include directories
+include_directories(include)
+
+# Source files
+set(SOURCES
+    src/main.c
+    src/validation_core.c
+    src/register_access.c
+    src/bit_operations.c
+    src/chip_monitor.c
+    src/hardware_abstraction.c
+)
+
+# Create executable
+add_executable(validation_suite ${SOURCES})
+
+# Platform-specific configuration
+if(PICO_BUILD)
+    # Pico-specific libraries
+    target_link_libraries(validation_suite
+        pico_stdlib
+        hardware_gpio
+        hardware_timer
+        hardware_adc
+    )
+
+    # Enable USB output
+    pico_enable_stdio_usb(validation_suite 1)
+    pico_enable_stdio_uart(validation_suite 0)
+
+    # Create additional output files
+    pico_add_extra_outputs(validation_suite)
+else()
+    # Desktop build configuration
+    target_compile_options(validation_suite PRIVATE -Wall -Wextra -g)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(validation_suite PRIVATE DEBUG=1)
+    endif()
+endif()
+
+# Unit tests (desktop only)
+if(NOT PICO_BUILD)
+    add_executable(unit_tests tests/unit_tests.c ${SOURCES})
+    target_compile_options(unit_tests PRIVATE -Wall -Wextra -g)
+    target_compile_definitions(unit_tests PRIVATE UNIT_TESTING=1)
+endif()
+\end{lstlisting}
+
+\subsection{Task 4: Cross-Compilation and Testing (60 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Successfully compile for both desktop and RP2040 targets
+    \item Test desktop version with comprehensive validation
+    \item Generate RP2040 UF2 file for hardware deployment
+    \item Verify cross-compiled binary functionality
+\end{itemize}
+
+\textbf{Build Process:}
+\begin{verbatim}
+# Desktop build
+mkdir build-desktop && cd build-desktop
+cmake ..
+make -j4
+./validation_suite
+
+# RP2040 cross-compilation build
+mkdir build-pico && cd build-pico
+cmake ..
+make -j4
+# Result: validation_suite.uf2 ready for Pico
+\end{verbatim}
+
+\textbf{Testing Requirements:}
+\begin{itemize}
+    \item Desktop version runs all validation tests
+    \item Cross-compiled version builds without errors
+    \item UF2 file is generated and ready for deployment
+    \item Both versions use the same source code
+\end{itemize}
+
+\subsection{Task 5: RP2040 Hardware Integration (30 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Flash UF2 file to RP2040 hardware
+    \item Verify basic functionality (LED blink, serial output)
+    \item Test GPIO operations through HAL
+    \item Document hardware behavior vs. simulation
+\end{itemize}
+
+\textbf{Hardware Verification Checklist:}
+\begin{itemize}
+    \item[$\square$] UF2 file flashes successfully to Pico
+    \item[$\square$] Serial output appears in terminal
+    \item[$\square$] LED blinks to indicate system activity
+    \item[$\square$] GPIO operations work as expected
+    \item[$\square$] No crashes or unexpected behavior
+\end{itemize}
+
+\section{Part 2: Homework Extension (2 hours)}
+
+\subsection{Task 6: Advanced Build Configuration}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Add support for different optimization levels
+    \item Implement conditional feature compilation
+    \item Add static analysis integration (cppcheck, clang-static-analyzer)
+    \item Create automated testing in build system
+\end{itemize}
+
+\textbf{Advanced CMake Features:}
+\begin{lstlisting}[language=cmake]
+# Build type configuration
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Optimization flags
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(validation_suite PRIVATE -O2 -DNDEBUG)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(validation_suite PRIVATE -O0 -g -DDEBUG)
+endif()
+
+# Optional features
+option(ENABLE_ADVANCED_LOGGING "Enable detailed logging" OFF)
+option(ENABLE_PERFORMANCE_MONITORING "Enable performance counters" OFF)
+
+if(ENABLE_ADVANCED_LOGGING)
+    target_compile_definitions(validation_suite PRIVATE ADVANCED_LOGGING=1)
+endif()
+
+# Static analysis
+find_program(CPPCHECK cppcheck)
+if(CPPCHECK)
+    add_custom_target(cppcheck
+        COMMAND ${CPPCHECK} --enable=all --std=c11 ${CMAKE_SOURCE_DIR}/src
+        COMMENT "Running cppcheck static analysis"
+    )
+endif()
+\end{lstlisting}
+
+\subsection{Task 7: Library Creation and Packaging}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create reusable validation library
+    \item Implement proper library versioning
+    \item Add installation and packaging support
+    \item Create example programs using the library
+\end{itemize}
+
+\textbf{Library CMake Configuration:}
+\begin{lstlisting}[language=cmake]
+# Create validation library
+add_library(validation_lib STATIC
+    src/validation_core.c
+    src/register_access.c
+    src/bit_operations.c
+    src/chip_monitor.c
+    src/hardware_abstraction.c
+)
+
+target_include_directories(validation_lib PUBLIC include)
+
+# Version information
+set(VALIDATION_LIB_VERSION_MAJOR 1)
+set(VALIDATION_LIB_VERSION_MINOR 0)
+set(VALIDATION_LIB_VERSION_PATCH 0)
+
+# Installation rules
+install(TARGETS validation_lib
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
+install(DIRECTORY include/
+    DESTINATION include/validation_suite
+    FILES_MATCHING PATTERN "*.h"
+)
+
+# Package configuration
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    cmake/validation_suite-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/validation_suite-config.cmake
+    INSTALL_DESTINATION lib/cmake/validation_suite
+)
+\end{lstlisting}
+
+\subsection{Task 8: Performance Optimization and Profiling}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Profile code performance on both platforms
+    \item Optimize critical validation functions
+    \item Implement memory usage monitoring
+    \item Compare desktop vs. embedded performance
+\end{itemize}
+
+\textbf{Performance Monitoring Framework:}
+\begin{lstlisting}[language=C]
+// performance_monitor.h
+#ifndef PERFORMANCE_MONITOR_H
+#define PERFORMANCE_MONITOR_H
+
+#include <stdint.h>
+
+typedef struct {
+    const char* function_name;
+    uint64_t total_time_us;
+    uint32_t call_count;
+    uint64_t min_time_us;
+    uint64_t max_time_us;
+} performance_stats_t;
+
+// Performance monitoring macros
+#define PERF_START(name) uint64_t _perf_start_##name = hal_get_time_us()
+#define PERF_END(name) record_performance_data(#name, hal_get_time_us() - _perf_start_##name)
+
+// Performance monitoring functions
+void init_performance_monitoring(void);
+void record_performance_data(const char* function_name, uint64_t execution_time);
+void print_performance_report(void);
+void reset_performance_stats(void);
+
+#endif // PERFORMANCE_MONITOR_H
+\end{lstlisting}
+
+\section{Submission Requirements}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Modular Design:} Clear separation of concerns with well-defined interfaces
+    \item \textbf{Header Guards:} All header files must have proper include guards
+    \item \textbf{Platform Independence:} Code works on both desktop and embedded platforms
+    \item \textbf{Build System:} CMake configuration is clean and well-documented
+    \item \textbf{Error Handling:} Robust error handling across all modules
+\end{itemize}
+
+\subsection{Documentation Requirements}
+\begin{itemize}
+    \item \textbf{BUILD\_INSTRUCTIONS.md:} Detailed build instructions for both platforms
+    \item \textbf{API\_DOCUMENTATION.md:} Complete API reference for all public functions
+    \item \textbf{PORTING\_GUIDE.md:} Guide for porting to other embedded platforms
+    \item \textbf{PERFORMANCE\_ANALYSIS.md:} Performance comparison and optimization notes
+\end{itemize}
+
+\subsection{Deliverables Checklist}
+\begin{itemize}
+    \item[$\square$] Complete modular source code with headers
+    \item[$\square$] Working CMakeLists.txt for both platforms
+    \item[$\square$] Successfully compiled desktop executable
+    \item[$\square$] Successfully generated RP2040 UF2 file
+    \item[$\square$] Hardware verification on actual RP2040
+    \item[$\square$] Comprehensive documentation
+    \item[$\square$] Performance analysis and optimization
+\end{itemize}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+Task 1: Modular Architecture & 20 & Clean separation, proper headers \\
+Task 2: Hardware Abstraction & 20 & Platform independence, consistent API \\
+Task 3: CMake Configuration & 20 & Correct build system, both platforms \\
+Task 4: Cross-Compilation & 15 & Successful builds, working binaries \\
+Task 5: Hardware Integration & 15 & RP2040 deployment, verification \\
+Task 6: Advanced Build & 10 & Optimization, static analysis \\
+Task 7: Library Creation & 10 & Reusable library, packaging \\
+Task 8: Performance & 10 & Profiling, optimization \\
+Code Quality & 15 & Modularity, maintainability \\
+Documentation & 15 & Complete, clear documentation \\
+\hline
+\textbf{Total} & \textbf{150} & \textbf{Professional-grade embedded system} \\
+\hline
+\end{tabular>
+\end{center>
+
+\section{Troubleshooting Guide}
+
+\subsection{Common Build Issues}
+\begin{itemize}
+    \item \textbf{PICO\_SDK\_PATH not set:} Export environment variable correctly
+    \item \textbf{CMake version too old:} Upgrade to 3.13 or newer
+    \item \textbf{Cross-compiler not found:} Install arm-none-eabi-gcc toolchain
+    \item \textbf{Missing dependencies:} Install required development packages
+\end{itemize}
+
+\subsection{Cross-Compilation Problems}
+\begin{itemize}
+    \item \textbf{Linker errors:} Check library dependencies in CMakeLists.txt
+    \item \textbf{Header not found:} Verify include paths and SDK installation
+    \item \textbf{Function undefined:} Ensure all source files are included in build
+    \item \textbf{Memory issues:} Check stack and heap usage for embedded target
+\end{itemize}
+
+\subsection{Hardware Deployment Issues}
+\begin{itemize}
+    \item \textbf{UF2 not recognized:} Hold BOOTSEL button while connecting USB
+    \item \textbf{No serial output:} Check USB serial configuration in code
+    \item \textbf{Program doesn't start:} Verify UF2 file integrity and Pico reset
+    \item \textbf{GPIO not working:} Check pin initialization and direction settings
+\end{itemize}
+
+\section{Testing and Validation}
+
+\subsection{Desktop Testing}
+\begin{enumerate}
+    \item Compile and run all validation tests
+    \item Verify modular architecture with unit tests
+    \item Test HAL simulation functionality
+    \item Validate performance monitoring
+    \item Check memory usage and leaks
+\end{enumerate}
+
+\subsection{Embedded Testing}
+\begin{enumerate}
+    \item Flash UF2 to RP2040 and verify boot
+    \item Test serial communication and debug output
+    \item Verify GPIO operations and LED control
+    \item Test timing functions and delays
+    \item Validate register simulation on hardware
+\end{enumerate}
+
+\subsection{Cross-Platform Validation}
+\begin{enumerate}
+    \item Same source code compiles for both platforms
+    \item HAL provides consistent behavior
+    \item Performance characteristics are documented
+    \item Feature parity between platforms (where applicable)
+    \item Error handling works on both platforms
+\end{enumerate}
+
+\section{Extension Opportunities}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item \textbf{Multi-Platform Support:} Add support for other microcontrollers
+    \item \textbf{Real-Time OS Integration:} Port to FreeRTOS or similar
+    \item \textbf{Communication Protocols:} Add UART, SPI, I2C validation
+    \item \textbf{Bootloader Integration:} Custom bootloader for field updates
+    \item \textbf{Continuous Integration:} Automated testing with GitHub Actions
+\end{itemize}
+
+\subsection{Professional Development}
+\begin{itemize}
+    \item Study commercial embedded validation tools
+    \item Research industry standard build systems
+    \item Explore professional debugging tools (J-Link, etc.)
+    \item Investigate automated testing frameworks
+    \item Learn about embedded software certification standards
+\end{itemize}
+
+\section{Success Tips}
+
+\begin{itemize}
+    \item \textbf{Start Simple:} Get basic cross-compilation working first
+    \item \textbf{Test Incrementally:} Verify each module as you create it
+    \item \textbf{Use Version Control:} Commit working states frequently
+    \item \textbf{Document Everything:} Good documentation saves debugging time
+    \item \textbf{Plan the Architecture:} Think about interfaces before implementing
+    \item \textbf{Test on Hardware:} Don't assume simulation matches reality
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Welcome to embedded systems development!}\\
+\textit{You're now building professional-grade validation tools.}
+\end{center>
+
+\end{document>
+

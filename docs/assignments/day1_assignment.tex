@@ -1,0 +1,406 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 1 Assignment: C Fundamentals Lab}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 1 Assignment - C Fundamentals Lab},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 1 ASSIGNMENT}\\[0.5cm]
+    {\Large C Fundamentals and Compilation Lab}\\[0.3cm]
+    {\large Chip Parameter Validation System}\\[0.2cm]
+    {\normalsize Due: End of Day 1 + Homework Extension}
+\end{center}
+
+\vspace{1cm}
+
+\section{Assignment Overview}
+
+\subsection{Learning Objectives}
+By completing this assignment, you will:
+\begin{itemize}
+    \item Write C programs using variables, operators, and basic I/O
+    \item Compile programs using GCC with appropriate flags
+    \item Handle user input validation and error checking
+    \item Create validation programs relevant to post-silicon testing
+    \item Use GitHub for version control and submission
+\end{itemize}
+
+\subsection{Assignment Context}
+You will build a chip parameter validation system that simulates real-world post-silicon validation scenarios. This system will check voltage levels, calculate power consumption, and validate operating parameters against specifications.
+
+\section{Part 1: In-Class Lab (3.5 hours)}
+
+\subsection{Setup and Repository}
+\begin{enumerate}
+    \item Accept the GitHub Classroom assignment invitation
+    \item Clone your personal repository: \texttt{git clone [your-repo-url]}
+    \item Navigate to the project directory
+    \item Verify GCC installation: \texttt{gcc --version}
+\end{enumerate}
+
+\subsection{Task 1: Basic Voltage Validator (45 minutes)}
+
+\textbf{File:} \texttt{voltage\_validator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Prompt user for supply voltage input
+    \item Validate voltage is within acceptable range (1.8V - 3.6V)
+    \item Display clear PASS/FAIL results with explanations
+    \item Handle invalid input gracefully
+\end{itemize}
+
+\textbf{Starter Code Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+    // TODO: Declare variables for voltage and limits
+
+    // TODO: Display program header and instructions
+
+    // TODO: Get voltage input from user
+
+    // TODO: Validate voltage range
+
+    // TODO: Display results with clear messaging
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Expected Output Example:}
+\begin{verbatim}
+=== Chip Voltage Validator ===
+Enter supply voltage (V): 3.3
+Voltage: 3.30V
+Valid range: 1.8V - 3.6V
+Result: PASS - Voltage within acceptable range
+\end{verbatim}
+
+\subsection{Task 2: Power Consumption Calculator (45 minutes)}
+
+\textbf{File:} \texttt{power\_calculator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Input: voltage and current values
+    \item Calculate power consumption (P = V × I)
+    \item Validate power is within acceptable limits (< 5W)
+    \item Display power efficiency rating
+\end{itemize}
+
+\textbf{Power Efficiency Ratings:}
+\begin{itemize}
+    \item Excellent: < 1W
+    \item Good: 1W - 2W
+    \item Acceptable: 2W - 3W
+    \item High: 3W - 5W
+    \item Excessive: > 5W (FAIL)
+\end{itemize}
+
+\subsection{Task 3: Multi-Parameter Validator (60 minutes)}
+
+\textbf{File:} \texttt{chip\_validator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Combine voltage and power validation
+    \item Add temperature validation (< 85°C)
+    \item Add clock frequency validation (1MHz - 133MHz for RP2040)
+    \item Provide comprehensive pass/fail summary
+    \item Calculate and display overall system health score
+\end{itemize}
+
+\textbf{Health Score Calculation:}
+\begin{itemize}
+    \item Each parameter: 25 points if PASS, 0 if FAIL
+    \item Total possible: 100 points
+    \item Display percentage and grade (A: 90-100, B: 80-89, C: 70-79, F: <70)
+\end{itemize}
+
+\subsection{Task 4: Compilation and Testing (30 minutes)}
+
+\textbf{Compilation Requirements:}
+\begin{itemize}
+    \item Compile each program with: \texttt{gcc -Wall -g -std=c11 program.c -o program}
+    \item Fix all compiler warnings
+    \item Test with various input values
+    \item Document any issues in \texttt{TESTING.md}
+\end{itemize}
+
+\textbf{Test Cases to Verify:}
+\begin{enumerate}
+    \item Valid inputs within all ranges
+    \item Boundary values (exactly at limits)
+    \item Invalid inputs (out of range)
+    \item Edge cases (negative values, zero)
+    \item Non-numeric input handling
+\end{enumerate}
+
+\section{Part 2: Homework Extension (2 hours)}
+
+\subsection{Task 5: Enhanced Error Handling}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Add input validation for non-numeric entries
+    \item Implement retry mechanism for invalid inputs
+    \item Add range checking with specific error messages
+    \item Create user-friendly error recovery
+\end{itemize}
+
+\textbf{Example Enhanced Error Handling:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int get_valid_voltage(float *voltage) {
+    int attempts = 0;
+    const int max_attempts = 3;
+
+    while (attempts < max_attempts) {
+        printf("Enter supply voltage (1.8V - 3.6V): ");
+
+        if (scanf("%f", voltage) != 1) {
+            printf("Error: Please enter a valid number.\n");
+            // Clear input buffer
+            while (getchar() != '\n');
+        } else if (*voltage < 1.8 || *voltage > 3.6) {
+            printf("Error: Voltage %.2fV is out of range.\n", *voltage);
+        } else {
+            return 1; // Success
+        }
+
+        attempts++;
+        printf("Attempt %d of %d failed. ", attempts, max_attempts);
+        if (attempts < max_attempts) {
+            printf("Please try again.\n");
+        }
+    }
+
+    printf("Maximum attempts exceeded.\n");
+    return 0; // Failure
+}
+\end{lstlisting}
+
+\subsection{Task 6: Configuration File Support}
+
+\textbf{File:} \texttt{config\_validator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Read validation parameters from \texttt{config.txt}
+    \item Support customizable voltage, power, and temperature limits
+    \item Allow different chip profiles (RP2040, STM32, etc.)
+    \item Implement configuration file parsing
+\end{itemize}
+
+\textbf{Sample config.txt:}
+\begin{verbatim}
+# Chip Validation Configuration
+CHIP_TYPE=RP2040
+MIN_VOLTAGE=1.8
+MAX_VOLTAGE=3.6
+MAX_POWER=5.0
+MAX_TEMPERATURE=85.0
+MIN_FREQUENCY=1000000
+MAX_FREQUENCY=133000000
+\end{verbatim}
+
+\subsection{Task 7: Batch Testing Mode}
+
+\textbf{File:} \texttt{batch\_validator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Read test data from \texttt{test\_data.csv}
+    \item Process multiple chip measurements automatically
+    \item Generate summary statistics (pass rate, average values)
+    \item Output results to \texttt{results.txt}
+\end{itemize}
+
+\section{Submission Requirements}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Compilation:} All programs must compile without warnings
+    \item \textbf{Comments:} Clear, descriptive comments for all major sections
+    \item \textbf{Variable Names:} Descriptive names (e.g., \texttt{supply\_voltage} not \texttt{v})
+    \item \textbf{Formatting:} Consistent indentation and spacing
+    \item \textbf{Error Handling:} Robust input validation and error messages
+\end{itemize}
+
+\subsection{Documentation Requirements}
+\begin{itemize}
+    \item \textbf{README.md:} Project description, compilation instructions, usage examples
+    \item \textbf{TESTING.md:} Test cases, results, and any issues encountered
+    \item \textbf{Code Comments:} Inline documentation explaining logic
+\end{itemize}
+
+\subsection{GitHub Submission}
+\begin{enumerate}
+    \item Commit your work regularly with descriptive messages
+    \item Push all changes to your GitHub repository
+    \item Create a pull request with title "Day 1 Assignment Submission"
+    \item Include a summary of completed tasks in the PR description
+    \item Submit the PR URL via the course submission form
+\end{enumerate}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+Task 1: Basic Validator & 15 & Correct logic, proper I/O, compilation \\
+Task 2: Power Calculator & 15 & Accurate calculations, validation logic \\
+Task 3: Multi-Parameter & 20 & Integration, health scoring, comprehensive testing \\
+Task 4: Compilation & 10 & Clean compilation, proper GCC usage \\
+Task 5: Error Handling & 15 & Robust input validation, user experience \\
+Task 6: Configuration & 10 & File parsing, parameter customization \\
+Task 7: Batch Processing & 10 & Automation, statistics, file I/O \\
+Code Quality & 15 & Comments, style, variable naming \\
+Documentation & 10 & README, testing docs, clarity \\
+GitHub Usage & 5 & Commit quality, PR submission \\
+\hline
+\textbf{Total} & \textbf{125} & \textbf{Extra credit available for advanced features} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Grading Scale}
+\begin{itemize}
+    \item \textbf{A (90-100\%):} Exceptional work, all requirements met plus enhancements
+    \item \textbf{B (80-89\%):} Good work, most requirements met with minor issues
+    \item \textbf{C (70-79\%):} Satisfactory work, basic requirements met
+    \item \textbf{D (60-69\%):} Below expectations, significant issues or missing components
+    \item \textbf{F (<60\%):} Unsatisfactory, major requirements not met
+\end{itemize}
+
+\section{Getting Help}
+
+\subsection{During Lab Time}
+\begin{itemize}
+    \item Raise your hand for instructor or TA assistance
+    \item Work with your assigned pair programming partner
+    \item Use the class discussion board for questions
+    \item Collaborate with nearby teams (but submit individual work)
+\end{itemize}
+
+\subsection{For Homework}
+\begin{itemize}
+    \item Post questions in the course Slack channel
+    \item Attend virtual office hours (schedule TBD)
+    \item Review course materials and lecture slides
+    \item Use online C programming resources (document sources)
+\end{itemize}
+
+\subsection{Common Issues and Solutions}
+\begin{itemize}
+    \item \textbf{Compilation errors:} Check syntax, missing semicolons, header includes
+    \item \textbf{Input issues:} Use \texttt{scanf} return value checking, clear input buffer
+    \item \textbf{Logic errors:} Use printf debugging, trace through code manually
+    \item \textbf{Git issues:} Check file staging, commit messages, push status
+\end{itemize}
+
+\section{Extension Opportunities}
+
+\subsection{Advanced Features (Extra Credit)}
+\begin{itemize}
+    \item \textbf{Graphical Output:} ASCII charts showing parameter ranges
+    \item \textbf{Data Logging:} Timestamp and log all validation results
+    \item \textbf{Statistical Analysis:} Calculate mean, standard deviation of measurements
+    \item \textbf{Multi-Language Support:} Internationalization for error messages
+    \item \textbf{Unit Testing:} Automated test suite for validation functions
+\end{itemize}
+
+\subsection{Real-World Connections}
+\begin{itemize}
+    \item Research actual RP2040 specifications and compare to your limits
+    \item Investigate post-silicon validation practices in industry
+    \item Explore how validation tools are used in semiconductor companies
+    \item Connect with professionals in validation engineering roles
+\end{itemize}
+
+\section{Success Tips}
+
+\begin{itemize}
+    \item \textbf{Start Early:} Begin with the basic tasks and build complexity gradually
+    \item \textbf{Test Frequently:} Compile and test after each small change
+    \item \textbf{Read Carefully:} Pay attention to requirements and expected outputs
+    \item \textbf{Ask Questions:} Don't hesitate to seek help when stuck
+    \item \textbf{Document Everything:} Good documentation helps with debugging and grading
+    \item \textbf{Have Fun:} Enjoy the process of creating your first validation tools!
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Good luck with your first C programming assignment!}\\
+\textit{You're building the foundation for your validation engineering career.}
+\end{center}
+
+\end{document}
+

@@ -1,0 +1,361 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Course Registration Form}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{courseblue}{RGB}{0,102,204}
+\definecolor{formgray}{RGB}{240,240,240}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{courseblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=courseblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Course Registration Form},
+    pdfauthor={Course Administrator},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{courseblue} COURSE REGISTRATION}\\[0.5cm]
+    {\Large C Programming for Post-Silicon Validation Engineers}\\[0.3cm]
+    {\large 6-Day Intensive Bootcamp}\\[0.2cm]
+    {\normalsize Please complete all sections and submit by [DATE]}
+\end{center}
+
+\vspace{1cm}
+
+\section{Personal Information}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{formgray}
+\textbf{Field} & \textbf{Information} \\
+\hline
+Full Name & \rule{8cm}{0.4pt} \\
+\hline
+Email Address & \rule{8cm}{0.4pt} \\
+\hline
+Phone Number & \rule{8cm}{0.4pt} \\
+\hline
+Employee ID & \rule{8cm}{0.4pt} \\
+\hline
+Department & \rule{8cm}{0.4pt} \\
+\hline
+Manager Name & \rule{8cm}{0.4pt} \\
+\hline
+Manager Email & \rule{8cm}{0.4pt} \\
+\hline
+\end{tabular}
+
+\section{Background Information}
+
+\subsection{Educational Background}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Bachelor's degree in Engineering
+    \item[$\square$] Master's degree in Engineering
+    \item[$\square$] PhD in Engineering or related field
+    \item[$\square$] Other technical degree: \rule{5cm}{0.4pt}
+\end{itemize}
+
+\subsection{Current Role}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Hardware Engineer
+    \item[$\square$] Test Engineer
+    \item[$\square$] Validation Engineer
+    \item[$\square$] Design Engineer
+    \item[$\square$] Applications Engineer
+    \item[$\square$] Other: \rule{5cm}{0.4pt}
+\end{itemize}
+
+\subsection{Years of Experience}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] 0-2 years
+    \item[$\square$] 3-5 years
+    \item[$\square$] 6-10 years
+    \item[$\square$] 11-15 years
+    \item[$\square$] 16+ years
+\end{itemize}
+
+\section{Technical Background}
+
+\subsection{Programming Experience}
+\textbf{Rate your experience level (1=None, 5=Expert):}
+
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\rowcolor{formgray}
+\textbf{Language/Technology} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+\hline
+C Programming & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+C++ Programming & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+Python & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+MATLAB & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+Assembly Language & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+Embedded Systems & $\square$ & $\square$ & $\square$ & $\square$ & $\square$ \\
+\hline
+\end{tabular}
+
+\subsection{Development Tools Experience}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Command line/terminal usage
+    \item[$\square$] Git version control
+    \item[$\square$] GitHub
+    \item[$\square$] VS Code or similar IDE
+    \item[$\square$] Debugging tools (GDB, etc.)
+    \item[$\square$] Build systems (Make, CMake)
+\end{itemize}
+
+\subsection{Hardware Experience}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Digital circuit design
+    \item[$\square$] Microcontroller programming
+    \item[$\square$] FPGA development
+    \item[$\square$] PCB design
+    \item[$\square$] Test equipment usage (oscilloscope, logic analyzer)
+    \item[$\square$] Post-silicon validation
+\end{itemize}
+
+\section{Course Motivation and Goals}
+
+\subsection{Why are you taking this course?}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Career transition to validation engineering
+    \item[$\square$] Skill enhancement for current role
+    \item[$\square$] Preparation for new project assignment
+    \item[$\square$] Personal professional development
+    \item[$\square$] Manager recommendation
+    \item[$\square$] Other: \rule{5cm}{0.4pt}
+\end{itemize}
+
+\subsection{What do you hope to achieve?}
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+
+\subsection{How will you apply these skills?}
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+
+\section{Learning Preferences}
+
+\subsection{Preferred Learning Style}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Hands-on practice
+    \item[$\square$] Lecture and examples
+    \item[$\square$] Group collaboration
+    \item[$\square$] Individual study
+    \item[$\square$] Visual demonstrations
+    \item[$\square$] Reading documentation
+\end{itemize}
+
+\subsection{Collaboration Preference}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Prefer working alone
+    \item[$\square$] Enjoy pair programming
+    \item[$\square$] Like small group projects
+    \item[$\square$] Comfortable with any arrangement
+\end{itemize}
+
+\section{Technical Setup}
+
+\subsection{Development Environment}
+\textbf{Operating System:}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Windows 10/11
+    \item[$\square$] macOS (version: \rule{3cm}{0.4pt})
+    \item[$\square$] Linux (distribution: \rule{3cm}{0.4pt})
+\end{itemize}
+
+\textbf{Laptop Specifications:}
+\begin{itemize}
+    \item RAM: \rule{2cm}{0.4pt} GB
+    \item Storage: \rule{2cm}{0.4pt} GB available
+    \item Processor: \rule{4cm}{0.4pt}
+\end{itemize}
+
+\subsection{Pre-Course Setup}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] I have completed the development environment setup
+    \item[$\square$] I have verified all tools are working
+    \item[$\square$] I have a GitHub account
+    \item[$\square$] I have completed the Git tutorial
+    \item[$\square$] I need help with setup (will attend office hours)
+\end{itemize}
+
+\section{Accessibility and Special Needs}
+
+\subsection{Accommodations Needed}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] No special accommodations needed
+    \item[$\square$] Visual impairment accommodations
+    \item[$\square$] Hearing impairment accommodations
+    \item[$\square$] Mobility accommodations
+    \item[$\square$] Learning disability accommodations
+    \item[$\square$] Other: \rule{5cm}{0.4pt}
+\end{itemize}
+
+\textbf{Details (if applicable):}\\
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+
+\section{Schedule and Logistics}
+
+\subsection{Availability}
+\textbf{Course Dates:} [INSERT SPECIFIC DATES]\\
+\textbf{Time:} 9:00 AM - 5:00 PM daily\\
+\textbf{Location:} [INSERT LOCATION]
+
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] I can attend all 6 days
+    \item[$\square$] I have scheduling conflicts (please specify):
+\end{itemize}
+
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+
+\subsection{Transportation and Parking}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] I will drive (need parking)
+    \item[$\square$] I will use public transportation
+    \item[$\square$] I will walk/bike
+    \item[$\square$] Other: \rule{3cm}{0.4pt}
+\end{itemize}
+
+\section{Emergency Contact Information}
+
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{formgray}
+\textbf{Field} & \textbf{Information} \\
+\hline
+Emergency Contact Name & \rule{8cm}{0.4pt} \\
+\hline
+Relationship & \rule{8cm}{0.4pt} \\
+\hline
+Phone Number & \rule{8cm}{0.4pt} \\
+\hline
+Email Address & \rule{8cm}{0.4pt} \\
+\hline
+\end{tabular}
+
+\section{Agreement and Consent}
+
+\subsection{Course Policies}
+By registering for this course, I agree to:
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Attend all scheduled sessions
+    \item[$\square$] Complete pre-course setup requirements
+    \item[$\square$] Participate actively in labs and discussions
+    \item[$\square$] Follow the course code of conduct
+    \item[$\square$] Complete assignments and projects on time
+    \item[$\square$] Provide feedback for course improvement
+\end{itemize}
+
+\subsection{Photography and Recording}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] I consent to photography for course documentation
+    \item[$\square$] I consent to video recording for training purposes
+    \item[$\square$] I consent to use of my work in course materials
+    \item[$\square$] I do not consent to any recording or photography
+\end{itemize}
+
+\subsection{Data Usage}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] I consent to anonymous data collection for course improvement
+    \item[$\square$] I consent to follow-up surveys about course effectiveness
+    \item[$\square$] I consent to contact for alumni networking
+\end{itemize}
+
+\section{Additional Information}
+
+\subsection{Questions or Concerns}
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+\rule{\textwidth}{0.4pt}\\[0.3cm]
+
+\subsection{How did you hear about this course?}
+\begin{itemize}[leftmargin=0.5cm]
+    \item[$\square$] Manager recommendation
+    \item[$\square$] Colleague referral
+    \item[$\square$] Company training catalog
+    \item[$\square$] Internal email announcement
+    \item[$\square$] Professional network
+    \item[$\square$] Other: \rule{4cm}{0.4pt}
+\end{itemize}
+
+\section{Signature and Submission}
+
+\vspace{1cm}
+
+\textbf{Participant Signature:} \rule{6cm}{0.4pt} \textbf{Date:} \rule{3cm}{0.4pt}
+
+\vspace{0.5cm}
+
+\textbf{Print Name:} \rule{6cm}{0.4pt}
+
+\vspace{1cm}
+
+\textbf{Manager Approval:} \rule{6cm}{0.4pt} \textbf{Date:} \rule{3cm}{0.4pt}
+
+\vspace{0.5cm}
+
+\textbf{Manager Print Name:} \rule{6cm}{0.4pt}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Submission Instructions}\\
+\textit{Please submit completed form to: [training@company.com]}\\
+\textit{Or deliver to: [Training Department, Building X, Room Y]}\\
+\textit{Deadline: [DATE] - Late registrations subject to availability}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+\textbf{For Office Use Only}\\
+\begin{tabular}{|l|l|}
+\hline
+Registration Date: & \rule{3cm}{0.4pt} \\
+\hline
+Processed By: & \rule{3cm}{0.4pt} \\
+\hline
+Cohort Assignment: & \rule{3cm}{0.4pt} \\
+\hline
+Setup Verified: & \rule{3cm}{0.4pt} \\
+\hline
+\end{tabular}
+\end{center>
+
+\end{document}
+

@@ -1,0 +1,620 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+% Page setup
+\geometry{margin=1in}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Development Environment Setup Guide}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+\definecolor{warningred}{RGB}{220,20,60}
+\definecolor{successgreen}{RGB}{34,139,34}
+
+% Code listing style
+\lstdefinestyle{bashstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=bashstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Development Environment Setup Guide},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DEVELOPMENT ENVIRONMENT}\\[0.3cm]
+    {\Huge\bfseries\color{codeblue} SETUP GUIDE}\\[0.5cm]
+    {\Large C Programming for Post-Silicon Validation Engineers}\\[0.3cm]
+    {\large Complete Installation and Configuration Instructions}\\[0.2cm]
+    {\normalsize Version 1.0 - 2025}
+\end{center}
+
+\vspace{1cm}
+
+\section{Overview}
+
+This guide provides step-by-step instructions for setting up your development environment for the 6-day C programming course. You must complete this setup \textbf{one week before} the course begins.
+
+\subsection{What You'll Install}
+\begin{itemize}
+    \item \textbf{GCC Compiler:} Native C compiler for desktop development
+    \item \textbf{ARM Cross-Compiler:} For RP2040 embedded development
+    \item \textbf{CMake:} Build system for managing complex projects
+    \item \textbf{Git:} Version control system
+    \item \textbf{VS Code:} Primary development environment
+    \item \textbf{Raspberry Pi Pico SDK:} Embedded development framework
+    \item \textbf{GDB:} Debugger for troubleshooting code
+    \item \textbf{Python 3:} For build scripts and utilities
+\end{itemize}
+
+\subsection{Time Required}
+\begin{itemize}
+    \item \textbf{Windows:} 2-3 hours
+    \item \textbf{macOS:} 1-2 hours
+    \item \textbf{Linux:} 30-60 minutes
+\end{itemize}
+
+\section{Pre-Installation Checklist}
+
+\subsection{System Requirements}
+\begin{itemize}
+    \item \textbf{Operating System:} Windows 10/11, macOS 10.15+, or Linux (Ubuntu 20.04+ recommended)
+    \item \textbf{RAM:} Minimum 4GB, recommended 8GB+
+    \item \textbf{Storage:} At least 5GB free space
+    \item \textbf{Internet:} Stable connection for downloads
+    \item \textbf{Administrator Access:} Required for software installation
+\end{itemize}
+
+\subsection{Before You Begin}
+\begin{itemize}
+    \item Close all unnecessary applications
+    \item Disable antivirus temporarily (if it interferes with installation)
+    \item Have your GitHub account ready (create one at \url{https://github.com} if needed)
+    \item Ensure you have administrator/sudo privileges
+\end{itemize}
+
+\section{Windows Installation}
+
+\subsection{Step 1: Install MSYS2}
+MSYS2 provides a Unix-like environment on Windows with package management.
+
+\begin{enumerate}
+    \item Download MSYS2 from \url{https://www.msys2.org/}
+    \item Run the installer and follow the default installation path: \texttt{C:\textbackslash msys64}
+    \item After installation, open MSYS2 terminal
+    \item Update the package database:
+\end{enumerate}
+
+\begin{lstlisting}[language=bash]
+pacman -Syu
+\end{lstlisting}
+
+\textbf{Note:} The terminal may close after the first update. Reopen it and run the command again.
+
+\subsection{Step 2: Install Development Tools}
+Install the essential development tools through MSYS2:
+
+\begin{lstlisting}[language=bash]
+# Install base development tools
+pacman -S mingw-w64-x86_64-gcc
+pacman -S mingw-w64-x86_64-gdb
+pacman -S mingw-w64-x86_64-cmake
+pacman -S git
+pacman -S make
+
+# Install ARM cross-compiler
+pacman -S mingw-w64-x86_64-arm-none-eabi-gcc
+pacman -S mingw-w64-x86_64-arm-none-eabi-gdb
+
+# Install Python
+pacman -S mingw-w64-x86_64-python
+pacman -S mingw-w64-x86_64-python-pip
+\end{lstlisting}
+
+\subsection{Step 3: Configure Environment Variables}
+Add MSYS2 tools to your Windows PATH:
+
+\begin{enumerate}
+    \item Open Windows Settings → System → About → Advanced System Settings
+    \item Click "Environment Variables"
+    \item Under "System Variables," find and edit "Path"
+    \item Add these paths (adjust if you installed MSYS2 elsewhere):
+    \begin{itemize}
+        \item \texttt{C:\textbackslash msys64\textbackslash mingw64\textbackslash bin}
+        \item \texttt{C:\textbackslash msys64\textbackslash usr\textbackslash bin}
+    \end{itemize}
+    \item Click OK to save changes
+    \item Restart your computer
+\end{enumerate}
+
+\subsection{Step 4: Install VS Code}
+\begin{enumerate}
+    \item Download VS Code from \url{https://code.visualstudio.com/}
+    \item Run the installer with default settings
+    \item Launch VS Code and install these extensions:
+    \begin{itemize}
+        \item C/C++ (Microsoft)
+        \item CMake Tools (Microsoft)
+        \item GitLens (GitKraken)
+        \item Raspberry Pi Pico (Raspberry Pi Foundation)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Step 5: Install Raspberry Pi Pico SDK}
+\begin{enumerate}
+    \item Open Command Prompt or PowerShell as Administrator
+    \item Navigate to your development directory (e.g., \texttt{C:\textbackslash dev})
+    \item Clone the Pico SDK:
+\end{enumerate}
+
+\begin{lstlisting}[language=bash]
+git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+\end{lstlisting}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item Set the PICO\_SDK\_PATH environment variable:
+    \begin{itemize}
+        \item Go to Environment Variables (as in Step 3)
+        \item Create a new System Variable:
+        \item Name: \texttt{PICO\_SDK\_PATH}
+        \item Value: \texttt{C:\textbackslash dev\textbackslash pico-sdk} (adjust path as needed)
+    \end{itemize}
+\end{enumerate}
+
+\section{macOS Installation}
+
+\subsection{Step 1: Install Homebrew}
+Homebrew is the package manager for macOS:
+
+\begin{lstlisting}[language=bash]
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+\end{lstlisting}
+
+Follow the on-screen instructions to add Homebrew to your PATH.
+
+\subsection{Step 2: Install Development Tools}
+\begin{lstlisting}[language=bash]
+# Install essential tools
+brew install gcc
+brew install cmake
+brew install git
+brew install python3
+
+# Install ARM cross-compiler
+brew install --cask gcc-arm-embedded
+
+# Alternative ARM toolchain (if above doesn't work)
+brew tap ArmMbed/homebrew-formulae
+brew install arm-none-eabi-gcc
+\end{lstlisting}
+
+\subsection{Step 3: Install VS Code}
+\begin{lstlisting}[language=bash]
+brew install --cask visual-studio-code
+\end{lstlisting}
+
+Or download directly from \url{https://code.visualstudio.com/}
+
+Install the same extensions as listed in the Windows section.
+
+\subsection{Step 4: Install Raspberry Pi Pico SDK}
+\begin{lstlisting}[language=bash]
+# Navigate to your development directory
+cd ~/Development  # or wherever you keep projects
+mkdir -p ~/Development  # create if it doesn't exist
+
+# Clone the Pico SDK
+git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+
+# Set environment variable
+echo 'export PICO_SDK_PATH=~/Development/pico-sdk' >> ~/.zshrc
+# For bash users, use ~/.bash_profile instead of ~/.zshrc
+
+# Reload your shell configuration
+source ~/.zshrc  # or source ~/.bash_profile
+\end{lstlisting}
+
+\section{Linux Installation (Ubuntu/Debian)}
+
+\subsection{Step 1: Update System}
+\begin{lstlisting}[language=bash]
+sudo apt update
+sudo apt upgrade -y
+\end{lstlisting}
+
+\subsection{Step 2: Install Development Tools}
+\begin{lstlisting}[language=bash]
+# Install essential development tools
+sudo apt install -y build-essential gcc gdb cmake git python3 python3-pip
+
+# Install ARM cross-compiler
+sudo apt install -y gcc-arm-none-eabi gdb-arm-none-eabi
+
+# Install additional utilities
+sudo apt install -y curl wget unzip
+\end{lstlisting}
+
+\subsection{Step 3: Install VS Code}
+\textbf{Option 1: Using Snap (Recommended)}
+\begin{lstlisting}[language=bash]
+sudo snap install code --classic
+\end{lstlisting}
+
+\textbf{Option 2: Using APT Repository}
+\begin{lstlisting}[language=bash]
+# Add Microsoft GPG key and repository
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+
+# Install VS Code
+sudo apt update
+sudo apt install code
+\end{lstlisting}
+
+\subsection{Step 4: Install Raspberry Pi Pico SDK}
+\begin{lstlisting}[language=bash]
+# Navigate to your development directory
+cd ~/Development
+mkdir -p ~/Development  # create if it doesn't exist
+
+# Clone the Pico SDK
+git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+
+# Set environment variable
+echo 'export PICO_SDK_PATH=~/Development/pico-sdk' >> ~/.bashrc
+source ~/.bashrc
+\end{lstlisting}
+
+\section{Verification and Testing}
+
+\subsection{Step 1: Verify Tool Installation}
+Open a terminal/command prompt and run these commands to verify installation:
+
+\begin{lstlisting}[language=bash]
+# Check GCC
+gcc --version
+# Expected: gcc (GCC) 11.x.x or newer
+
+# Check ARM cross-compiler
+arm-none-eabi-gcc --version
+# Expected: arm-none-eabi-gcc (GNU Arm Embedded Toolchain) 10.x.x or newer
+
+# Check CMake
+cmake --version
+# Expected: cmake version 3.13.x or newer
+
+# Check Git
+git --version
+# Expected: git version 2.x.x
+
+# Check Python
+python3 --version
+# Expected: Python 3.8.x or newer
+
+# Check GDB
+gdb --version
+# Expected: GNU gdb (GDB) 10.x.x or newer
+
+# Check Pico SDK
+echo $PICO_SDK_PATH
+# Expected: Path to your pico-sdk directory
+\end{lstlisting}
+
+\subsection{Step 2: Test Basic Compilation}
+Create a test program to verify your setup:
+
+\begin{lstlisting}[language=bash]
+# Create a test directory
+mkdir ~/test-setup
+cd ~/test-setup
+
+# Create a simple C program
+cat > hello.c << 'EOF'
+#include <stdio.h>
+
+int main() {
+    printf("Hello, Validation World!\n");
+    printf("GCC is working correctly!\n");
+    return 0;
+}
+EOF
+
+# Compile and run the program
+gcc -Wall -g hello.c -o hello
+./hello
+\end{lstlisting}
+
+\textbf{Expected Output:}
+\begin{verbatim}
+Hello, Validation World!
+GCC is working correctly!
+\end{verbatim}
+
+\subsection{Step 3: Test Cross-Compilation}
+Test ARM cross-compilation with a simple Pico program:
+
+\begin{lstlisting}[language=bash]
+# Create a simple Pico program
+cat > pico_test.c << 'EOF'
+#include "pico/stdlib.h"
+
+int main() {
+    stdio_init_all();
+    printf("Pico SDK is working!\n");
+    return 0;
+}
+EOF
+
+# Create a basic CMakeLists.txt
+cat > CMakeLists.txt << 'EOF'
+cmake_minimum_required(VERSION 3.13)
+include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+project(pico_test C CXX ASM)
+set(CMAKE_C_STANDARD 11)
+pico_sdk_init()
+add_executable(pico_test pico_test.c)
+target_link_libraries(pico_test pico_stdlib)
+pico_enable_stdio_usb(pico_test 1)
+pico_add_extra_outputs(pico_test)
+EOF
+
+# Build the project
+mkdir build
+cd build
+cmake ..
+make
+\end{lstlisting}
+
+If successful, you should see a \texttt{pico\_test.uf2} file in the build directory.
+
+\section{VS Code Configuration}
+
+\subsection{Configure C/C++ Extension}
+\begin{enumerate}
+    \item Open VS Code
+    \item Press \texttt{Ctrl+Shift+P} (or \texttt{Cmd+Shift+P} on macOS)
+    \item Type "C/C++: Edit Configurations (UI)"
+    \item Set the following:
+    \begin{itemize}
+        \item \textbf{Compiler path:} Path to your gcc executable
+        \item \textbf{IntelliSense mode:} gcc-x64 (or appropriate for your system)
+        \item \textbf{C standard:} c11
+        \item \textbf{C++ standard:} c++17
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Configure CMake Extension}
+\begin{enumerate}
+    \item Open the Command Palette (\texttt{Ctrl+Shift+P})
+    \item Type "CMake: Configure"
+    \item Select your compiler when prompted
+    \item The extension should automatically detect your CMake installation
+\end{enumerate}
+
+\subsection{Recommended VS Code Settings}
+Create a \texttt{.vscode/settings.json} file in your project directory:
+
+\begin{lstlisting}
+{
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
+}
+\end{lstlisting}
+
+\section{GitHub Setup}
+
+\subsection{Configure Git}
+Set up your Git identity:
+
+\begin{lstlisting}[language=bash]
+git config --global user.name "Your Full Name"
+git config --global user.email "your.email@example.com"
+git config --global init.defaultBranch main
+\end{lstlisting}
+
+\subsection{SSH Key Setup (Recommended)}
+\begin{lstlisting}[language=bash]
+# Generate SSH key
+ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# Start SSH agent
+eval "$(ssh-agent -s)"
+
+# Add key to agent
+ssh-add ~/.ssh/id_ed25519
+
+# Copy public key to clipboard
+# On Linux/macOS:
+cat ~/.ssh/id_ed25519.pub
+# On Windows (in Git Bash):
+clip < ~/.ssh/id_ed25519.pub
+\end{lstlisting}
+
+\begin{enumerate}
+    \item Go to GitHub.com → Settings → SSH and GPG keys
+    \item Click "New SSH key"
+    \item Paste your public key and save
+    \item Test the connection: \texttt{ssh -T git@github.com}
+\end{enumerate}
+
+\section{Troubleshooting}
+
+\subsection{Common Issues and Solutions}
+
+\subsubsection{Windows: "gcc not found" or "command not recognized"}
+\textbf{Problem:} PATH environment variable not set correctly.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Verify MSYS2 installation paths are in your system PATH
+    \item Restart your computer after changing PATH
+    \item Open a new command prompt/PowerShell window
+    \item Try running commands from MSYS2 terminal instead
+\end{enumerate}
+
+\subsubsection{macOS: "xcrun: error: invalid active developer path"}
+\textbf{Problem:} Xcode command line tools not installed.
+
+\textbf{Solution:}
+\begin{lstlisting}[language=bash]
+xcode-select --install
+\end{lstlisting}
+
+\subsubsection{Linux: "arm-none-eabi-gcc: command not found"}
+\textbf{Problem:} ARM toolchain not installed or not in PATH.
+
+\textbf{Solution:}
+\begin{lstlisting}[language=bash]
+# Try alternative installation method
+sudo apt remove gcc-arm-none-eabi
+wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+tar -xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+sudo mv gcc-arm-none-eabi-10.3-2021.10 /opt/
+echo 'export PATH=/opt/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+\end{lstlisting}
+
+\subsubsection{CMake: "Could not find PICO\_SDK\_PATH"}
+\textbf{Problem:} Environment variable not set or not accessible.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Verify the Pico SDK was cloned with \texttt{--recursive} flag
+    \item Check that PICO\_SDK\_PATH points to the correct directory
+    \item Restart your terminal/IDE after setting the environment variable
+    \item On Windows, ensure you set it as a System variable, not User variable
+\end{enumerate}
+
+\subsubsection{VS Code: IntelliSense not working}
+\textbf{Problem:} C/C++ extension not configured properly.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Press \texttt{Ctrl+Shift+P} and run "C/C++: Reset IntelliSense Database"
+    \item Check that compiler path is correct in \texttt{c\_cpp\_properties.json}
+    \item Ensure include paths are set correctly
+    \item Reload VS Code window
+\end{enumerate}
+
+\subsection{Getting Help}
+
+If you encounter issues not covered here:
+
+\begin{enumerate}
+    \item Check the course discussion forum/Slack channel
+    \item Search for error messages online (Stack Overflow, GitHub issues)
+    \item Contact the course instructors with:
+    \begin{itemize}
+        \item Your operating system and version
+        \item Complete error messages
+        \item Steps you've already tried
+        \item Screenshots if applicable
+    \end{itemize}
+    \item Attend pre-course office hours (if available)
+\end{enumerate}
+
+\section{Final Verification Checklist}
+
+Before the course begins, ensure you can complete all these tasks:
+
+\begin{itemize}
+    \item[$\square$] All tools show correct version numbers when checked
+    \item[$\square$] Simple C program compiles and runs successfully
+    \item[$\square$] ARM cross-compilation produces .uf2 file for Pico
+    \item[$\square$] VS Code opens and recognizes C files with syntax highlighting
+    \item[$\square$] Git is configured with your name and email
+    \item[$\square$] GitHub SSH key is set up and working
+    \item[$\square$] CMake can configure a simple project
+    \item[$\square$] GDB can be launched (even if you don't know how to use it yet)
+    \item[$\square$] PICO\_SDK\_PATH environment variable is set correctly
+    \item[$\square$] You can create, edit, and save files in your development directory
+\end{itemize}
+
+\section{What's Next?}
+
+\subsection{Pre-Course Preparation}
+\begin{enumerate}
+    \item Complete the Git tutorial: \url{https://learngitbranching.js.org/}
+    \item Watch CS50 C introduction videos (first 2 lectures)
+    \item Read the Pico SDK "Getting Started" guide
+    \item Familiarize yourself with VS Code interface
+    \item Join the course communication channels
+\end{enumerate}
+
+\subsection{Day 1 Preparation}
+\begin{itemize}
+    \item Bring your laptop with all tools installed and verified
+    \item Have your GitHub account credentials ready
+    \item Ensure your development environment is working
+    \item Bring a notebook for taking notes
+    \item Come ready to learn and collaborate!
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Congratulations on completing the setup!}\\
+\textit{You're now ready to begin your journey into C programming and embedded validation.}\\
+\textbf{See you on Day 1!}
+\end{center}
+
+\end{document}
+

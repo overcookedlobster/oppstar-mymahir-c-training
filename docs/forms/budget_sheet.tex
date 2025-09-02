@@ -1,0 +1,557 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Course Budget Analysis}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{courseblue}{RGB}{0,102,204}
+\definecolor{coursegreen}{RGB}{34,139,34}
+\definecolor{coursered}{RGB}{220,20,60}
+\definecolor{courseorange}{RGB}{255,140,0}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{courseblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=courseblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Course Budget Analysis},
+    pdfauthor={Course Administrator},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{courseblue} BUDGET ANALYSIS}\\[0.5cm]
+    {\Large C Programming for Post-Silicon Validation Engineers}\\[0.3cm]
+    {\large 6-Day Intensive Bootcamp - Financial Planning}\\[0.2cm]
+    {\normalsize Comprehensive Cost Analysis and ROI Projections}
+\end{center}
+
+\vspace{1cm}
+
+\section{Executive Summary}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+% Key metrics boxes
+\draw[fill=coursegreen!20, thick] (0,0) rectangle (3,2);
+\node at (1.5,1.5) {\textbf{Setup Cost}};
+\node at (1.5,1) {\textbf{\$8,150}};
+\node at (1.5,0.5) {\textbf{One-time}};
+
+\draw[fill=courseblue!20, thick] (4,0) rectangle (7,2);
+\node at (5.5,1.5) {\textbf{Per Cohort}};
+\node at (5.5,1) {\textbf{\$4,700}};
+\node at (5.5,0.5) {\textbf{Operating}};
+
+\draw[fill=courseorange!20, thick] (8,0) rectangle (11,2);
+\node at (9.5,1.5) {\textbf{Revenue}};
+\node at (9.5,1) {\textbf{\$50,000}};
+\node at (9.5,0.5) {\textbf{Per Cohort}};
+
+\draw[fill=coursered!20, thick] (4,2.5) rectangle (7,4.5);
+\node at (5.5,4) {\textbf{Profit Margin}};
+\node at (5.5,3.5) {\textbf{90.6\%}};
+\node at (5.5,3) {\textbf{Per Cohort}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Key Financial Highlights:}
+\begin{itemize}
+    \item \textbf{Break-even:} Achieved after first cohort
+    \item \textbf{ROI:} 965\% return on investment
+    \item \textbf{Scalability:} High profit margins enable rapid expansion
+    \item \textbf{Low Risk:} Minimal upfront investment required
+\end{itemize}
+
+\section{One-Time Setup Costs}
+
+\subsection{Hardware and Equipment}
+
+\begin{center}
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Item} & \textbf{Quantity} & \textbf{Unit Cost} & \textbf{Total Cost} & \textbf{Notes} \\
+\hline
+Raspberry Pi Pico & 25 & \$4.00 & \$100.00 & 20 + 5 spares \\
+\hline
+USB-A to Micro-USB Cables & 25 & \$2.00 & \$50.00 & Data cables \\
+\hline
+Breadboards (mini) & 20 & \$3.00 & \$60.00 & Optional for advanced projects \\
+\hline
+Jumper Wires & 20 sets & \$2.00 & \$40.00 & Male-to-male, various lengths \\
+\hline
+LEDs and Resistors & 20 kits & \$5.00 & \$100.00 & Basic components \\
+\hline
+Storage Case & 2 & \$25.00 & \$50.00 & Organized hardware storage \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Hardware Subtotal} & & & \textbf{\$400.00} & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Curriculum Development}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Component} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Curriculum Design & \$2,000 & Subject matter expert, 40 hours \\
+\hline
+Content Creation & \$1,500 & Slides, labs, examples development \\
+\hline
+GitHub Classroom Setup & \$500 & Repository templates, auto-grading \\
+\hline
+Documentation & \$800 & Manuals, guides, troubleshooting \\
+\hline
+Video Content & \$200 & Setup tutorials, demonstrations \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Curriculum Subtotal} & \textbf{\$5,000} & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Instructor Training and Certification}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Component} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Lead Instructor Training & \$1,200 & 3-day intensive preparation \\
+\hline
+TA Training & \$600 & 1.5-day preparation for 2 TAs \\
+\hline
+Certification Materials & \$200 & Assessment tools, standards \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Training Subtotal} & \textbf{\$2,000} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Platform and Infrastructure}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Component} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Learning Management System & \$500 & Setup and configuration \\
+\hline
+GitHub Organization & \$0 & Free for educational use \\
+\hline
+Communication Platform & \$200 & Slack workspace setup \\
+\hline
+Assessment Tools & \$300 & Quiz platform, analytics \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Platform Subtotal} & \textbf{\$1,000} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Marketing and Launch}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Component} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Marketing Materials & \$300 & Brochures, website content \\
+\hline
+Launch Event & \$200 & Promotional activities \\
+\hline
+Initial Advertising & \$250 & Internal promotion, announcements \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Marketing Subtotal} & \textbf{\$750} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{coursered!20}
+\textbf{TOTAL SETUP COSTS} & \textbf{\$8,150} \\
+\hline
+\end{tabular}
+\end{center>
+
+\section{Per-Cohort Operating Costs}
+
+\subsection{Personnel Costs}
+
+\begin{center}
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Role} & \textbf{Days} & \textbf{Daily Rate} & \textbf{Total} & \textbf{Notes} \\
+\hline
+Lead Instructor & 6 & \$400 & \$2,400 & Including prep time \\
+\hline
+Teaching Assistant 1 & 6 & \$200 & \$1,200 & Technical support \\
+\hline
+Teaching Assistant 2 & 6 & \$200 & \$1,200 & Lab assistance \\
+\hline
+Course Coordinator & 2 & \$300 & \$600 & Admin, logistics \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Personnel Subtotal} & & & \textbf{\$5,400} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Materials and Supplies}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Item} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Printed Materials & \$100 & Handouts, reference cards \\
+\hline
+Consumables & \$50 & Replacement components, cables \\
+\hline
+Refreshments & \$150 & Coffee, snacks for 6 days \\
+\hline
+Certificates & \$30 & Professional completion certificates \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Materials Subtotal} & \textbf{\$330} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Facility and Equipment}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Item} & \textbf{Cost} & \textbf{Description} \\
+\hline
+Classroom Rental & \$600 & 6 days @ \$100/day \\
+\hline
+A/V Equipment & \$200 & Projector, screens, adapters \\
+\hline
+Power/Networking & \$100 & Extension cords, WiFi setup \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Facility Subtotal} & \textbf{\$900} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{coursered!20}
+\textbf{TOTAL OPERATING COSTS} & \textbf{\$6,630} \\
+\hline
+\end{tabular}
+\end{center>
+
+\section{Revenue Model}
+
+\subsection{Pricing Strategy}
+
+\begin{center}
+\begin{tabular}{|l|r|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Component} & \textbf{Amount} & \textbf{Justification} \\
+\hline
+Base Course Fee & \$2,000 & Competitive with industry bootcamps \\
+\hline
+Materials Fee & \$200 & Hardware kit (student keeps) \\
+\hline
+Certification Fee & \$100 & Professional credential \\
+\hline
+Extended Support & \$200 & 4-week post-course mentoring \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Total per Participant} & \textbf{\$2,500} & \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Revenue Calculation}
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Participants per Cohort} & \textbf{20} \\
+\hline
+Price per Participant & \$2,500 \\
+\hline
+\rowcolor{coursered!20}
+\textbf{Revenue per Cohort} & \textbf{\$50,000} \\
+\hline
+\end{tabular}
+\end{center>
+
+\section{Profitability Analysis}
+
+\subsection{Per-Cohort Profit Calculation}
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{courseblue!20}
+Revenue per Cohort & \$50,000 \\
+\hline
+Operating Costs per Cohort & \$6,630 \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Gross Profit per Cohort} & \textbf{\$43,370} \\
+\hline
+\textbf{Profit Margin} & \textbf{86.7\%} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Break-Even Analysis}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\begin{axis}[
+    xlabel={Number of Cohorts},
+    ylabel={Cumulative Profit (\$)},
+    xmin=0, xmax=5,
+    ymin=-10000, ymax=200000,
+    xtick={0,1,2,3,4,5},
+    ytick={-10000,0,50000,100000,150000,200000},
+    legend pos=north west,
+    grid=major,
+]
+
+% Setup cost line
+\addplot[color=coursered, thick, dashed] coordinates {(0,-8150) (5,-8150)};
+\addlegendentry{Setup Costs}
+
+% Revenue line
+\addplot[color=courseblue, thick] coordinates {(0,0) (1,50000) (2,100000) (3,150000) (4,200000) (5,250000)};
+\addlegendentry{Cumulative Revenue}
+
+% Cost line
+\addplot[color=courseorange, thick] coordinates {(0,8150) (1,14780) (2,21410) (3,28040) (4,34670) (5,41300)};
+\addlegendentry{Cumulative Costs}
+
+% Profit line
+\addplot[color=coursegreen, thick] coordinates {(0,-8150) (1,35220) (2,78590) (3,121960) (4,165330) (5,208700)};
+\addlegendentry{Net Profit}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\textbf{Break-even Point:} After 1 cohort (immediate profitability)
+
+\section{Annual Projections}
+
+\subsection{Conservative Scenario (6 Cohorts/Year)}
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Metric} & \textbf{Annual Value} \\
+\hline
+Number of Cohorts & 6 \\
+\hline
+Total Participants & 120 \\
+\hline
+Total Revenue & \$300,000 \\
+\hline
+Total Operating Costs & \$39,780 \\
+\hline
+Setup Costs (Year 1 only) & \$8,150 \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Net Profit (Year 1)} & \textbf{\$252,070} \\
+\hline
+\textbf{Net Profit (Year 2+)} & \textbf{\$260,220} \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Optimistic Scenario (12 Cohorts/Year)}
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Metric} & \textbf{Annual Value} \\
+\hline
+Number of Cohorts & 12 \\
+\hline
+Total Participants & 240 \\
+\hline
+Total Revenue & \$600,000 \\
+\hline
+Total Operating Costs & \$79,560 \\
+\hline
+Setup Costs (Year 1 only) & \$8,150 \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Net Profit (Year 1)} & \textbf{\$512,290} \\
+\hline
+\textbf{Net Profit (Year 2+)} & \textbf{\$520,440} \\
+\hline
+\end{tabular}
+\end{center>
+
+\section{Cost Optimization Opportunities}
+
+\subsection{Economies of Scale}
+
+\begin{center}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Cost Category} & \textbf{Current} & \textbf{Optimized} & \textbf{Savings} \\
+\hline
+Hardware (bulk purchase) & \$400 & \$300 & \$100 \\
+\hline
+Facility (annual contract) & \$600/cohort & \$400/cohort & \$200/cohort \\
+\hline
+Materials (bulk printing) & \$100/cohort & \$60/cohort & \$40/cohort \\
+\hline
+\rowcolor{coursegreen!20}
+\textbf{Total Savings} & & & \textbf{\$340/cohort} \\
+\hline
+\end{tabular}
+\end{center>
+
+\subsection{Revenue Enhancement}
+
+\begin{itemize}
+    \item \textbf{Corporate Packages:} \$45,000 for 20-person cohort (10\% discount)
+    \item \textbf{Advanced Modules:} \$1,000 additional per participant
+    \item \textbf{Certification Renewal:} \$200 annually
+    \item \textbf{Train-the-Trainer:} \$5,000 per corporate trainer
+\end{itemize}
+
+\section{Risk Analysis}
+
+\subsection{Financial Risks}
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{courseblue!20}
+\textbf{Risk} & \textbf{Probability} & \textbf{Impact} & \textbf{Mitigation} \\
+\hline
+Low Enrollment & Medium & High & Marketing, pricing flexibility \\
+\hline
+Instructor Unavailability & Low & Medium & Backup instructor training \\
+\hline
+Hardware Costs Increase & Low & Low & Bulk purchasing, alternatives \\
+\hline
+Competition & Medium & Medium & Unique positioning, quality \\
+\hline
+Economic Downturn & Low & High & Corporate partnerships \\
+\hline
+\end{tabular>
+\end{center>
+
+\subsection{Sensitivity Analysis}
+
+\textbf{Break-even enrollment per cohort:} 7 participants\\
+\textbf{Current enrollment target:} 20 participants\\
+\textbf{Safety margin:} 185\% above break-even
+
+\section{Investment Recommendations}
+
+\subsection{Phase 1: Pilot Program}
+\textbf{Investment Required:} \$8,150\\
+\textbf{Timeline:} 6 weeks\\
+\textbf{Expected ROI:} 965\% after first cohort
+
+\subsection{Phase 2: Scale-Up}
+\textbf{Additional Investment:} \$15,000\\
+\textbf{Purpose:} Second instructor, expanded capacity\\
+\textbf{Capacity Increase:} 100\% (double cohort frequency)
+
+\subsection{Phase 3: Expansion}
+\textbf{Additional Investment:} \$25,000\\
+\textbf{Purpose:} Advanced modules, corporate programs\\
+\textbf{Revenue Increase:} 50\% premium pricing
+
+\section{Conclusion and Recommendations}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+% ROI visualization
+\draw[fill=coursegreen!30] (0,0) rectangle (8,3);
+\node at (4,2.5) {\textbf{STRONG FINANCIAL CASE}};
+\node at (4,2) {\textbf{High ROI, Low Risk, Scalable}};
+\node at (4,1.5) {\textbf{Immediate Profitability}};
+\node at (4,1) {\textbf{Strategic Value Creation}};
+\node at (4,0.5) {\textbf{Competitive Advantage}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Key Recommendations:}
+
+\begin{enumerate}
+    \item \textbf{Approve Immediate Launch:} Strong financial fundamentals support immediate program launch
+    \item \textbf{Start Conservative:} Begin with 6 cohorts/year, scale based on demand
+    \item \textbf{Invest in Quality:} High-quality delivery ensures premium pricing sustainability
+    \item \textbf{Plan for Scale:} Prepare infrastructure for rapid expansion
+    \item \textbf{Monitor Metrics:} Track enrollment, satisfaction, and career outcomes
+\end{enumerate}
+
+\textbf{Financial Summary:}
+\begin{itemize}
+    \item \textbf{Payback Period:} 1 cohort (6 weeks)
+    \item \textbf{3-Year NPV:} \$1.2M+ (conservative scenario)
+    \item \textbf{Strategic Value:} Enhanced team capabilities, competitive advantage
+    \item \textbf{Risk Level:} Low (high margins, proven demand)
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{This program represents an exceptional investment opportunity}\\
+\textit{combining strong financial returns with strategic workforce development.}
+\end{center>
+
+\end{document}
+

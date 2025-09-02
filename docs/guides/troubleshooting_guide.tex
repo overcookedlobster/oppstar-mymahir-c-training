@@ -1,0 +1,720 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+
+% Page setup
+\geometry{margin=1in}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Troubleshooting Guide}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+\definecolor{warningred}{RGB}{220,20,60}
+\definecolor{successgreen}{RGB}{34,139,34}
+
+% Code listing style
+\lstdefinestyle{bashstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=bashstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Troubleshooting Guide},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} TROUBLESHOOTING GUIDE}\\[0.5cm]
+    {\Large C Programming for Post-Silicon Validation Engineers}\\[0.3cm]
+    {\large Common Issues and Solutions}\\[0.2cm]
+    {\normalsize Quick Reference for Students and Instructors}
+\end{center}
+
+\vspace{1cm}
+
+\section{Quick Reference}
+
+\subsection{Emergency Contacts}
+\begin{itemize}
+    \item \textbf{Lead Instructor:} [instructor@company.com]
+    \item \textbf{Technical Support:} [support@company.com]
+    \item \textbf{Course Slack:} \#c-programming-help
+    \item \textbf{Emergency Phone:} [+1-XXX-XXX-XXXX] (hardware failures only)
+\end{itemize}
+
+\subsection{Most Common Issues}
+\begin{enumerate}
+    \item Compilation errors (syntax, missing headers)
+    \item Cross-compilation toolchain problems
+    \item RP2040 flashing and connection issues
+    \item Git/GitHub workflow problems
+    \item VS Code configuration issues
+\end{enumerate}
+
+\section{Compilation Issues}
+
+\subsection{GCC Compilation Errors}
+
+\subsubsection{Error: "gcc: command not found"}
+\textbf{Symptoms:} Terminal/command prompt doesn't recognize gcc command.
+
+\textbf{Causes:}
+\begin{itemize}
+    \item GCC not installed
+    \item PATH environment variable not configured
+    \item Using wrong terminal (Windows)
+\end{itemize}
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Check if GCC is installed
+which gcc
+gcc --version
+
+# Windows: Use MSYS2 terminal or add to PATH
+# Add C:\msys64\mingw64\bin to system PATH
+
+# macOS: Install via Homebrew
+brew install gcc
+
+# Linux: Install via package manager
+sudo apt install build-essential  # Ubuntu/Debian
+sudo yum install gcc              # CentOS/RHEL
+\end{lstlisting}
+
+\subsubsection{Error: "fatal error: stdio.h: No such file or directory"}
+\textbf{Symptoms:} Cannot find standard C headers.
+
+\textbf{Causes:}
+\begin{itemize}
+    \item Incomplete GCC installation
+    \item Missing C standard library headers
+    \item Incorrect include paths
+\end{itemize}
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Linux: Install development headers
+sudo apt install libc6-dev build-essential
+
+# macOS: Install Xcode command line tools
+xcode-select --install
+
+# Windows: Reinstall MSYS2 with complete toolchain
+pacman -S mingw-w64-x86_64-toolchain
+\end{lstlisting}
+
+\subsubsection{Error: ``undefined reference to 'function\_name''}
+\textbf{Symptoms:} Linker cannot find function definitions.
+
+\textbf{Causes:}
+\begin{itemize}
+    \item Function declared but not defined
+    \item Missing source files in compilation
+    \item Incorrect function signature
+    \item Missing library links
+\end{itemize}
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Include all source files
+gcc main.c validation.c register_access.c -o program
+
+# Check function signatures match declarations
+# Verify all functions are implemented
+
+# For library functions, add appropriate flags
+gcc program.c -lm -o program  # for math library
+\end{lstlisting}
+
+\subsection{Cross-Compilation Issues}
+
+\subsubsection{Error: "arm-none-eabi-gcc: command not found"}
+\textbf{Symptoms:} ARM cross-compiler not found.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Windows (MSYS2)
+pacman -S mingw-w64-x86_64-arm-none-eabi-gcc
+
+# macOS
+brew install --cask gcc-arm-embedded
+# or
+brew tap ArmMbed/homebrew-formulae
+brew install arm-none-eabi-gcc
+
+# Linux
+sudo apt install gcc-arm-none-eabi
+
+# Verify installation
+arm-none-eabi-gcc --version
+\end{lstlisting}
+
+\subsubsection{Error: "Could not find PICO\_SDK\_PATH"}
+\textbf{Symptoms:} CMake cannot locate Pico SDK.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Check if environment variable is set
+echo $PICO_SDK_PATH
+
+# Set environment variable (Linux/macOS)
+export PICO_SDK_PATH=~/Development/pico-sdk
+echo 'export PICO_SDK_PATH=~/Development/pico-sdk' >> ~/.bashrc
+
+# Windows: Set in System Environment Variables
+# Variable: PICO_SDK_PATH
+# Value: C:\dev\pico-sdk
+
+# Verify SDK is properly cloned
+ls $PICO_SDK_PATH
+# Should show: cmake, docs, src, tools, etc.
+
+# Re-clone if necessary
+git clone --recursive https://github.com/raspberrypi/pico-sdk.git
+\end{lstlisting}
+
+\section{RP2040 Hardware Issues}
+
+\subsection{Flashing and Connection Problems}
+
+\subsubsection{Issue: "RP2040 not detected as USB drive"}
+\textbf{Symptoms:} Pico doesn't appear as RPI-RP2 drive when connected.
+
+\textbf{Solutions:}
+\begin{enumerate}
+    \item Hold BOOTSEL button while connecting USB cable
+    \item Keep BOOTSEL pressed until drive appears
+    \item Try different USB cable (data cable, not charge-only)
+    \item Try different USB port
+    \item Check Device Manager (Windows) for unrecognized devices
+\end{enumerate}
+
+\subsubsection{Issue: "Program doesn't run after flashing UF2"}
+\textbf{Symptoms:} UF2 copies successfully but program doesn't execute.
+
+\textbf{Diagnostic Steps:}
+\begin{lstlisting}[language=bash]
+# Check UF2 file size (should be > 0 bytes)
+ls -la program.uf2
+
+# Verify build completed successfully
+make clean
+make
+
+# Check for build errors in output
+# Look for "failed" or "error" messages
+
+# Try a simple blink program first
+\end{lstlisting}
+
+\textbf{Solutions:}
+\begin{itemize}
+    \item Rebuild project from clean state
+    \item Verify CMakeLists.txt configuration
+    \item Check that pico\_add\_extra\_outputs() is called
+    \item Try flashing a known-good UF2 file
+    \item Reset Pico by unplugging and reconnecting
+\end{itemize}
+
+\subsection{Serial Communication Issues}
+
+\subsubsection{Issue: "No serial output from RP2040"}
+\textbf{Symptoms:} Program runs but no printf output visible.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Verify USB stdio is enabled in CMakeLists.txt
+pico_enable_stdio_usb(program_name 1)
+pico_enable_stdio_uart(program_name 0)
+
+# Add stdio initialization in code
+#include "pico/stdlib.h"
+stdio_init_all();
+
+# Wait for USB connection (optional)
+while (!stdio_usb_connected()) {
+    sleep_ms(100);
+}
+\end{lstlisting}
+
+\textbf{Terminal Setup:}
+\begin{itemize}
+    \item \textbf{Windows:} Use PuTTY, Tera Term, or Windows Terminal
+    \item \textbf{macOS:} Use screen, minicom, or Serial app
+    \item \textbf{Linux:} Use screen, minicom, or picocom
+\end{itemize}
+
+\begin{lstlisting}[language=bash]
+# Find the correct serial port
+# Windows: Check Device Manager for COM port
+# macOS/Linux:
+ls /dev/tty*  # Look for /dev/ttyACM0 or similar
+
+# Connect using screen (macOS/Linux)
+screen /dev/ttyACM0 115200
+
+# Connect using minicom
+minicom -D /dev/ttyACM0 -b 115200
+\end{lstlisting}
+
+\section{Development Environment Issues}
+
+\subsection{VS Code Problems}
+
+\subsubsection{Issue: "IntelliSense not working for C files"}
+\textbf{Symptoms:} No syntax highlighting, autocomplete, or error detection.
+
+\textbf{Solutions:}
+\begin{enumerate}
+    \item Install C/C++ extension by Microsoft
+    \item Configure compiler path in settings
+    \item Create or update \texttt{c\_cpp\_properties.json}
+    \item Reload VS Code window
+\end{enumerate}
+
+\begin{lstlisting}
+// .vscode/c_cpp_properties.json
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:PICO_SDK_PATH}/src/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
+\end{lstlisting}
+
+\subsubsection{Issue: "CMake extension not detecting project"}
+\textbf{Symptoms:} CMake tools don't recognize CMakeLists.txt.
+
+\textbf{Solutions:}
+\begin{enumerate}
+    \item Install CMake Tools extension
+    \item Open Command Palette (Ctrl+Shift+P)
+    \item Run "CMake: Configure"
+    \item Select appropriate compiler kit
+    \item Check CMakeLists.txt syntax
+\end{enumerate}
+
+\subsection{Git and GitHub Issues}
+
+\subsubsection{Issue: "Permission denied (publickey)" when pushing to GitHub}
+\textbf{Symptoms:} Cannot push commits to GitHub repository.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Check if SSH key exists
+ls ~/.ssh/id_*
+
+# Generate new SSH key if needed
+ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# Add key to SSH agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+# Copy public key and add to GitHub
+cat ~/.ssh/id_ed25519.pub
+
+# Test SSH connection
+ssh -T git@github.com
+
+# Alternative: Use HTTPS instead of SSH
+git remote set-url origin https://github.com/username/repo.git
+\end{lstlisting}
+
+\subsubsection{Issue: "Merge conflicts in Git"}
+\textbf{Symptoms:} Cannot merge or pull due to conflicting changes.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Check status
+git status
+
+# View conflicted files
+git diff
+
+# Edit files to resolve conflicts
+# Look for <<<<<<< ======= >>>>>>> markers
+# Choose which version to keep
+
+# Stage resolved files
+git add resolved_file.c
+
+# Complete merge
+git commit -m "Resolve merge conflict"
+
+# Alternative: Abort merge and start over
+git merge --abort
+\end{lstlisting}
+
+\section{CMake Build System Issues}
+
+\subsection{Common CMake Errors}
+
+\subsubsection{Error: "CMake version too old"}
+\textbf{Symptoms:} "CMake 3.13 or higher is required"
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Check current version
+cmake --version
+
+# Update CMake
+# Ubuntu/Debian
+sudo apt remove cmake
+sudo snap install cmake --classic
+
+# macOS
+brew upgrade cmake
+
+# Windows (download from cmake.org)
+# Or use chocolatey: choco upgrade cmake
+\end{lstlisting}
+
+\subsubsection{Error: ``No CMAKE\_C\_COMPILER could be found''}
+\textbf{Symptoms:} CMake cannot find C compiler.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Specify compiler explicitly
+cmake -DCMAKE_C_COMPILER=gcc ..
+
+# For cross-compilation
+cmake -DCMAKE_C_COMPILER=arm-none-eabi-gcc ..
+
+# Clear CMake cache and reconfigure
+rm -rf build/
+mkdir build && cd build
+cmake ..
+\end{lstlisting}
+
+\section{Runtime and Logic Errors}
+
+\subsection{Segmentation Faults}
+
+\subsubsection{Issue: "Segmentation fault (core dumped)"}
+\textbf{Symptoms:} Program crashes with segfault.
+
+\textbf{Common Causes:}
+\begin{itemize}
+    \item Dereferencing NULL pointers
+    \item Array bounds violations
+    \item Stack overflow (infinite recursion)
+    \item Use after free
+\end{itemize}
+
+\textbf{Debugging with GDB:}
+\begin{lstlisting}[language=bash]
+# Compile with debug symbols
+gcc -g -Wall program.c -o program
+
+# Run with GDB
+gdb ./program
+(gdb) run
+# Program crashes
+(gdb) backtrace
+(gdb) print variable_name
+(gdb) list
+\end{lstlisting}
+
+\textbf{Prevention:}
+\begin{lstlisting}[language=c]
+// Always check pointers
+if (ptr != NULL) {
+    *ptr = value;
+}
+
+// Check array bounds
+if (index >= 0 && index < array_size) {
+    array[index] = value;
+}
+
+// Initialize pointers
+int *ptr = NULL;
+\end{lstlisting}
+
+\subsection{Memory Issues}
+
+\subsubsection{Issue: "Memory leaks"}
+\textbf{Symptoms:} Program uses increasing amounts of memory.
+
+\textbf{Detection:}
+\begin{lstlisting}[language=bash]
+# Use Valgrind (Linux/macOS)
+valgrind --leak-check=full ./program
+
+# Use AddressSanitizer
+gcc -fsanitize=address -g program.c -o program
+./program
+\end{lstlisting}
+
+\textbf{Prevention:}
+\begin{lstlisting}[language=c]
+// Always free allocated memory
+char *buffer = malloc(100);
+if (buffer != NULL) {
+    // use buffer
+    free(buffer);
+    buffer = NULL;  // Prevent double-free
+}
+
+// Use static allocation when possible
+char buffer[100];  // No need to free
+\end{lstlisting}
+
+\section{Performance Issues}
+
+\subsection{Slow Compilation}
+
+\textbf{Symptoms:} Build takes very long time.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Use parallel compilation
+make -j4  # Use 4 cores
+
+# For CMake
+cmake --build . --parallel 4
+
+# Clean unnecessary files
+make clean
+
+# Use ccache for faster rebuilds
+sudo apt install ccache
+export CC="ccache gcc"
+\end{lstlisting}
+
+\subsection{Slow Program Execution}
+
+\textbf{Symptoms:} Program runs slower than expected.
+
+\textbf{Optimization:}
+\begin{lstlisting}[language=bash]
+# Compile with optimization
+gcc -O2 program.c -o program
+
+# For embedded targets
+arm-none-eabi-gcc -O2 -DNDEBUG program.c
+
+# Profile with gprof
+gcc -pg program.c -o program
+./program
+gprof program gmon.out > analysis.txt
+\end{lstlisting}
+
+\section{Platform-Specific Issues}
+
+\subsection{Windows-Specific Problems}
+
+\subsubsection{Issue: "Windows Defender blocking compilation"}
+\textbf{Symptoms:} Antivirus deletes compiled executables.
+
+\textbf{Solutions:}
+\begin{itemize}
+    \item Add development folder to Windows Defender exclusions
+    \item Temporarily disable real-time protection during development
+    \item Use Windows Security → Virus \& threat protection → Exclusions
+\end{itemize}
+
+\subsubsection{Issue: "Long path names causing issues"}
+\textbf{Symptoms:} Build fails with path-related errors.
+
+\textbf{Solutions:}
+\begin{itemize}
+    \item Use shorter directory names
+    \item Enable long path support in Windows 10/11
+    \item Move project closer to root directory (e.g., C:\textbackslash dev\textbackslash)
+\end{itemize}
+
+\subsection{macOS-Specific Problems}
+
+\subsubsection{Issue: "Operation not permitted" errors}
+\textbf{Symptoms:} Cannot write to certain directories.
+
+\textbf{Solutions:}
+\begin{itemize}
+    \item Use user directories instead of system directories
+    \item Grant Terminal full disk access in System Preferences
+    \item Use sudo only when necessary
+\end{itemize}
+
+\subsection{Linux-Specific Problems}
+
+\subsubsection{Issue: "Permission denied" for USB devices}
+\textbf{Symptoms:} Cannot access RP2040 or serial ports.
+
+\textbf{Solutions:}
+\begin{lstlisting}[language=bash]
+# Add user to dialout group
+sudo usermod -a -G dialout $USER
+
+# Set udev rules for RP2040
+sudo tee /etc/udev/rules.d/99-pico.rules << 'EOF'
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2e8a", MODE="0666"
+EOF
+
+# Reload udev rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+# Log out and back in for group changes
+\end{lstlisting}
+
+\section{Emergency Procedures}
+
+\subsection{Complete Environment Reset}
+
+If your development environment is completely broken:
+
+\begin{enumerate}
+    \item \textbf{Backup your code:} Copy all source files to a safe location
+    \item \textbf{Document the problem:} Note error messages and steps that led to the issue
+    \item \textbf{Clean reinstall:} Follow the setup guide from scratch
+    \item \textbf{Restore code:} Copy your source files back
+    \item \textbf{Test incrementally:} Verify each tool works before proceeding
+\end{enumerate}
+
+\subsection{Hardware Failure}
+
+If your RP2040 board stops working:
+
+\begin{enumerate}
+    \item Try different USB cable and port
+    \item Test with known-good UF2 file (blink example)
+    \item Check for physical damage
+    \item Request replacement board from instructor
+    \item Use QEMU emulation as temporary fallback
+\end{enumerate}
+
+\subsection{Data Recovery}
+
+If you lose your work:
+
+\begin{enumerate}
+    \item Check Git history: \texttt{git log --oneline}
+    \item Look for auto-saved files in VS Code
+    \item Check temporary directories
+    \item Restore from GitHub if you've been pushing regularly
+    \item Ask teammates for their copies of shared code
+\end{enumerate}
+
+\section{Prevention and Best Practices}
+
+\subsection{Avoiding Common Issues}
+
+\begin{itemize}
+    \item \textbf{Commit frequently:} Save your work to Git every 30 minutes
+    \item \textbf{Test incrementally:} Compile and test after small changes
+    \item \textbf{Read error messages:} Don't ignore compiler warnings
+    \item \textbf{Keep backups:} Push to GitHub regularly
+    \item \textbf{Document problems:} Keep notes on issues and solutions
+\end{itemize}
+
+\subsection{Good Development Habits}
+
+\begin{itemize}
+    \item Start with simple programs and add complexity gradually
+    \item Use meaningful variable and function names
+    \item Add comments to explain complex logic
+    \item Test edge cases and error conditions
+    \item Keep your development environment updated
+\end{itemize}
+
+\section{Getting Help}
+
+\subsection{Self-Help Resources}
+
+\begin{enumerate}
+    \item \textbf{Read error messages carefully:} They often contain the solution
+    \item \textbf{Search online:} Stack Overflow, GitHub issues, documentation
+    \item \textbf{Check course materials:} Slides, examples, and documentation
+    \item \textbf{Use debugging tools:} GDB, print statements, LED indicators
+\end{enumerate}
+
+\subsection{When to Ask for Help}
+
+Ask for help when:
+\begin{itemize}
+    \item You've spent more than 30 minutes on a single error
+    \item Error messages are unclear or contradictory
+    \item Hardware appears to be malfunctioning
+    \item You need clarification on requirements
+    \item You're completely stuck and don't know where to start
+\end{itemize}
+
+\subsection{How to Ask for Help Effectively}
+
+When requesting help, provide:
+\begin{itemize}
+    \item \textbf{Complete error message:} Copy and paste the full error
+    \item \textbf{Context:} What were you trying to do?
+    \item \textbf{Environment:} OS, compiler version, etc.
+    \item \textbf{Code snippet:} Minimal example that reproduces the problem
+    \item \textbf{Steps tried:} What solutions have you already attempted?
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Remember: Every expert was once a beginner!}\\
+\textit{Troubleshooting is a valuable skill that improves with practice.}\\
+\textbf{Don't hesitate to ask for help when you need it.}
+\end{center}
+
+\end{document}
+

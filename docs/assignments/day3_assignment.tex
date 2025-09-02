@@ -1,0 +1,529 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amssymb}
+
+% Page setup
+\geometry{margin=1in}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 3 Assignment: Memory Management and Data Structures Lab}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 3 Assignment - Memory Management and Data Structures Lab},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 3 ASSIGNMENT}\\[0.5cm]
+    {\Large Memory Management and Data Structures Lab}\\[0.3cm]
+    {\large Chip State Monitoring and Bit Manipulation}\\[0.2cm]
+    {\normalsize Due: End of Day 3 + Homework Extension}
+\end{center}
+
+\vspace{1cm}
+
+\section{Assignment Overview}
+
+\subsection{Learning Objectives}
+By completing this assignment, you will:
+\begin{itemize}
+    \item Master pointers and memory addressing for hardware register access
+    \item Use arrays and structures to model complex chip architectures
+    \item Implement bit manipulation for register control and status checking
+    \item Apply AI tools responsibly for code assistance and optimization
+    \item Create comprehensive chip state monitoring systems
+\end{itemize}
+
+\subsection{Assignment Context}
+You will build a sophisticated chip state monitoring system that uses pointers to simulate direct hardware register access, structures to model chip components, and bit manipulation to control and monitor hardware states. This assignment introduces AI-assisted development with critical evaluation requirements.
+
+\section{Part 1: In-Class Lab (3.5 hours)}
+
+\subsection{Setup and AI Tool Introduction}
+\begin{enumerate}
+    \item Accept the Day 3 GitHub Classroom assignment
+    \item Set up your preferred AI coding assistant (GitHub Copilot, ChatGPT, etc.)
+    \item Create \texttt{AI\_USAGE\_LOG.md} to document all AI assistance
+    \item Create a new branch: \texttt{git checkout -b day3-pointers-structures}
+\end{enumerate}
+
+\subsection{Task 1: Pointer-Based Register Access (60 minutes)}
+
+\textbf{File:} \texttt{pointer\_registers.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Simulate memory-mapped register access using pointers
+    \item Implement safe pointer operations with null checking
+    \item Create pointer arithmetic for register bank traversal
+    \item Add pointer-based register read/write functions
+\end{itemize}
+
+\textbf{Starter Code Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#define REGISTER_BANK_SIZE 256
+#define BASE_REGISTER_ADDR 0x40000000
+
+// Simulated register bank (in real hardware, this would be memory-mapped)
+static uint32_t register_bank[REGISTER_BANK_SIZE];
+
+// TODO: Implement pointer-based register access functions
+uint32_t* get_register_pointer(uint32_t address);
+uint32_t read_register_via_pointer(uint32_t address);
+void write_register_via_pointer(uint32_t address, uint32_t value);
+int validate_register_pointer(uint32_t* reg_ptr);
+
+// TODO: Implement pointer arithmetic functions
+void bulk_register_write(uint32_t start_addr, uint32_t* values, int count);
+void bulk_register_read(uint32_t start_addr, uint32_t* buffer, int count);
+uint32_t* find_register_by_value(uint32_t value, uint32_t start_addr, int range);
+\end{lstlisting}
+
+\textbf{Safety Requirements:}
+\begin{itemize}
+    \item Always check pointers for NULL before dereferencing
+    \item Validate address ranges before pointer operations
+    \item Implement bounds checking for array access
+    \item Add error handling for invalid pointer operations
+\end{itemize}
+
+\subsection{Task 2: Chip State Structures (60 minutes)}
+
+\textbf{File:} \texttt{chip\_structures.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Define comprehensive chip state structures
+    \item Implement structure initialization and manipulation
+    \item Create arrays of structures for multi-chip systems
+    \item Add structure-based validation functions
+\end{itemize}
+
+\textbf{Required Structures:}
+\begin{lstlisting}[language=C]
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef struct {
+    uint32_t control_register;
+    uint32_t status_register;
+    uint32_t error_register;
+    uint32_t config_register;
+} register_set_t;
+
+typedef struct {
+    char chip_id[16];
+    char part_number[32];
+    uint32_t serial_number;
+    float temperature;
+    float voltage;
+    register_set_t registers;
+    bool is_initialized;
+    bool has_errors;
+    uint32_t error_count;
+    uint64_t uptime_seconds;
+} chip_state_t;
+
+typedef struct {
+    chip_state_t chips[MAX_CHIPS];
+    int active_chip_count;
+    int total_error_count;
+    float average_temperature;
+    char system_status[64];
+} system_state_t;
+
+// TODO: Implement structure manipulation functions
+void init_chip_state(chip_state_t* chip, const char* id, const char* part_num);
+void update_chip_temperature(chip_state_t* chip, float new_temp);
+void update_chip_registers(chip_state_t* chip, register_set_t* new_regs);
+int validate_chip_state(const chip_state_t* chip);
+void print_chip_summary(const chip_state_t* chip);
+\end{lstlisting}
+
+\subsection{Task 3: Bit Manipulation Operations (60 minutes)}
+
+\textbf{File:} \texttt{bit\_operations.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement comprehensive bit manipulation macros and functions
+    \item Create register control functions using bit operations
+    \item Add bit pattern validation and testing
+    \item Implement bit field extraction and insertion
+\end{itemize}
+
+\textbf{Bit Manipulation Framework:}
+\begin{lstlisting}[language=C]
+#include <stdint.h>
+
+// Basic bit manipulation macros
+#define SET_BIT(reg, bit)       ((reg) |= (1U << (bit)))
+#define CLEAR_BIT(reg, bit)     ((reg) &= ~(1U << (bit)))
+#define TOGGLE_BIT(reg, bit)    ((reg) ^= (1U << (bit)))
+#define CHECK_BIT(reg, bit)     (((reg) >> (bit)) & 1U)
+
+// Advanced bit manipulation macros
+#define SET_BITS(reg, mask)     ((reg) |= (mask))
+#define CLEAR_BITS(reg, mask)   ((reg) &= ~(mask))
+#define GET_FIELD(reg, mask, shift) (((reg) & (mask)) >> (shift))
+#define SET_FIELD(reg, mask, shift, value) \
+    ((reg) = ((reg) & ~(mask)) | (((value) << (shift)) & (mask)))
+
+// TODO: Implement bit manipulation functions
+void demonstrate_bit_operations(void);
+uint32_t create_test_pattern(int pattern_type);
+int validate_bit_pattern(uint32_t value, uint32_t expected_pattern, uint32_t mask);
+void analyze_register_bits(uint32_t register_value, const char* register_name);
+
+// TODO: Implement register control functions
+void enable_chip_power(chip_state_t* chip);
+void disable_chip_power(chip_state_t* chip);
+bool is_chip_ready(const chip_state_t* chip);
+uint32_t get_error_flags(const chip_state_t* chip);
+void clear_error_flags(chip_state_t* chip, uint32_t flags_to_clear);
+\end{lstlisting}
+
+\subsection{Task 4: AI-Assisted Development Session (45 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Use AI tools to help implement complex algorithms
+    \item Document all AI interactions in \texttt{AI\_USAGE\_LOG.md}
+    \item Critically evaluate AI suggestions before implementation
+    \item Improve AI-generated code with your own enhancements
+\end{itemize}
+
+\textbf{AI Assistance Tasks:}
+\begin{enumerate}
+    \item Ask AI to generate a function for calculating CRC checksums of register values
+    \item Request AI help with optimizing bit manipulation operations
+    \item Get AI suggestions for error handling in pointer operations
+    \item Ask AI to create test cases for your structure validation functions
+\end{enumerate}
+
+\textbf{AI Usage Documentation Format:}
+\begin{verbatim}
+# AI Usage Log - Day 3
+
+## AI Interaction 1: CRC Checksum Function
+**AI Tool:** ChatGPT-4
+**Prompt:** "Generate a C function to calculate CRC-32 checksum of
+register values"
+**AI Response:** [Include the generated code]
+**Evaluation:**
+- Pros: Correct algorithm implementation, good comments
+- Cons: No input validation, uses malloc unnecessarily
+**My Improvements:**
+- Added input validation
+- Replaced malloc with static buffer
+- Added error handling
+**Final Decision:** Accepted with modifications
+\end{verbatim}
+
+\subsection{Task 5: Comprehensive Chip Monitor (45 minutes)}
+
+\textbf{File:} \texttt{chip\_monitor.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Integrate all previous tasks into a complete monitoring system
+    \item Use pointers to access chip structures efficiently
+    \item Implement bit manipulation for status monitoring
+    \item Add comprehensive error detection and reporting
+\end{itemize}
+
+\section{Part 2: Homework Extension (2 hours)}
+
+\subsection{Task 6: Advanced Pointer Techniques}
+
+\textbf{File:} \texttt{advanced\_pointers.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement function pointers for dynamic test selection
+    \item Create pointer arrays for efficient chip management
+    \item Add pointer-to-pointer usage for dynamic memory management
+    \item Implement callback functions for event handling
+\end{itemize}
+
+\textbf{Advanced Pointer Examples:}
+\begin{lstlisting}[language=C]
+// Function pointer for different validation strategies
+typedef int (*validation_func_t)(const chip_state_t* chip);
+
+// Array of validation function pointers
+validation_func_t validation_strategies[] = {
+    validate_power_levels,
+    validate_temperature_range,
+    validate_register_consistency,
+    validate_error_states
+};
+
+// Callback function type for chip events
+typedef void (*chip_event_callback_t)(chip_state_t* chip, int event_type);
+
+// TODO: Implement advanced pointer functions
+int run_validation_strategy(chip_state_t* chip, int strategy_index);
+void register_chip_callback(chip_state_t* chip, chip_event_callback_t callback);
+chip_state_t** create_chip_array(int count);
+void destroy_chip_array(chip_state_t** chips, int count);
+\end{lstlisting}
+
+\subsection{Task 7: Memory Safety and Debugging}
+
+\textbf{File:} \texttt{memory\_safety.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement comprehensive memory safety checks
+    \item Add memory leak detection and prevention
+    \item Create debugging utilities for pointer operations
+    \item Implement memory usage monitoring
+\end{itemize}
+
+\textbf{Memory Safety Framework:}
+\begin{lstlisting}[language=C]
+// Memory debugging utilities
+typedef struct {
+    void* ptr;
+    size_t size;
+    const char* file;
+    int line;
+    bool is_freed;
+} memory_allocation_t;
+
+// TODO: Implement memory safety functions
+void* safe_malloc(size_t size, const char* file, int line);
+void safe_free(void* ptr, const char* file, int line);
+void check_memory_leaks(void);
+void print_memory_usage_report(void);
+
+// Macros for safe memory operations
+#define SAFE_MALLOC(size) safe_malloc(size, __FILE__, __LINE__)
+#define SAFE_FREE(ptr) safe_free(ptr, __FILE__, __LINE__)
+\end{lstlisting}
+
+\subsection{Task 8: AI-Enhanced Optimization}
+
+\textbf{File:} \texttt{ai\_optimized\_code.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Use AI to suggest performance optimizations
+    \item Implement AI-suggested algorithms with critical evaluation
+    \item Compare performance before and after AI optimizations
+    \item Document the optimization process and results
+\end{itemize}
+
+\section{Submission Requirements}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Memory Safety:} All pointer operations must be safe and validated
+    \item \textbf{Structure Design:} Logical organization of data with appropriate types
+    \item \textbf{Bit Operations:} Efficient and correct bit manipulation implementations
+    \item \textbf{Error Handling:} Comprehensive error checking and recovery
+    \item \textbf{AI Integration:} Thoughtful use of AI with critical evaluation
+\end{itemize}
+
+\subsection{Documentation Requirements}
+\begin{itemize}
+    \item \textbf{AI\_USAGE\_LOG.md:} Complete documentation of all AI assistance
+    \item \textbf{MEMORY\_ANALYSIS.md:} Memory usage analysis and safety measures
+    \item \textbf{BIT\_OPERATIONS\_GUIDE.md:} Documentation of bit manipulation functions
+    \item \textbf{README.md:} Updated with Day 3 functionality and AI usage notes
+\end{itemize}
+
+\subsection{AI Usage Requirements}
+\begin{itemize}
+    \item Document every AI interaction with prompts and responses
+    \item Provide critical evaluation of AI suggestions
+    \item Show improvements made to AI-generated code
+    \item Explain decisions to accept or reject AI recommendations
+    \item Demonstrate understanding of all AI-assisted code
+\end{itemize}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+Task 1: Pointer Operations & 20 & Safe pointer usage, correct implementation \\
+Task 2: Structure Design & 20 & Well-designed structures, proper usage \\
+Task 3: Bit Manipulation & 20 & Correct bit operations, comprehensive coverage \\
+Task 4: AI Integration & 15 & Thoughtful AI usage, critical evaluation \\
+Task 5: System Integration & 15 & Effective combination of all concepts \\
+Task 6: Advanced Pointers & 10 & Function pointers, advanced techniques \\
+Task 7: Memory Safety & 10 & Comprehensive safety measures \\
+Task 8: AI Optimization & 10 & Performance improvements, analysis \\
+Code Quality & 15 & Safety, efficiency, maintainability \\
+Documentation & 15 & AI logs, technical documentation \\
+\hline
+\textbf{Total} & \textbf{150} & \textbf{Extra credit for innovative features} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Memory Safety Checklist}
+
+\subsection{Pointer Safety}
+\begin{itemize}
+    \item[$\square$] Always check pointers for NULL before dereferencing
+    \item[$\square$] Validate array bounds before pointer arithmetic
+    \item[$\square$] Initialize all pointers to NULL or valid addresses
+    \item[$\square$] Set pointers to NULL after freeing memory
+    \item[$\square$] Use const pointers where data shouldn't be modified
+\end{itemize}
+
+\subsection{Memory Management}
+\begin{itemize}
+    \item[$\square$] Every malloc has a corresponding free
+    \item[$\square$] No double-free operations
+    \item[$\square$] No use-after-free operations
+    \item[$\square$] Memory allocation failure handling
+    \item[$\square$] Memory leak detection and prevention
+\end{itemize}
+
+\section{Common Pitfalls and Solutions}
+
+\subsection{Pointer Pitfalls}
+\begin{itemize}
+    \item \textbf{Null Pointer Dereference:} Always check \texttt{if (ptr != NULL)}
+    \item \textbf{Dangling Pointers:} Set to NULL after freeing
+    \item \textbf{Buffer Overflows:} Check array bounds in loops
+    \item \textbf{Pointer Arithmetic Errors:} Be careful with pointer increment/decrement
+\end{itemize}
+
+\subsection{Structure Pitfalls}
+\begin{itemize}
+    \item \textbf{Uninitialized Members:} Always initialize all structure members
+    \item \textbf{Padding Issues:} Be aware of structure alignment and padding
+    \item \textbf{Deep vs Shallow Copy:} Understand when to copy pointers vs. data
+\end{itemize}
+
+\subsection{Bit Manipulation Pitfalls}
+\begin{itemize}
+    \item \textbf{Signed vs Unsigned:} Use unsigned types for bit operations
+    \item \textbf{Shift Overflow:} Don't shift by more than type width
+    \item \textbf{Operator Precedence:} Use parentheses in complex expressions
+\end{itemize}
+
+\section{Testing and Validation}
+
+\subsection{Required Test Cases}
+\begin{enumerate}
+    \item \textbf{Pointer Tests:} NULL pointers, valid pointers, boundary conditions
+    \item \textbf{Structure Tests:} Initialization, modification, validation
+    \item \textbf{Bit Operation Tests:} All bit manipulation functions with various patterns
+    \item \textbf{Memory Tests:} Allocation, deallocation, leak detection
+    \item \textbf{Integration Tests:} Complete system functionality
+\end{enumerate}
+
+\subsection{AI Code Validation}
+\begin{itemize}
+    \item Compile and test all AI-generated code
+    \item Verify AI code meets requirements
+    \item Test edge cases not covered by AI
+    \item Validate performance claims made by AI
+    \item Ensure AI code follows course coding standards
+\end{itemize}
+
+\section{Extension Opportunities}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item \textbf{Custom Memory Allocator:} Implement pool-based allocation
+    \item \textbf{Smart Pointers:} Reference counting for automatic cleanup
+    \item \textbf{Bit Field Structures:} Use C bit fields for register modeling
+    \item \textbf{Memory Mapping:} Simulate actual memory-mapped I/O
+    \item \textbf{Endianness Handling:} Big-endian vs little-endian considerations
+\end{itemize}
+
+\subsection{AI Exploration}
+\begin{itemize}
+    \item Compare different AI tools (ChatGPT vs Copilot vs Claude)
+    \item Experiment with different prompting strategies
+    \item Use AI for code review and bug detection
+    \item Explore AI-assisted refactoring techniques
+\end{itemize}
+
+\section{Success Tips}
+
+\begin{itemize}
+    \item \textbf{Start with Safety:} Always implement safety checks first
+    \item \textbf{Test Incrementally:} Test each pointer operation as you implement it
+    \item \textbf{Use AI Wisely:} Don't blindly accept AI suggestions, understand them first
+    \item \textbf{Draw Memory Diagrams:} Visualize pointer relationships on paper
+    \item \textbf{Validate Everything:} Check all inputs and intermediate results
+    \item \textbf{Document AI Usage:} Keep detailed logs of AI interactions
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Master the power of pointers and structures!}\\
+\textit{These are the building blocks of embedded systems programming.}
+\end{center}
+
+\end{document}
+

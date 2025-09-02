@@ -1,0 +1,653 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 6 Assignment: Capstone Project}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 6 Assignment - Capstone Project},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 6 CAPSTONE PROJECT}\\[0.5cm]
+    {\Large Comprehensive Validation System Integration}\\[0.3cm]
+    {\large Team-Based Final Project and Portfolio Development}\\[0.2cm]
+    {\normalsize Duration: 6 Hours + Presentation}
+\end{center}
+
+\vspace{1cm}
+
+\section{Project Overview}
+
+\subsection{Mission Statement}
+Design, implement, and demonstrate a comprehensive validation system that integrates all course concepts into a professional-grade solution suitable for post-silicon validation engineering roles. This capstone project serves as the culmination of your learning journey and the foundation of your professional portfolio.
+
+\subsection{Learning Objectives}
+By completing this capstone project, you will:
+\begin{itemize}
+    \item Integrate all course concepts into a cohesive, working system
+    \item Demonstrate professional project management and collaboration skills
+    \item Create portfolio-quality documentation and presentations
+    \item Apply AI tools effectively while maintaining critical evaluation
+    \item Build a foundation for continued learning and career development
+    \item Establish professional connections within your cohort
+\end{itemize}
+
+\subsection{Project Scope}
+Your team will create a complete validation system that demonstrates mastery of:
+\begin{itemize}
+    \item C programming fundamentals and advanced concepts
+    \item Embedded systems programming for RP2040
+    \item Hardware-in-the-loop testing methodologies
+    \item Professional software development practices
+    \item Technical communication and documentation
+\end{itemize}
+
+\section{Team Formation and Roles}
+
+\subsection{Team Structure}
+\begin{itemize}
+    \item \textbf{Team Size:} 2-3 participants per team
+    \item \textbf{Formation:} Self-selected or instructor-assigned based on complementary skills
+    \item \textbf{Diversity:} Mix of backgrounds, experience levels, and project interests encouraged
+\end{itemize}
+
+\subsection{Recommended Roles}
+\textbf{For 3-Person Teams:}
+\begin{itemize}
+    \item \textbf{Project Lead:} Overall coordination, integration, and timeline management
+    \item \textbf{Hardware Specialist:} RP2040 programming, peripheral integration, debugging
+    \item \textbf{Software Architect:} Code structure, optimization, testing framework
+\end{itemize}
+
+\textbf{For 2-Person Teams:}
+\begin{itemize}
+    \item \textbf{Lead Developer:} Project coordination and core implementation
+    \item \textbf{Validation Engineer:} Testing, documentation, and quality assurance
+\end{itemize}
+
+\textbf{Shared Responsibilities:}
+\begin{itemize}
+    \item Code review and quality assurance
+    \item Documentation and presentation preparation
+    \item AI tool usage and evaluation
+    \item GitHub workflow and version control
+\end{itemize}
+
+\section{Project Requirements}
+
+\subsection{Core Requirements (Must Have - 70\% of Grade)}
+
+\subsubsection{1. Multi-Peripheral Validation System}
+\begin{itemize}
+    \item Test at least 3 different RP2040 peripherals (GPIO, ADC, timers, etc.)
+    \item Implement comprehensive test suites for each peripheral
+    \item Provide pass/fail criteria and detailed reporting
+    \item Include error detection and recovery mechanisms
+\end{itemize}
+
+\subsubsection{2. Modular Software Architecture}
+\begin{itemize}
+    \item Clean separation of concerns with header files
+    \item Hardware abstraction layer for portability
+    \item Reusable validation library components
+    \item Professional code organization and documentation
+\end{itemize}
+
+\subsubsection{3. Cross-Platform Compatibility}
+\begin{itemize}
+    \item Code compiles and runs on both desktop and RP2040
+    \item CMake build system supporting both targets
+    \item Consistent behavior across platforms (where applicable)
+    \item Platform-specific optimizations where needed
+\end{itemize}
+
+\subsubsection{4. Hardware-in-the-Loop Testing}
+\begin{itemize}
+    \item Actual hardware testing on RP2040 platform
+    \item Real-time constraint validation
+    \item Hardware-specific validation scenarios
+    \item Integration with physical test setup
+\end{itemize}
+
+\subsubsection{5. Professional Documentation}
+\begin{itemize}
+    \item Comprehensive README with setup and usage instructions
+    \item API documentation for all public functions
+    \item Architecture overview and design decisions
+    \item Test results and validation reports
+\end{itemize}
+
+\subsection{Advanced Features (Choose 2+ - 20\% of Grade)}
+
+\subsubsection{A. Fault Injection and Recovery Testing}
+\begin{itemize}
+    \item Controlled fault injection mechanisms
+    \item System recovery validation
+    \item Resilience testing under stress conditions
+    \item Graceful degradation strategies
+\end{itemize}
+
+\subsubsection{B. Statistical Analysis and Reporting}
+\begin{itemize}
+    \item Test result statistical analysis
+    \item Performance benchmarking and trends
+    \item Automated report generation
+    \item Data visualization (ASCII charts or export to CSV)
+\end{itemize}
+
+\subsubsection{C. Real-Time Performance Monitoring}
+\begin{itemize}
+    \item Execution time measurement and analysis
+    \item Memory usage monitoring
+    \item CPU utilization tracking
+    \item Performance optimization recommendations
+\end{itemize}
+
+\subsubsection{D. Advanced Communication Protocols}
+\begin{itemize}
+    \item UART, SPI, or I2C validation testing
+    \item Protocol compliance verification
+    \item Communication error detection and handling
+    \item Multi-device communication scenarios
+\end{itemize}
+
+\subsubsection{E. AI-Enhanced Optimization}
+\begin{itemize}
+    \item AI-assisted code optimization
+    \item Automated test case generation using AI
+    \item AI-powered anomaly detection in test results
+    \item Critical evaluation and improvement of AI suggestions
+\end{itemize}
+
+\subsubsection{F. Custom Validation Protocols}
+\begin{itemize}
+    \item Industry-specific validation scenarios
+    \item Custom test methodologies
+    \item Innovative validation approaches
+    \item Integration with external test equipment (simulated)
+\end{itemize}
+
+\subsection{Innovation and Creativity (10\% of Grade)}
+\begin{itemize}
+    \item Novel approaches to validation challenges
+    \item Creative use of RP2040 capabilities
+    \item Innovative user interfaces or interaction methods
+    \item Unique integration of course concepts
+    \item Original solutions to technical problems
+\end{itemize}
+
+\section{Project Timeline and Milestones}
+
+\subsection{Hour-by-Hour Schedule}
+
+\textbf{Hour 1: Project Planning and Setup (9:00-10:00 AM)}
+\begin{itemize}
+    \item Team formation and role assignment
+    \item Project theme selection and scope definition
+    \item GitHub repository setup and branch strategy
+    \item Architecture design and module breakdown
+    \item Task assignment and timeline planning
+\end{itemize}
+
+\textbf{Hour 2: Core Implementation Phase 1 (10:15-11:15 AM)}
+\begin{itemize}
+    \item Basic project structure creation
+    \item Core validation framework implementation
+    \item Hardware abstraction layer development
+    \item Initial peripheral testing modules
+\end{itemize}
+
+\textbf{Hour 3: Core Implementation Phase 2 (11:30 AM-12:30 PM)}
+\begin{itemize}
+    \item Multi-peripheral integration
+    \item Cross-compilation setup and testing
+    \item Hardware testing on RP2040
+    \item Error handling and recovery implementation
+\end{itemize}
+
+\textbf{Hour 4: Advanced Features and Integration (1:30-2:30 PM)}
+\begin{itemize}
+    \item Advanced feature implementation
+    \item System integration and testing
+    \item Performance optimization
+    \item AI tool integration and evaluation
+\end{itemize}
+
+\textbf{Hour 5: Testing, Documentation, and Polish (2:45-3:45 PM)}
+\begin{itemize}
+    \item Comprehensive system testing
+    \item Documentation completion
+    \item Code review and quality assurance
+    \item Presentation preparation
+\end{itemize}
+
+\textbf{Hour 6: Final Integration and Presentation Prep (4:00-5:00 PM)}
+\begin{itemize}
+    \item Final testing and bug fixes
+    \item Presentation rehearsal
+    \item Demo preparation and hardware setup
+    \item Portfolio documentation finalization
+\end{itemize}
+
+\subsection{Milestone Checkpoints}
+\textbf{Every hour, teams will demonstrate:}
+\begin{itemize}
+    \item Progress toward milestone goals
+    \item Working code compilation and basic functionality
+    \item Updated GitHub repository with commits
+    \item Any blockers or assistance needed
+    \item Adjustment of goals if necessary
+\end{itemize}
+
+\section{Suggested Project Themes}
+
+\subsection{Theme 1: Multi-Chip Validation Network}
+\textbf{Concept:} Create a system that can validate multiple RP2040 boards simultaneously
+\begin{itemize}
+    \item Master-slave communication architecture
+    \item Distributed testing coordination
+    \item Comparative analysis between chips
+    \item Network fault tolerance and recovery
+\end{itemize}
+
+\subsection{Theme 2: Environmental Stress Testing System}
+\textbf{Concept:} Validate chip behavior under simulated environmental conditions
+\begin{itemize}
+    \item Temperature variation simulation
+    \item Voltage fluctuation testing
+    \item Timing stress under load
+    \item Environmental data logging and analysis
+\end{itemize}
+
+\subsection{Theme 3: Communication Protocol Validator}
+\textbf{Concept:} Comprehensive testing of communication interfaces
+\begin{itemize}
+    \item UART, SPI, I2C protocol validation
+    \item Error injection and recovery testing
+    \item Protocol compliance verification
+    \item Multi-protocol coordination testing
+\end{itemize}
+
+\subsection{Theme 4: Power Management Validation Suite}
+\textbf{Concept:} Test and validate power management features
+\begin{itemize}
+    \item Sleep mode validation
+    \item Power consumption measurement
+    \item Wake-up source testing
+    \item Power efficiency optimization
+\end{itemize}
+
+\subsection{Theme 5: Signal Integrity and Timing Analyzer}
+\textbf{Concept:} Validate signal quality and timing characteristics
+\begin{itemize}
+    \item Signal rise/fall time measurement
+    \item Clock jitter analysis
+    \item Setup and hold time validation
+    \item Signal integrity under different loads
+\end{itemize}
+
+\subsection{Theme 6: Automated Regression Testing Framework}
+\textbf{Concept:} Continuous validation and regression testing system
+\begin{itemize}
+    \item Automated test scheduling
+    \item Regression detection algorithms
+    \item Historical trend analysis
+    \item Continuous integration simulation
+\end{itemize}
+
+\section{Technical Implementation Guidelines}
+
+\subsection{Code Architecture Requirements}
+
+\textbf{Directory Structure:}
+\begin{verbatim}
+capstone_project/
+├── src/
+│   ├── main.c
+│   ├── validation_core.c
+│   ├── [peripheral]_validator.c
+│   ├── hardware_abstraction.c
+│   ├── test_framework.c
+│   └── [advanced_feature].c
+├── include/
+│   ├── validation_core.h
+│   ├── [peripheral]_validator.h
+│   ├── hardware_abstraction.h
+│   ├── test_framework.h
+│   ├── common_types.h
+│   └── [advanced_feature].h
+├── tests/
+│   ├── unit_tests.c
+│   └── integration_tests.c
+├── docs/
+│   ├── README.md
+│   ├── API_REFERENCE.md
+│   ├── ARCHITECTURE.md
+│   ├── USER_GUIDE.md
+│   └── TEST_RESULTS.md
+├── scripts/
+│   ├── build_desktop.sh
+│   ├── build_pico.sh
+│   └── run_tests.sh
+├── CMakeLists.txt
+└── .github/
+    └── workflows/
+        └── ci.yml
+\end{verbatim}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Compilation:} Zero warnings with \texttt{-Wall -Wextra}
+    \item \textbf{Documentation:} All public functions documented
+    \item \textbf{Error Handling:} Comprehensive error checking and recovery
+    \item \textbf{Memory Safety:} No memory leaks or unsafe operations
+    \item \textbf{Performance:} Optimized for embedded constraints
+    \item \textbf{Portability:} Works on both desktop and embedded platforms
+\end{itemize}
+
+\subsection{AI Integration Requirements}
+\begin{itemize}
+    \item Document all AI assistance in \texttt{AI\_USAGE\_LOG.md}
+    \item Provide critical evaluation of AI suggestions
+    \item Show improvements made to AI-generated code
+    \item Demonstrate understanding of all AI-assisted implementations
+    \item Include AI evaluation in final presentation
+\end{itemize}
+
+\section{Presentation Requirements}
+
+\subsection{Presentation Format}
+\begin{itemize}
+    \item \textbf{Duration:} 7-10 minutes per team
+    \item \textbf{Format:} Live demonstration with slides
+    \item \textbf{Audience:} Classmates, instructors, and optional industry guests
+    \item \textbf{Equipment:} Projector, RP2040 hardware, laptop
+\end{itemize}
+
+\subsection{Presentation Structure}
+
+\textbf{1. Introduction (1 minute)}
+\begin{itemize}
+    \item Team member introductions and roles
+    \item Project theme and motivation
+    \item High-level overview of solution
+\end{itemize}
+
+\textbf{2. Problem Statement (1 minute)}
+\begin{itemize}
+    \item Validation challenge being addressed
+    \item Why this problem is important in post-silicon validation
+    \item Success criteria and goals
+\end{itemize}
+
+\textbf{3. Solution Architecture (2 minutes)}
+\begin{itemize}
+    \item High-level system design
+    \item Key components and their interactions
+    \item Technology choices and rationale
+    \item Integration of course concepts
+\end{itemize}
+
+\textbf{4. Technical Implementation (3 minutes)}
+\begin{itemize}
+    \item Key algorithms and data structures
+    \item Interesting technical challenges and solutions
+    \item Code quality and architecture highlights
+    \item AI integration and evaluation
+\end{itemize}
+
+\textbf{5. Live Demonstration (2 minutes)}
+\begin{itemize}
+    \item Hardware setup and system initialization
+    \item Core functionality demonstration
+    \item Advanced features showcase
+    \item Error handling and recovery demonstration
+\end{itemize}
+
+\textbf{6. Results and Lessons Learned (1 minute)}
+\begin{itemize}
+    \item Key achievements and metrics
+    \item Challenges overcome and lessons learned
+    \item Future improvements and extensions
+    \item Relevance to validation engineering careers
+\end{itemize}
+
+\subsection{Presentation Evaluation Criteria}
+\begin{itemize}
+    \item \textbf{Technical Content:} Accuracy and depth of technical explanation
+    \item \textbf{Demonstration:} Successful live demo of working system
+    \item \textbf{Communication:} Clear, professional presentation style
+    \item \textbf{Team Coordination:} Effective collaboration and role distribution
+    \item \textbf{Innovation:} Creative approaches and novel solutions
+\end{itemize}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Technical Implementation (60\%)}} \\
+\hline
+Core Requirements & 40 & Multi-peripheral validation, architecture, cross-platform \\
+Advanced Features & 15 & Implementation of 2+ advanced features \\
+Code Quality & 15 & Style, documentation, error handling, performance \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Collaboration and Process (25\%)}} \\
+\hline
+GitHub Workflow & 10 & Commit quality, branching, pull requests \\
+Team Collaboration & 10 & Effective teamwork, role distribution \\
+Project Management & 5 & Timeline adherence, milestone completion \\
+\hline
+\multicolumn{3}{|c|}{\textbf{Communication and Innovation (15\%)}} \\
+\hline
+Presentation & 8 & Technical accuracy, demonstration, communication \\
+Documentation & 4 & README, API docs, architecture documentation \\
+Innovation & 3 & Creative solutions, novel approaches \\
+\hline
+\textbf{Total} & \textbf{100} & \textbf{Professional validation engineering project} \\
+\hline
+\end{tabular>
+\end{center}
+
+\subsection{Grading Scale}
+\begin{itemize}
+    \item \textbf{A (90-100\%):} Exceptional project demonstrating mastery of all concepts
+    \item \textbf{B (80-89\%):} Strong project meeting all core requirements with good execution
+    \item \textbf{C (70-79\%):} Satisfactory project meeting basic requirements
+    \item \textbf{D (60-69\%):} Below expectations with significant issues or missing components
+    \item \textbf{F (<60\%):} Unsatisfactory project not meeting minimum requirements
+\end{itemize}
+
+\section{Support and Resources}
+
+\subsection{Available Support}
+\begin{itemize}
+    \item \textbf{Instructors:} Available throughout the day for guidance and troubleshooting
+    \item \textbf{Teaching Assistants:} Hands-on technical support and debugging help
+    \item \textbf{Peer Teams:} Cross-team collaboration and knowledge sharing encouraged
+    \item \textbf{AI Tools:} Access to coding assistants with evaluation requirements
+    \item \textbf{Hardware:} Backup RP2040 boards and debugging equipment
+\end{itemize>
+
+\subsection{Emergency Procedures}
+\begin{itemize}
+    \item \textbf{Hardware Failure:} Backup boards available, simulation fallback options
+    \item \textbf{Build Issues:} TA support for toolchain and configuration problems
+    \item \textbf{Git Conflicts:} Instructor assistance with version control issues
+    \item \textbf{Team Conflicts:} Mediation and role adjustment support
+    \item \textbf{Scope Issues:} Guidance on scope adjustment and priority focus
+\end{itemize}
+
+\subsection{Resource Library}
+\begin{itemize}
+    \item All previous day's code examples and solutions
+    \item RP2040 datasheet and SDK documentation
+    \item Course slides and reference materials
+    \item Example project structures and templates
+    \item Debugging guides and troubleshooting resources
+\end{itemize>
+
+\section{Portfolio Development}
+
+\subsection{GitHub Portfolio Requirements}
+Your capstone project will serve as a centerpiece of your professional portfolio. Ensure your GitHub repository includes:
+
+\begin{itemize}
+    \item \textbf{Professional README:} Clear project description, setup instructions, and usage examples
+    \item \textbf{Code Quality:} Well-organized, commented, and documented source code
+    \item \textbf{Documentation:} Comprehensive technical documentation and user guides
+    \item \textbf{Demonstration Materials:} Videos, screenshots, or GIFs showing the system in action
+    \item \textbf{Technical Analysis:} Design decisions, trade-offs, and performance analysis
+    \item \textbf{Professional Profile:} Updated GitHub profile highlighting your new skills
+\end{itemize}
+
+\subsection{Career Integration}
+\begin{itemize}
+    \item Link your project to LinkedIn profile and resume
+    \item Highlight validation engineering skills and embedded systems experience
+    \item Showcase collaborative development and professional practices
+    \item Demonstrate continuous learning and AI tool proficiency
+    \item Build connections with classmates for professional networking
+\end{itemize}
+
+\section{Post-Project Activities}
+
+\subsection{Immediate Follow-Up (Week 1)}
+\begin{itemize}
+    \item Complete any remaining documentation
+    \item Reflect on lessons learned and areas for improvement
+    \item Connect with team members and classmates on LinkedIn
+    \item Update resume and portfolio with new skills and projects
+    \item Begin planning for extended homework assignments
+\end{itemize}
+
+\subsection{Extended Development (Weeks 2-4)}
+\begin{itemize}
+    \item Implement additional advanced features
+    \item Optimize performance and add new capabilities
+    \item Create detailed technical blog posts about your project
+    \item Contribute to open-source embedded systems projects
+    \item Mentor future course participants
+\end{itemize>
+
+\section{Success Tips and Best Practices}
+
+\subsection{Project Management}
+\begin{itemize}
+    \item \textbf{Start with MVP:} Get basic functionality working first, then add features
+    \item \textbf{Communicate Frequently:} Regular team check-ins and status updates
+    \item \textbf{Version Control:} Commit early and often with descriptive messages
+    \item \textbf{Test Continuously:} Don't wait until the end to test integration
+    \item \textbf{Document as You Go:} Write documentation while implementation is fresh
+\end{itemize}
+
+\subsection{Technical Development}
+\begin{itemize}
+    \item \textbf{Modular Design:} Build reusable components that can be easily tested
+    \item \textbf{Error Handling:} Plan for failure modes and recovery strategies
+    \item \textbf{Performance Focus:} Keep embedded constraints in mind throughout development
+    \item \textbf{Code Reviews:} Review each other's code for quality and learning
+    \item \textbf{Hardware Testing:} Test on actual hardware early and often
+\end{itemize>
+
+\subsection{Presentation Preparation}
+\begin{itemize}
+    \item \textbf{Practice Demo:} Rehearse your demonstration multiple times
+    \item \textbf{Backup Plans:} Have fallback options if hardware fails during demo
+    \item \textbf{Tell a Story:} Structure your presentation as a compelling narrative
+    \item \textbf{Time Management:} Practice staying within the time limit
+    \item \textbf{Engage Audience:} Make eye contact and explain technical concepts clearly
+\end{itemize>
+
+\section{Reflection and Evaluation}
+
+\subsection{Self-Assessment Questions}
+At the end of the project, reflect on:
+\begin{itemize}
+    \item What was your biggest technical achievement in this project?
+    \item How did you overcome the most challenging obstacle you faced?
+    \item What would you do differently if you started the project over?
+    \item How will you apply these skills in your future career?
+    \item What additional skills do you want to develop next?
+\end{itemize>
+
+\subsection{Peer Evaluation}
+Provide feedback on your teammates':
+\begin{itemize}
+    \item Technical contributions and problem-solving skills
+    \item Communication and collaboration effectiveness
+    \item Reliability and commitment to the project
+    \item Leadership and initiative in driving progress
+    \item Areas for improvement and growth
+\end{itemize>
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Congratulations on reaching the capstone!}\\
+\textit{This project represents the culmination of your transformation into a validation engineer.}\\
+\textbf{Show the world what you've learned and built!}
+\end{center>
+
+\end{document>
+

@@ -1,0 +1,124 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title page info
+\title{Day 2: Control Flow and Debugging}
+\subtitle{C Programming for Post-Silicon Validation Engineers}
+\author{Course Instructor}
+\date{6-Day Intensive Bootcamp}
+\institute{Post-Silicon Validation Training Program}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Welcome to Day 2!}
+\begin{center}
+\Large Making Decisions and Finding Bugs
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Yesterday:} Basic C syntax and compilation
+    \item \textbf{Today's Mission:} Control flow and debugging mastery
+    \item \textbf{Validation Focus:} Test sequences and fault detection
+    \item \textbf{New Tool:} GDB debugger
+    \item \textbf{Outcome:} Automated register monitoring system!
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{center}
+\textit{"Programs must be written for people to read, and only incidentally for machines to execute"} - Abelson \& Sussman
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Today's Learning Objectives}
+By the end of Day 2, you will:
+
+\begin{enumerate}
+    \item Master conditional statements (if-else)
+    \item Implement loops for repetitive testing
+    \item Create and call functions effectively
+    \item Use GDB to debug programs step-by-step
+    \item Design automated test sequences
+    \item Handle multiple validation scenarios
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{alertblock}{Validation Context}
+Build test sequences that simulate real hardware monitoring!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Conditional Statements - Making Decisions}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+    float temperature = 75.5;
+    float max_temp = 85.0;
+
+    if (temperature > max_temp) {
+        printf("CRITICAL: Temperature too high!\\n");
+        printf("Shutting down for safety...\\n");
+    } else if (temperature > max_temp - 10) {
+        printf("WARNING: Temperature approaching limit\\n");
+    } else {
+        printf("Temperature normal: %.1f\\textdegree C\\n", temperature);
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Key points:}
+\begin{itemize}
+    \item Use \texttt{==} for equality, not \texttt{=}
+    \item Combine conditions with \texttt{\&\&} (AND) and \texttt{||} (OR)
+    \item Always use braces \texttt{\{\}} for clarity
+\end{itemize}
+\end{frame}
+
+\end{document}
+

@@ -1,0 +1,481 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Page setup
+\geometry{margin=1in}
+\setlength{\headheight}{13.59999pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 2 Assignment: Control Flow and Debugging Lab}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 2 Assignment - Control Flow and Debugging Lab},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 2 ASSIGNMENT}\\[0.5cm]
+    {\Large Control Flow and Debugging Lab}\\[0.3cm]
+    {\large Register Monitoring and Test Automation}\\[0.2cm]
+    {\normalsize Due: End of Day 2 + Homework Extension}
+\end{center}
+
+\vspace{1cm}
+
+\section{Assignment Overview}
+
+\subsection{Learning Objectives}
+By completing this assignment, you will:
+\begin{itemize}
+    \item Master conditional statements and loops for test automation
+    \item Create and use functions for modular test design
+    \item Use GDB for systematic debugging and problem solving
+    \item Implement automated test sequences for hardware validation
+    \item Design robust error handling and recovery mechanisms
+\end{itemize}
+
+\subsection{Assignment Context}
+You will build a comprehensive register monitoring system that simulates post-silicon validation of hardware registers. This system will automatically test multiple registers, detect anomalies, and provide detailed reporting - essential skills for validation engineering.
+
+\section{Part 1: In-Class Lab (3.5 hours)}
+
+\subsection{Setup and Repository}
+\begin{enumerate}
+    \item Accept the Day 2 GitHub Classroom assignment
+    \item Clone your repository and navigate to the project directory
+    \item Verify your Day 1 work is committed and pushed
+    \item Create a new branch: \texttt{git checkout -b day2-development}
+\end{enumerate}
+
+\subsection{Task 1: Register Simulation Framework (60 minutes)}
+
+\textbf{File:} \texttt{register\_sim.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create functions to simulate hardware register reads/writes
+    \item Implement register address mapping (0x1000-0x1FFF range)
+    \item Add register value simulation with realistic patterns
+    \item Include error injection capabilities for testing
+\end{itemize}
+
+\textbf{Starter Code Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define REG_BASE_ADDR 0x1000
+#define MAX_REGISTERS 256
+#define INVALID_REGISTER 0xDEADBEEF
+
+// Global register simulation array
+static uint32_t register_bank[MAX_REGISTERS];
+static int simulation_initialized = 0;
+
+// TODO: Implement register simulation functions
+uint32_t read_register(uint32_t address);
+void write_register(uint32_t address, uint32_t value);
+void init_register_simulation(void);
+void inject_register_fault(uint32_t address);
+
+int main() {
+    // TODO: Initialize simulation
+    // TODO: Demonstrate register operations
+    // TODO: Test error conditions
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Task 2: Conditional Validation Logic (45 minutes)}
+
+\textbf{File:} \texttt{register\_validator.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement register value validation with multiple criteria
+    \item Use if-else chains for different validation scenarios
+    \item Add switch statements for error code handling
+    \item Create validation functions that return detailed status
+\end{itemize}
+
+\textbf{Validation Scenarios:}
+\begin{enumerate}
+    \item \textbf{Range Check:} Value within expected min/max bounds
+    \item \textbf{Pattern Check:} Specific bit patterns (e.g., alternating bits)
+    \item \textbf{Consistency Check:} Related registers have consistent values
+    \item \textbf{Change Detection:} Register values change as expected
+\end{enumerate}
+
+\subsection{Task 3: Automated Test Loops (60 minutes)}
+
+\textbf{File:} \texttt{test\_automation.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Use for loops to test consecutive register ranges
+    \item Implement while loops for condition-based testing
+    \item Create nested loops for multi-dimensional test matrices
+    \item Add loop control for early termination on critical failures
+\end{itemize}
+
+\textbf{Test Automation Features:}
+\begin{lstlisting}[language=C]
+// Example test automation structure
+typedef struct {
+    uint32_t start_address;
+    uint32_t end_address;
+    uint32_t expected_pattern;
+    int max_retries;
+    int stop_on_first_failure;
+} test_config_t;
+
+int run_register_sweep(test_config_t *config);
+int run_stress_test(int iterations, int delay_ms);
+int run_pattern_test(uint32_t pattern, int register_count);
+\end{lstlisting}
+
+\subsection{Task 4: Function-Based Test Architecture (60 minutes)}
+
+\textbf{File:} \texttt{test\_functions.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create modular test functions for different validation types
+    \item Implement parameter passing for configurable tests
+    \item Use return values to indicate test results
+    \item Design function interfaces for easy integration
+\end{itemize}
+
+\textbf{Required Functions:}
+\begin{lstlisting}[language=C]
+// Core test functions
+int test_single_register(uint32_t addr, uint32_t expected);
+int test_register_range(uint32_t start, uint32_t end, uint32_t pattern);
+int test_register_readwrite(uint32_t addr);
+int test_register_persistence(uint32_t addr, uint32_t value, int delay_ms);
+
+// Utility functions
+void print_test_summary(int passed, int failed, int total);
+void log_test_result(const char* test_name, int result, const char* details);
+uint32_t generate_test_pattern(int pattern_type);
+\end{lstlisting>
+
+\subsection{Task 5: GDB Debugging Session (45 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Compile programs with debug symbols: \texttt{gcc -g -Wall}
+    \item Use GDB to step through test functions
+    \item Set breakpoints at critical validation points
+    \item Inspect variables during test execution
+    \item Document debugging findings in \texttt{DEBUG\_LOG.md}
+\end{itemize}
+
+\textbf{Debugging Exercises:}
+\begin{enumerate}
+    \item Intentionally introduce a bug in register validation
+    \item Use GDB to locate and understand the bug
+    \item Fix the bug and verify the solution
+    \item Document the debugging process step-by-step
+\end{enumerate}
+
+\textbf{GDB Commands to Practice:}
+\begin{verbatim}
+gdb ./test_program
+(gdb) break main
+(gdb) break test_single_register
+(gdb) run
+(gdb) next
+(gdb) step
+(gdb) print variable_name
+(gdb) info locals
+(gdb) backtrace
+(gdb) continue
+\end{verbatim}
+
+\section{Part 2: Homework Extension (2 hours)}
+
+\subsection{Task 6: Advanced Loop Patterns}
+
+\textbf{File:} \texttt{advanced\_loops.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement nested loops for multi-chip testing
+    \item Add loop optimization for performance-critical tests
+    \item Create dynamic loop bounds based on runtime conditions
+    \item Implement loop unrolling for speed optimization
+\end{itemize}
+
+\textbf{Advanced Loop Examples:}
+\begin{lstlisting}[language=C]
+// Multi-chip testing with nested loops
+int test_multiple_chips(int chip_count, int registers_per_chip) {
+    int total_failures = 0;
+
+    for (int chip = 0; chip < chip_count; chip++) {
+        printf("Testing chip %d...\n", chip);
+
+        for (int reg = 0; reg < registers_per_chip; reg++) {
+            uint32_t addr = get_chip_register_address(chip, reg);
+
+            // Test with multiple patterns
+            for (int pattern = 0; pattern < 4; pattern++) {
+                uint32_t test_value = generate_pattern(pattern);
+                if (!test_register_pattern(addr, test_value)) {
+                    total_failures++;
+                    if (is_critical_failure(addr, test_value)) {
+                        printf("Critical failure on chip %d, stopping tests\n", chip);
+                        goto cleanup; // Emergency exit
+                    }
+                }
+            }
+        }
+    }
+
+cleanup:
+    return total_failures;
+}
+\end{lstlisting}
+
+\subsection{Task 7: Error Recovery and Resilience}
+
+\textbf{File:} \texttt{error\_recovery.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement retry mechanisms for transient failures
+    \item Add graceful degradation for partial system failures
+    \item Create error classification and handling strategies
+    \item Design recovery procedures for different error types
+\end{itemize}
+
+\textbf{Error Recovery Framework:}
+\begin{lstlisting}[language=C]
+typedef enum {
+    ERROR_NONE = 0,
+    ERROR_TRANSIENT,
+    ERROR_PERMANENT,
+    ERROR_CRITICAL,
+    ERROR_UNKNOWN
+} error_type_t;
+
+typedef struct {
+    error_type_t type;
+    uint32_t error_code;
+    char description[128];
+    int retry_count;
+    int max_retries;
+} error_info_t;
+
+int handle_test_error(error_info_t *error);
+int retry_with_backoff(int (*test_func)(void), int max_retries);
+void implement_circuit_breaker(const char* test_name, int failure_threshold);
+\end{lstlisting}
+
+\subsection{Task 8: Performance Optimization}
+
+\textbf{File:} \texttt{performance\_tests.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Measure test execution times
+    \item Optimize loops for speed vs. thoroughness trade-offs
+    \item Implement parallel testing concepts (simulation)
+    \item Create performance benchmarks and comparisons
+\end{itemize}
+
+\section{Submission Requirements}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Function Design:} Each function should have a single, clear purpose
+    \item \textbf{Error Handling:} All functions should handle edge cases gracefully
+    \item \textbf{Loop Efficiency:} Avoid infinite loops, optimize for performance
+    \item \textbf{Variable Scope:} Use appropriate variable scope (local vs. global)
+    \item \textbf{Magic Numbers:} Use \texttt{\#define} constants instead of hard-coded values
+\end{itemize}
+
+\subsection{Documentation Requirements}
+\begin{itemize}
+    \item \textbf{Function Documentation:} Comment each function's purpose, parameters, and return values
+    \item \textbf{DEBUG\_LOG.md:} Detailed debugging session documentation
+    \item \textbf{PERFORMANCE.md:} Performance analysis and optimization notes
+    \item \textbf{README.md:} Updated with Day 2 functionality and usage instructions
+\end{itemize}
+
+\subsection{GDB Documentation Format}
+\textbf{DEBUG\_LOG.md should include:}
+\begin{verbatim}
+# Day 2 Debugging Session Log
+
+## Bug 1: Off-by-one error in register loop
+**Problem:** Loop accessing invalid memory address
+**GDB Commands Used:**
+- break test_register_range
+- run
+- print start_address
+- print end_address
+- next (stepped through loop)
+
+**Solution:** Changed loop condition from <= to <
+**Verification:** Re-ran test, confirmed fix
+
+## Bug 2: Uninitialized variable
+[Similar format for each bug found and fixed]
+\end{verbatim}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+Task 1: Register Simulation & 15 & Correct implementation, realistic behavior \\
+Task 2: Conditional Logic & 15 & Proper if-else and switch usage \\
+Task 3: Loop Automation & 20 & Effective loop design, proper control flow \\
+Task 4: Function Architecture & 20 & Modular design, clear interfaces \\
+Task 5: GDB Debugging & 15 & Thorough debugging documentation \\
+Task 6: Advanced Loops & 10 & Complex loop patterns, optimization \\
+Task 7: Error Recovery & 10 & Robust error handling strategies \\
+Task 8: Performance & 10 & Timing analysis, optimization efforts \\
+Code Quality & 15 & Style, efficiency, maintainability \\
+Documentation & 10 & Clear, comprehensive documentation \\
+\hline
+\textbf{Total} & \textbf{140} & \textbf{Extra credit for advanced features} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Testing and Validation}
+
+\subsection{Required Test Cases}
+\begin{enumerate}
+    \item \textbf{Single Register Tests:} Valid values, boundary conditions, invalid addresses
+    \item \textbf{Range Tests:} Sequential registers, non-sequential patterns, large ranges
+    \item \textbf{Loop Tests:} Normal execution, early termination, error conditions
+    \item \textbf{Function Tests:} Parameter validation, return value verification, edge cases
+    \item \textbf{Error Tests:} Fault injection, recovery verification, resilience testing
+\end{enumerate}
+
+\subsection{Performance Benchmarks}
+\begin{itemize}
+    \item Time to test 100 consecutive registers
+    \item Memory usage during large test runs
+    \item Comparison of optimized vs. unoptimized loops
+    \item Error recovery overhead measurements
+\end{itemize}
+
+\section{Common Challenges and Solutions}
+
+\subsection{Infinite Loops}
+\textbf{Problem:} While loops that never terminate
+\textbf{Solution:} Always ensure loop conditions can become false, add safety counters
+
+\subsection{Off-by-One Errors}
+\textbf{Problem:} Array bounds violations in loops
+\textbf{Solution:} Carefully check loop conditions, use < instead of <= when appropriate
+
+\subsection{Function Parameter Issues}
+\textbf{Problem:} Incorrect parameter passing or return values
+\textbf{Solution:} Use GDB to trace parameter values, add parameter validation
+
+\subsection{Complex Conditional Logic}
+\textbf{Problem:} Nested if-else statements become unreadable
+\textbf{Solution:} Break into separate functions, use early returns, consider switch statements
+
+\section{Extension Opportunities}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item \textbf{State Machine Testing:} Implement register state transitions
+    \item \textbf{Concurrent Testing:} Simulate multi-threaded register access
+    \item \textbf{Data-Driven Tests:} Read test configurations from files
+    \item \textbf{Visual Output:} ASCII charts showing test progress
+    \item \textbf{Test Scheduling:} Priority-based test execution
+\end{itemize}
+
+\subsection{Real-World Applications}
+\begin{itemize}
+    \item Research actual register testing in semiconductor validation
+    \item Investigate commercial register testing tools
+    \item Study fault injection techniques used in industry
+    \item Explore automated test equipment (ATE) programming
+\end{itemize}
+
+\section{Success Tips}
+
+\begin{itemize}
+    \item \textbf{Start Simple:} Begin with basic loops and conditions, add complexity gradually
+    \item \textbf{Test Incrementally:} Test each function as you write it
+    \item \textbf{Use GDB Effectively:} Don't guess at bugs, use the debugger to understand them
+    \item \textbf{Plan Your Functions:} Think about the interface before implementing
+    \item \textbf{Handle Errors Early:} Add error checking as you write code, not as an afterthought
+    \item \textbf{Document as You Go:} Write comments and documentation while the logic is fresh
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Master the art of systematic testing and debugging!}\\
+\textit{These skills are the foundation of reliable validation systems.}
+\end{center}
+
+\end{document}
+

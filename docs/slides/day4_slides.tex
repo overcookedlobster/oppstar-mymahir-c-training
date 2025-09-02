@@ -1,0 +1,712 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title page info
+\title{Day 4: Advanced Functions and Cross-Compilation}
+\subtitle{C Programming for Post-Silicon Validation Engineers}
+\author{Course Instructor}
+\date{6-Day Intensive Bootcamp}
+\institute{Post-Silicon Validation Training Program}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Welcome to Day 4!}
+\begin{center}
+\Large From Native to Embedded: The Great Transition
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Yesterday:} Mastered pointers, structures, and memory
+    \item \textbf{Today's Mission:} Modular programming and cross-compilation
+    \item \textbf{Validation Focus:} Scalable test architectures
+    \item \textbf{New Platform:} ARM Cortex-M0+ (RP2040)
+    \item \textbf{Outcome:} First embedded validation program!
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{center}
+\textit{"The best programs are written in pieces"} - Brian Kernighan
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Today's Learning Objectives}
+By the end of Day 4, you will:
+
+\begin{enumerate}
+    \item Organize code with modular functions and headers
+    \item Understand cross-compilation for embedded targets
+    \item Set up and use the Raspberry Pi Pico SDK
+    \item Configure CMake build systems for embedded projects
+    \item Compile and link programs for ARM Cortex-M0+
+    \item Create portable validation libraries
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{alertblock}{Embedded Transition}
+Today we move from desktop to microcontroller programming!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Modular Programming: Header Files}
+\textbf{validation.h - Function declarations:}
+\begin{lstlisting}[language=C]
+#ifndef VALIDATION_H
+#define VALIDATION_H
+
+#include <stdint.h>
+
+// Function prototypes
+int validate_voltage(float voltage, float min, float max);
+int validate_temperature(float temp, float max_temp);
+uint32_t read_register(uint32_t address);
+void write_register(uint32_t address, uint32_t value);
+int run_full_validation_suite(void);
+
+// Constants
+#define MIN_VOLTAGE 1.8f
+#define MAX_VOLTAGE 3.6f
+#define MAX_TEMPERATURE 85.0f
+
+#endif // VALIDATION_H
+\end{lstlisting}
+
+\textbf{Why header files?}
+\begin{itemize}
+    \item Separate interface from implementation
+    \item Enable code reuse across projects
+    \item Improve compilation efficiency
+    \item Enforce consistent function signatures
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementation File Structure}
+\textbf{validation.c - Function implementations:}
+\begin{lstlisting}[language=C]
+#include "validation.h"
+#include <stdio.h>
+
+int validate_voltage(float voltage, float min, float max) {
+    if (voltage < min || voltage > max) {
+        printf("FAIL: Voltage %.2fV out of range [%.1f-%.1f]\n",
+               voltage, min, max);
+        return 0;
+    }
+    printf("PASS: Voltage %.2fV within range\n", voltage);
+    return 1;
+}
+
+int validate_temperature(float temp, float max_temp) {
+    if (temp > max_temp) {
+        printf("FAIL: Temperature %.1fC exceeds %.1fC\n",
+               temp, max_temp);
+        return 0;
+    }
+    printf("PASS: Temperature %.1fC within limits\n", temp);
+    return 1;
+}
+
+// More functions...
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using Your Library}
+\textbf{main.c - Using the validation library:}
+\begin{lstlisting}[language=C]
+#include "validation.h"
+#include <stdio.h>
+
+int main() {
+    printf("Starting validation suite...\n");
+
+    // Test voltage validation
+    int voltage_ok = validate_voltage(3.3f, MIN_VOLTAGE, MAX_VOLTAGE);
+
+    // Test temperature validation
+    int temp_ok = validate_temperature(45.5f, MAX_TEMPERATURE);
+
+    // Run complete suite
+    int suite_result = run_full_validation_suite();
+
+    if (voltage_ok && temp_ok && suite_result) {
+        printf("All validations PASSED!\n");
+        return 0;
+    } else {
+        printf("Some validations FAILED!\n");
+        return 1;
+    }
+}
+\end{lstlisting}
+
+\textbf{Compilation:}
+\texttt{gcc -Wall -g main.c validation.c -o validator}
+\end{frame}
+
+\begin{frame}
+\frametitle{Cross-Compilation Concepts}
+\begin{center}
+\begin{tabular}{ccc}
+\fbox{\begin{minipage}{2.5cm}\centering Host System\\x86 Linux\end{minipage}} &
+$\xrightarrow{\text{Source Code}}$ &
+\fbox{\begin{minipage}{2.5cm}\centering Cross Compiler\\arm-eabi-gcc\end{minipage}} \\[0.5cm]
+\textbf{Development} & & \textbf{Build Process} \\[0.5cm]
+& $\xrightarrow{\text{ARM Binary}}$ &
+\fbox{\begin{minipage}{2.5cm}\centering Target System\\ARM Cortex\end{minipage}} \\[0.5cm]
+& & \textbf{Execution}
+\end{tabular}
+\end{center}
+
+\textbf{Why cross-compile?}
+\begin{itemize}
+    \item Target has different CPU architecture (ARM vs x86)
+    \item Target has limited resources (memory, storage)
+    \item Target may not have development tools
+    \item Enables development on powerful host systems
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Meet the RP2040}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\textbf{Raspberry Pi Pico Specifications:}
+\begin{itemize}
+    \item \textbf{CPU:} Dual ARM Cortex-M0+ @ 133MHz
+    \item \textbf{Memory:} 264KB SRAM
+    \item \textbf{Storage:} 2MB Flash
+    \item \textbf{GPIO:} 26 pins (3.3V)
+    \item \textbf{Peripherals:} UART, SPI, I2C, PWM, ADC
+    \item \textbf{Cost:} \$4-5 USD
+    \item \textbf{Programming:} USB drag-and-drop
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\textbf{Perfect for validation because:}
+\begin{itemize}
+    \item Real ARM architecture
+    \item Hardware peripherals
+    \item Easy programming
+    \item Low cost
+    \item Excellent documentation
+    \item Active community
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+\begin{center}
+\textbf{This is your validation hardware platform!}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pico SDK Introduction}
+\textbf{What is the Pico SDK?}
+\begin{itemize}
+    \item Official C/C++ development kit for RP2040
+    \item Hardware abstraction layer (HAL)
+    \item Standard library implementations
+    \item CMake-based build system
+    \item Extensive examples and documentation
+\end{itemize}
+
+\textbf{Basic Pico program structure:}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+
+int main() {
+    // Initialize standard I/O
+    stdio_init_all();
+
+    // Initialize GPIO pin 25 (onboard LED)
+    gpio_init(25);
+    gpio_set_dir(25, GPIO_OUT);
+
+    // Main loop
+    while (true) {
+        gpio_put(25, 1);  // LED on
+        sleep_ms(500);
+        gpio_put(25, 0);  // LED off
+        sleep_ms(500);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{CMake Configuration for Pico}
+\textbf{CMakeLists.txt for embedded project:}
+\begin{lstlisting}[basicstyle=\tiny]
+cmake_minimum_required(VERSION 3.13)
+
+# Include the Pico SDK
+include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+
+project(validation_suite C CXX ASM)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+# Initialize the Pico SDK
+pico_sdk_init()
+
+# Add executable
+add_executable(validation_suite
+    src/main.c
+    src/validation.c
+    src/gpio_tests.c
+    src/register_sim.c
+)
+
+# Link libraries
+target_link_libraries(validation_suite
+    pico_stdlib          # Standard library
+    hardware_gpio        # GPIO control
+    hardware_timer       # Timing functions
+    hardware_adc         # Analog-to-digital converter
+)
+
+# Enable USB output (for printf)
+pico_enable_stdio_usb(validation_suite 1)
+pico_enable_stdio_uart(validation_suite 0)
+
+# Create map/bin/hex/uf2 files
+pico_add_extra_outputs(validation_suite)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Cross-Compilation Workflow}
+\textbf{Build process:}
+\begin{verbatim}
+# 1. Create build directory
+mkdir build && cd build
+
+# 2. Configure with CMake
+cmake ..
+
+# 3. Build the project
+make -j4
+
+# 4. Result files:
+# validation_suite.elf  - Executable
+# validation_suite.uf2  - Pico-flashable format
+# validation_suite.bin  - Raw binary
+# validation_suite.hex  - Intel hex format
+\end{verbatim}
+
+\textbf{Flashing to Pico:}
+\begin{enumerate}
+    \item Hold BOOTSEL button while connecting USB
+    \item Pico appears as USB drive
+    \item Copy \texttt{validation\_suite.uf2} to the drive
+    \item Pico automatically reboots and runs your program
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Validation Example: GPIO Testing}
+\begin{lstlisting}[language=C, basicstyle=\tiny]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+#include <stdio.h>
+
+#define LED_PIN 25
+#define TEST_PIN_START 2
+#define TEST_PIN_COUNT 8
+
+typedef struct {
+    uint8_t pin;
+    bool test_passed;
+    char result_msg[64];
+} gpio_test_result_t;
+
+int test_gpio_pin(uint8_t pin) {
+    // Initialize pin as output
+    gpio_init(pin);
+    gpio_set_dir(pin, GPIO_OUT);
+
+    // Test high output
+    gpio_put(pin, 1);
+    sleep_ms(10);
+    bool high_read = gpio_get(pin);
+
+    // Test low output
+    gpio_put(pin, 0);
+    sleep_ms(10);
+    bool low_read = gpio_get(pin);
+
+    // Validation: high should read 1, low should read 0
+    return (high_read == 1) && (low_read == 0);
+}
+
+int run_gpio_validation_suite(gpio_test_result_t results[]) {
+    int passed_tests = 0;
+
+    printf("Starting GPIO validation suite...\n");
+
+    for (int i = 0; i < TEST_PIN_COUNT; i++) {
+        uint8_t pin = TEST_PIN_START + i;
+        results[i].pin = pin;
+        results[i].test_passed = test_gpio_pin(pin);
+
+        if (results[i].test_passed) {
+            snprintf(results[i].result_msg, sizeof(results[i].result_msg),
+                    "Pin %d: PASS", pin);
+            passed_tests++;
+        } else {
+            snprintf(results[i].result_msg, sizeof(results[i].result_msg),
+                    "Pin %d: FAIL", pin);
+        }
+
+        printf("%s\n", results[i].result_msg);
+
+        // Blink LED to show progress
+        gpio_put(LED_PIN, 1);
+        sleep_ms(100);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(100);
+    }
+
+    return passed_tests;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Embedded vs Desktop Programming}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Aspect} & \textbf{Desktop} & \textbf{Embedded} \\
+\hline
+Memory & GBs available & KBs available \\
+Storage & GBs/TBs & KBs/MBs \\
+OS & Full OS (Linux/Windows) & Bare metal/RTOS \\
+Libraries & Full standard library & Limited stdlib \\
+Debugging & GDB, IDE debuggers & Hardware debuggers \\
+I/O & Files, network, GUI & GPIO, UART, SPI \\
+Performance & Less critical & Highly optimized \\
+Power & Unlimited & Battery constrained \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Embedded programming considerations:}
+\begin{itemize}
+    \item Memory usage optimization
+    \item Real-time constraints
+    \item Hardware-specific code
+    \item Power management
+    \item Reliability and fault tolerance
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Portable Code Design}
+\textbf{Hardware abstraction example:}
+\begin{lstlisting}[language=C]
+// hardware_abstraction.h
+#ifdef PICO_BUILD
+    #include "pico/stdlib.h"
+    #include "hardware/gpio.h"
+    #define HAL_GPIO_WRITE(pin, value) gpio_put(pin, value)
+    #define HAL_GPIO_READ(pin) gpio_get(pin)
+    #define HAL_DELAY_MS(ms) sleep_ms(ms)
+#else
+    // Desktop simulation
+    #include <stdio.h>
+    #include <unistd.h>
+    extern int sim_gpio_state[];
+    #define HAL_GPIO_WRITE(pin, value) (sim_gpio_state[pin] = value)
+    #define HAL_GPIO_READ(pin) (sim_gpio_state[pin])
+    #define HAL_DELAY_MS(ms) usleep((ms) * 1000)
+#endif
+
+// Your validation code uses HAL functions
+void blink_status_led(void) {
+    HAL_GPIO_WRITE(LED_PIN, 1);
+    HAL_DELAY_MS(500);
+    HAL_GPIO_WRITE(LED_PIN, 0);
+    HAL_DELAY_MS(500);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]  % <- Add this [fragile] option
+\frametitle{Static vs Dynamic Memory}
+\textbf{Embedded systems prefer static allocation:}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Static (Good):}
+\begin{lstlisting}[language=C]
+// Fixed-size arrays
+int test_results[MAX_TESTS];
+
+// Static structures
+ChipState chips[NUM_CHIPS];
+
+// Stack variables
+void test_function() {
+    int local_var = 42;
+    // ...
+}
+\end{lstlisting}
+\end{column}
+\begin{column}{0.5\textwidth}
+\textbf{Dynamic (Avoid):}
+\begin{lstlisting}[language=C]
+// Heap allocation
+int *results = malloc(
+    sizeof(int) * num_tests);
+
+// Variable-length arrays
+void test_function(int n) {
+    int array[n];  // Risky!
+    // ...
+}
+\end{lstlisting}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+\textbf{Why avoid dynamic allocation?}
+\begin{itemize}
+    \item Limited heap space
+    \item Memory fragmentation
+    \item Unpredictable timing
+    \item Risk of memory leaks
+    \item No virtual memory protection
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interactive Poll: Architecture Quiz}
+\begin{center}
+\Large Which is better for embedded validation?
+\end{center}
+
+\textbf{Scenario:} Testing 100 registers repeatedly
+
+\textbf{Option A:} \texttt{int results[100];}
+
+\textbf{Option B:} \texttt{int *results = malloc(100 * sizeof(int));}
+
+\pause
+
+\begin{alertblock}{Answer}
+\textbf{Option A} - Static allocation is predictable and reliable!
+\end{alertblock}
+
+\vspace{0.5cm}
+\textbf{Embedded rule:} If you can predict the size, use static allocation.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Function Organization Best Practices}
+\textbf{Layered architecture for validation:}
+\begin{lstlisting}[language=C]
+// Layer 1: Hardware abstraction
+void hal_gpio_init(uint8_t pin);
+void hal_gpio_write(uint8_t pin, bool value);
+bool hal_gpio_read(uint8_t pin);
+
+// Layer 2: Device drivers
+void led_init(void);
+void led_on(void);
+void led_off(void);
+void led_blink(uint32_t duration_ms);
+
+// Layer 3: Test primitives
+int test_gpio_output(uint8_t pin);
+int test_gpio_input(uint8_t pin);
+int test_voltage_range(float voltage);
+
+// Layer 4: Test suites
+int run_gpio_test_suite(void);
+int run_power_test_suite(void);
+int run_complete_validation(void);
+
+// Layer 5: Application
+int main(void);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Lab Preview: Cross-Compiled Validator}
+\textbf{This afternoon you'll build:}
+\begin{itemize}
+    \item Modular validation library with headers
+    \item Cross-compilation setup for RP2040
+    \item CMake build configuration
+    \item GPIO-based hardware testing
+    \item Portable code that runs on both desktop and Pico
+    \item AI-assisted optimization and debugging
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Deliverables:}
+\begin{itemize}
+    \item \texttt{validation.h} and \texttt{validation.c}
+    \item \texttt{CMakeLists.txt} for cross-compilation
+    \item Working \texttt{.uf2} file for Pico
+    \item Desktop simulation version
+    \item Documentation of build process
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Troubleshooting Cross-Compilation}
+\textbf{Common issues and solutions:}
+
+\begin{itemize}
+    \item \textbf{SDK not found:} Check \texttt{PICO\_SDK\_PATH} environment variable
+    \item \textbf{Compiler errors:} Verify \texttt{arm-none-eabi-gcc} installation
+    \item \textbf{CMake fails:} Ensure CMake version 3.13+
+    \item \textbf{Linking errors:} Check library dependencies in CMakeLists.txt
+    \item \textbf{Upload fails:} Hold BOOTSEL button when connecting Pico
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Debug strategy:}
+\begin{enumerate}
+    \item Start with simple blink example
+    \item Add complexity incrementally
+    \item Use printf for debugging (via USB)
+    \item Test on desktop first, then cross-compile
+    \item Keep backup of working versions
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Key Takeaways - Day 4}
+\begin{itemize}
+    \item \textbf{Modular design scales:} Header files enable code reuse
+    \item \textbf{Cross-compilation opens doors:} Same code, different targets
+    \item \textbf{RP2040 is powerful:} Real ARM platform for validation
+    \item \textbf{CMake manages complexity:} Automated build processes
+    \item \textbf{Static allocation is safer:} Predictable memory usage
+    \item \textbf{Layered architecture works:} Organize by abstraction level
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{center}
+\textbf{You're now an embedded systems developer!}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tonight's Homework}
+\textbf{Optimize your cross-compiled validator:}
+\begin{enumerate}
+    \item Refactor code into multiple source files
+    \item Create comprehensive header documentation
+    \item Optimize for embedded constraints (memory, speed)
+    \item Add error handling and recovery
+    \item Use AI to suggest performance improvements
+    \item Test both desktop and embedded versions
+\end{enumerate}
+
+\vspace{0.5cm}
+\textbf{Advanced challenges:}
+\begin{itemize}
+    \item Implement hardware abstraction layer
+    \item Add configuration management
+    \item Create automated test reporting
+    \item Explore Pico SDK advanced features
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tomorrow Preview: Hardware Debugging}
+\begin{center}
+\Large Real Hardware, Real Debugging!
+\end{center}
+
+\textbf{Day 5 topics:}
+\begin{itemize}
+    \item Advanced GDB techniques for embedded systems
+    \item RP2040 peripheral programming (ADC, timers, UART)
+    \item Hardware-in-the-loop testing concepts
+    \item Fault injection and detection methods
+    \item Real-time debugging strategies
+    \item Performance optimization techniques
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{alertblock}{Hardware Day}
+Tomorrow you'll be programming real silicon!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions \& Discussion}
+\begin{center}
+\Large Ready for embedded development?
+\end{center}
+
+\begin{itemize}
+    \item Cross-compilation setup questions?
+    \item CMake configuration challenges?
+    \item Modular programming concepts unclear?
+    \item RP2040 hardware questions?
+    \item Excited about tomorrow's hardware programming?
+\end{itemize}
+
+\vspace{1cm}
+\begin{center}
+\textbf{Time to build your first embedded validator!}
+\end{center}
+\end{frame}
+
+\end{document}
+

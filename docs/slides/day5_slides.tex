@@ -1,0 +1,834 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title page info
+\title{Day 5: Hardware Debugging and RP2040 Peripherals}
+\subtitle{C Programming for Post-Silicon Validation Engineers}
+\author{Course Instructor}
+\date{6-Day Intensive Bootcamp}
+\institute{Post-Silicon Validation Training Program}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Welcome to Day 5!}
+\begin{center}
+\Large Real Hardware, Real Validation!
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Yesterday:} Cross-compilation and modular programming
+    \item \textbf{Today's Mission:} Master hardware debugging and peripherals
+    \item \textbf{Validation Focus:} Hardware-in-the-loop testing
+    \item \textbf{Real Hardware:} RP2040 GPIO, ADC, timers, and more
+    \item \textbf{Outcome:} Complete embedded validation system!
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{center}
+\textit{"Hardware is hard, but debugging makes it manageable"} - Embedded Systems Wisdom
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Today's Learning Objectives}
+By the end of Day 5, you will:
+
+\begin{enumerate}
+    \item Use advanced GDB techniques for embedded debugging
+    \item Program RP2040 peripherals (GPIO, ADC, timers)
+    \item Implement hardware-in-the-loop testing
+    \item Create fault injection and detection systems
+    \item Optimize code for real-time constraints
+    \item Build comprehensive hardware validation suites
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{alertblock}{Hardware Reality}
+Today we validate real silicon with real constraints!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Advanced GDB for Embedded Systems}
+\textbf{Embedded debugging challenges:}
+\begin{itemize}
+    \item No console output during execution
+    \item Limited memory and storage
+    \item Real-time timing constraints
+    \item Hardware-dependent behavior
+    \item Interrupt-driven programming
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Solutions:}
+\begin{itemize}
+    \item \textbf{printf debugging:} Via USB serial
+    \item \textbf{LED indicators:} Visual debugging
+    \item \textbf{Hardware debuggers:} SWD/JTAG interfaces
+    \item \textbf{Logic analyzers:} Signal timing analysis
+    \item \textbf{Oscilloscopes:} Analog signal debugging
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Printf Debugging on RP2040}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include <stdio.h>
+
+int main() {
+    // Initialize USB serial for printf
+    stdio_init_all();
+
+    // Wait for USB connection (optional)
+    while (!stdio_usb_connected()) {
+        sleep_ms(100);
+    }
+
+    printf("RP2040 Validation System Starting...\n");
+
+    int test_count = 0;
+    while (true) {
+        printf("Running test cycle %d\n", ++test_count);
+
+        // Your validation code here
+        int result = run_validation_tests();
+
+        printf("Test cycle %d result: %s\n",
+               test_count, result ? "PASS" : "FAIL");
+
+        sleep_ms(1000);
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Viewing output:} Use serial terminal (minicom, PuTTY, or VS Code terminal)
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{LED-Based Debug Indicators}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+
+#define LED_PIN 25
+#define DEBUG_PIN_1 2
+#define DEBUG_PIN_2 3
+
+void debug_init(void) {
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+    gpio_init(DEBUG_PIN_1);
+    gpio_set_dir(DEBUG_PIN_1, GPIO_OUT);
+    gpio_init(DEBUG_PIN_2);
+    gpio_set_dir(DEBUG_PIN_2, GPIO_OUT);
+}
+
+void debug_signal_test_start(void) {
+    gpio_put(DEBUG_PIN_1, 1);  // Signal test start
+}
+
+void debug_signal_test_end(void) {
+    gpio_put(DEBUG_PIN_1, 0);  // Signal test end
+}
+
+void debug_signal_error(void) {
+    // Rapid blink pattern for errors
+    for (int i = 0; i < 10; i++) {
+        gpio_put(LED_PIN, 1);
+        sleep_ms(50);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(50);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{RP2040 Peripheral Overview}
+
+\begin{center}
+\textbf{RP2040 Microcontroller Peripherals}
+\end{center}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Digital Interfaces:}
+\begin{itemize}
+    \item GPIO (26 pins)
+    \item UART (2 channels)
+    \item SPI (2 channels)
+    \item I2C (2 channels)
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\textbf{Analog \& Timing:}
+\begin{itemize}
+    \item ADC (3 channels)
+    \item PWM (8 channels)
+    \item Timers (4 channels)
+    \item PIO (Programmable I/O)
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+\textbf{Validation applications:}
+\begin{itemize}
+    \item \textbf{GPIO:} Digital signal testing, control interfaces
+    \item \textbf{ADC:} Voltage monitoring, sensor validation
+    \item \textbf{Timers:} Precise timing measurements, timeouts
+    \item \textbf{PWM:} Signal generation, motor control testing
+    \item \textbf{UART/SPI/I2C:} Communication protocol validation
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{GPIO Advanced Programming}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+
+#define TEST_PIN_BASE 2
+#define NUM_TEST_PINS 8
+
+typedef struct {
+    uint8_t pin;
+    bool input_test_pass;
+    bool output_test_pass;
+    bool pullup_test_pass;
+    bool pulldown_test_pass;
+} gpio_comprehensive_result_t;
+
+int test_gpio_comprehensive(uint8_t pin, gpio_comprehensive_result_t *result) {
+    result->pin = pin;
+    gpio_init(pin);
+
+    // Test 1: Output functionality
+    gpio_set_dir(pin, GPIO_OUT);
+    gpio_put(pin, 1);
+    sleep_ms(1);
+    bool high_output = gpio_get(pin);
+    gpio_put(pin, 0);
+    sleep_ms(1);
+    bool low_output = gpio_get(pin);
+    result->output_test_pass = (high_output == 1) && (low_output == 0);
+
+    // Test 2: Input with pull-up
+    gpio_set_dir(pin, GPIO_IN);
+    gpio_pull_up(pin);
+    sleep_ms(10);  // Allow pull-up to settle
+    bool pullup_state = gpio_get(pin);
+    result->pullup_test_pass = (pullup_state == 1);
+
+    // Test 3: Input with pull-down
+    gpio_pull_down(pin);
+    sleep_ms(10);  // Allow pull-down to settle
+    bool pulldown_state = gpio_get(pin);
+    result->pulldown_test_pass = (pulldown_state == 0);
+
+    // Overall pass/fail
+    return result->output_test_pass && result->pullup_test_pass &&
+           result->pulldown_test_pass;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ADC for Voltage Monitoring}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/adc.h"
+
+#define ADC_VREF 3.3f  // Reference voltage
+#define ADC_RESOLUTION 4096  // 12-bit ADC
+
+void adc_validation_init(void) {
+    adc_init();
+
+    // Initialize ADC pins
+    adc_gpio_init(26);  // ADC0
+    adc_gpio_init(27);  // ADC1
+    adc_gpio_init(28);  // ADC2
+}
+
+float read_voltage(uint8_t adc_channel) {
+    adc_select_input(adc_channel);
+    uint16_t raw_value = adc_read();
+    return (raw_value * ADC_VREF) / ADC_RESOLUTION;
+}
+
+int validate_voltage_range(uint8_t channel, float expected_min, float expected_max) {
+    float voltage = read_voltage(channel);
+
+    printf("ADC%d: %.3fV (range: %.1f-%.1fV) ",
+           channel, voltage, expected_min, expected_max);
+
+    if (voltage >= expected_min && voltage <= expected_max) {
+        printf("PASS\n");
+        return 1;
+    } else {
+        printf("FAIL\n");
+        return 0;
+    }
+}
+
+int run_voltage_validation_suite(void) {
+    int passed = 0;
+    int total = 3;
+
+    // Test different voltage ranges
+    passed += validate_voltage_range(0, 0.0f, 3.3f);  // Full range
+    passed += validate_voltage_range(1, 1.5f, 2.0f);  // Mid-range
+    passed += validate_voltage_range(2, 0.0f, 0.5f);  // Low range
+
+    printf("Voltage validation: %d/%d tests passed\n", passed, total);
+    return (passed == total);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Timer-Based Precision Testing}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/timer.h"
+
+// Measure execution time of a function
+uint64_t measure_execution_time(void (*test_function)(void)) {
+    uint64_t start_time = time_us_64();
+    test_function();
+    uint64_t end_time = time_us_64();
+    return end_time - start_time;
+}
+
+// Test function timing constraints
+int validate_timing_constraint(void (*func)(void), uint64_t max_time_us) {
+    uint64_t execution_time = measure_execution_time(func);
+
+    printf("Execution time: %llu us (max: %llu us) ",
+           execution_time, max_time_us);
+
+    if (execution_time <= max_time_us) {
+        printf("PASS\n");
+        return 1;
+    } else {
+        printf("FAIL - Too slow!\n");
+        return 0;
+    }
+}
+
+// Example test function
+void sample_validation_function(void) {
+    // Simulate some validation work
+    for (int i = 0; i < 1000; i++) {
+        volatile int dummy = i * i;  // Prevent optimization
+    }
+}
+
+int run_timing_validation(void) {
+    printf("Testing timing constraints...\n");
+
+    // Validate that our function executes within 1ms
+    return validate_timing_constraint(sample_validation_function, 1000);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Interrupt-Based Event Detection}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+#include "hardware/irq.h"
+
+volatile bool fault_detected = false;
+volatile uint32_t fault_count = 0;
+
+// Interrupt handler for fault detection
+void gpio_irq_handler(uint gpio, uint32_t events) {
+    if (gpio == FAULT_INPUT_PIN && (events & GPIO_IRQ_EDGE_RISE)) {
+        fault_detected = true;
+        fault_count++;
+        printf("FAULT DETECTED! Count: %lu\n", fault_count);
+    }
+}
+
+void setup_fault_detection(uint8_t fault_pin) {
+    gpio_init(fault_pin);
+    gpio_set_dir(fault_pin, GPIO_IN);
+    gpio_pull_down(fault_pin);
+
+    // Enable interrupt on rising edge
+    gpio_set_irq_enabled_with_callback(fault_pin, GPIO_IRQ_EDGE_RISE,
+                                       true, &gpio_irq_handler);
+}
+
+int run_fault_detection_test(void) {
+    printf("Starting fault detection test...\n");
+
+    fault_detected = false;
+    fault_count = 0;
+
+    // Run test for 10 seconds
+    absolute_time_t start_time = get_absolute_time();
+    while (absolute_time_diff_us(start_time, get_absolute_time()) < 10000000) {
+        if (fault_detected) {
+            printf("Fault handling in progress...\n");
+            fault_detected = false;  // Reset flag
+        }
+        sleep_ms(100);
+    }
+
+    printf("Fault detection test complete. Total faults: %lu\n", fault_count);
+    return 1;  // Test completed successfully
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hardware-in-the-Loop Testing Concepts}
+\begin{center}
+\textbf{Hardware-in-the-Loop Test Setup}
+\end{center}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Test System:}
+\begin{itemize}
+    \item RP2040 Controller
+    \item Control Signals
+    \item Data Acquisition
+    \item Automated Testing
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\textbf{External Equipment:}
+\begin{itemize}
+    \item Power Supply
+    \item Oscilloscope
+    \item Logic Analyzer
+    \item Device Under Test
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+\textbf{HIL Testing Benefits:}
+\begin{itemize}
+    \item \textbf{Real conditions:} Actual hardware behavior
+    \item \textbf{Automated testing:} Repeatable test sequences
+    \item \textbf{Fault injection:} Controlled error conditions
+    \item \textbf{Regression testing:} Verify fixes don't break other features
+    \item \textbf{Stress testing:} Push hardware to limits
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Fault Injection Implementation}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+
+#define POWER_CONTROL_PIN 10
+#define CLOCK_CONTROL_PIN 11
+#define RESET_CONTROL_PIN 12
+
+typedef enum {
+    FAULT_NONE,
+    FAULT_POWER_GLITCH,
+    FAULT_CLOCK_GLITCH,
+    FAULT_RESET_PULSE,
+    FAULT_VOLTAGE_DROP
+} fault_type_t;
+
+void inject_power_glitch(uint32_t duration_ms) {
+    printf("Injecting power glitch for %lu ms\n", duration_ms);
+    gpio_put(POWER_CONTROL_PIN, 0);  // Cut power
+    sleep_ms(duration_ms);
+    gpio_put(POWER_CONTROL_PIN, 1);  // Restore power
+    sleep_ms(100);  // Allow system to stabilize
+}
+
+void inject_clock_glitch(uint32_t glitch_count) {
+    printf("Injecting %lu clock glitches\n", glitch_count);
+    for (uint32_t i = 0; i < glitch_count; i++) {
+        gpio_put(CLOCK_CONTROL_PIN, 0);
+        sleep_us(10);  // Very short glitch
+        gpio_put(CLOCK_CONTROL_PIN, 1);
+        sleep_us(10);
+    }
+}
+
+int test_fault_recovery(fault_type_t fault_type) {
+    printf("Testing recovery from fault type %d\n", fault_type);
+
+    // Record system state before fault
+    bool system_ready_before = check_system_ready();
+
+    // Inject fault
+    switch (fault_type) {
+        case FAULT_POWER_GLITCH:
+            inject_power_glitch(50);
+            break;
+        case FAULT_CLOCK_GLITCH:
+            inject_clock_glitch(10);
+            break;
+        // Add more fault types...
+    }
+
+    // Check recovery
+    sleep_ms(1000);  // Allow recovery time
+    bool system_ready_after = check_system_ready();
+
+    if (system_ready_after) {
+        printf("System recovered successfully\n");
+        return 1;
+    } else {
+        printf("System failed to recover\n");
+        return 0;
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Real-Time Debugging Strategies}
+\textbf{Challenges in real-time systems:}
+\begin{itemize}
+    \item Timing-sensitive operations
+    \item Interrupt-driven behavior
+    \item Race conditions
+    \item Resource contention
+    \item Non-deterministic execution
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Debugging techniques:}
+\begin{itemize}
+    \item \textbf{Non-intrusive logging:} Minimal impact on timing
+    \item \textbf{State machines:} Track system states
+    \item \textbf{Watchdog timers:} Detect system hangs
+    \item \textbf{Performance counters:} Monitor resource usage
+    \item \textbf{Logic analyzers:} Capture signal timing
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Best practices:}
+\begin{itemize}
+    \item Keep interrupt handlers short
+    \item Use atomic operations for shared data
+    \item Implement proper synchronization
+    \item Test under worst-case conditions
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Performance Optimization Example}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/timer.h"
+
+// Unoptimized version
+int validate_registers_slow(uint32_t *registers, int count) {
+    int errors = 0;
+    for (int i = 0; i < count; i++) {
+        uint32_t expected = calculate_expected_value(i);  // Expensive!
+        if (registers[i] != expected) {
+            errors++;
+            printf("Register %d: expected 0x%08lX, got 0x%08lX\n",
+                   i, expected, registers[i]);
+        }
+    }
+    return errors;
+}
+
+// Optimized version
+int validate_registers_fast(uint32_t *registers, int count) {
+    static uint32_t expected_values[MAX_REGISTERS];  // Pre-calculated
+    static bool values_initialized = false;
+
+    // Initialize expected values once
+    if (!values_initialized) {
+        for (int i = 0; i < count; i++) {
+            expected_values[i] = calculate_expected_value(i);
+        }
+        values_initialized = true;
+    }
+
+    int errors = 0;
+    for (int i = 0; i < count; i++) {
+        if (registers[i] != expected_values[i]) {
+            errors++;
+            // Minimal logging for speed
+            error_log[errors-1] = i;  // Just store index
+        }
+    }
+    return errors;
+}
+
+void benchmark_validation_functions(void) {
+    uint32_t test_registers[100];
+    // Initialize test data...
+
+    uint64_t slow_time = measure_execution_time_us(
+        validate_registers_slow_wrapper);
+    uint64_t fast_time = measure_execution_time_us(
+        validate_registers_fast_wrapper);
+
+    printf("Slow version: %llu us\n", slow_time);
+    printf("Fast version: %llu us\n", fast_time);
+    printf("Speedup: %%.1fx\n", (float)slow_time / fast_time);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interactive Poll: Debugging Challenge}
+\begin{center}
+\Large Your validation system occasionally hangs. What's your first debugging step?
+\end{center}
+
+\textbf{A)} Add more printf statements everywhere
+
+\textbf{B)} Implement a watchdog timer
+
+\textbf{C)} Use a logic analyzer to check signals
+
+\textbf{D)} Rewrite the entire system
+
+\pause
+
+\begin{alertblock}{Answer}
+\textbf{B)} Watchdog timer - Detect and recover from hangs automatically!
+\end{alertblock}
+
+\vspace{0.5cm}
+\textbf{Then} use logic analyzer and targeted debugging to find root cause.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Watchdog Implementation}
+\begin{lstlisting}[language=C]
+#include "pico/stdlib.h"
+#include "hardware/watchdog.h"
+
+#define WATCHDOG_TIMEOUT_MS 5000  // 5 second timeout
+
+void setup_watchdog_protection(void) {
+    // Enable watchdog with 5 second timeout
+    watchdog_enable(WATCHDOG_TIMEOUT_MS, 1);
+    printf("Watchdog enabled with %d ms timeout\n", WATCHDOG_TIMEOUT_MS);
+}
+
+void validation_main_loop(void) {
+    setup_watchdog_protection();
+
+    while (true) {
+        // Reset watchdog at start of each cycle
+        watchdog_update();
+
+        printf("Starting validation cycle...\n");
+
+        // Run validation tests
+        int gpio_result = run_gpio_tests();
+        watchdog_update();  // Reset after each major operation
+
+        int adc_result = run_adc_tests();
+        watchdog_update();
+
+        int timing_result = run_timing_tests();
+        watchdog_update();
+
+        // Report results
+        printf("Cycle complete: GPIO=%d, ADC=%d, Timing=%d\n",
+               gpio_result, adc_result, timing_result);
+
+        sleep_ms(1000);
+        // Watchdog will be reset at start of next cycle
+    }
+}
+
+// If system hangs, watchdog will reset the system
+// Check reset reason on startup:
+void check_reset_reason(void) {
+    if (watchdog_caused_reboot()) {
+        printf("WARNING: System was reset by watchdog!\n");
+        printf("Possible system hang detected.\n");
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Lab Preview: Complete Hardware Validator}
+\textbf{This afternoon you'll build:}
+\begin{itemize}
+    \item Comprehensive RP2040 peripheral validation suite
+    \item Advanced debugging with printf and LED indicators
+    \item Hardware-in-the-loop testing framework
+    \item Fault injection and recovery testing
+    \item Performance-optimized validation routines
+    \item Real-time constraint validation
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Advanced features:}
+\begin{itemize}
+    \item Interrupt-based event handling
+    \item Watchdog protection system
+    \item Automated test reporting
+    \item Statistical analysis of results
+    \item AI-assisted optimization
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hardware Safety Considerations}
+\textbf{Protecting your hardware:}
+\begin{itemize}
+    \item \textbf{Voltage limits:} Never exceed 3.3V on RP2040 pins
+    \item \textbf{Current limits:} Maximum 12mA per GPIO pin
+    \item \textbf{ESD protection:} Use anti-static precautions
+    \item \textbf{Power sequencing:} Proper startup/shutdown procedures
+    \item \textbf{Thermal management:} Monitor temperature during stress tests
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Validation safety practices:}
+\begin{itemize}
+    \item Start with low-stress tests
+    \item Implement emergency shutdown procedures
+    \item Use current-limited power supplies
+    \item Monitor system health continuously
+    \item Have backup hardware available
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Key Takeaways - Day 5}
+\begin{itemize}
+    \item \textbf{Hardware debugging is different:} Use printf, LEDs, and external tools
+    \item \textbf{Peripherals enable validation:} GPIO, ADC, timers are your tools
+    \item \textbf{Real-time matters:} Timing constraints are critical
+    \item \textbf{Fault injection tests robustness:} Controlled failures reveal weaknesses
+    \item \textbf{Optimization is essential:} Embedded systems demand efficiency
+    \item \textbf{Safety first:} Protect hardware during aggressive testing
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{center}
+\textbf{You're now a hardware validation expert!}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tonight's Homework}
+\textbf{Enhance your hardware validator:}
+\begin{enumerate}
+    \item Add comprehensive peripheral testing
+    \item Implement fault injection scenarios
+    \item Optimize critical validation routines
+    \item Add watchdog protection and error recovery
+    \item Create detailed performance benchmarks
+    \item Use AI to suggest hardware-specific optimizations
+\end{enumerate}
+
+\vspace{0.5cm}
+\textbf{Advanced challenges:}
+\begin{itemize}
+    \item Implement interrupt-based testing
+    \item Add statistical analysis of test results
+    \item Create automated test report generation
+    \item Explore advanced RP2040 features (PIO, DMA)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tomorrow Preview: Capstone Project}
+\begin{center}
+\Large The Grand Finale!
+\end{center}
+
+\textbf{Day 6 - Capstone Project:}
+\begin{itemize}
+    \item Integrate all learned concepts
+    \item Design and implement complete validation system
+    \item Team collaboration and project management
+    \item Professional presentation of results
+    \item Portfolio development and career planning
+    \item Course wrap-up and next steps
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{alertblock}{Showcase Day}
+Tomorrow you'll demonstrate your validation engineering skills!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions \& Discussion}
+\begin{center}
+\Large Ready to validate real hardware?
+\end{center}
+
+\begin{itemize}
+    \item Hardware debugging techniques questions?
+    \item RP2040 peripheral programming challenges?
+    \item Real-time optimization strategies?
+    \item Fault injection implementation ideas?
+    \item Excited about tomorrow's capstone project?
+\end{itemize}
+
+\vspace{1cm}
+\begin{center}
+\textbf{Time to build your hardware validation masterpiece!}
+\end{center}
+\end{frame}
+
+\end{document}
+

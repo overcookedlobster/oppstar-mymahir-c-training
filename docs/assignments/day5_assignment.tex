@@ -1,0 +1,625 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Day 5 Assignment: Hardware Debugging and RP2040 Peripherals Lab}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
+
+% Colors
+\definecolor{codeblue}{RGB}{0,102,204}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,245}
+
+% Code listing style
+\lstdefinestyle{cstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single
+}
+
+\lstset{style=cstyle}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Day 5 Assignment - Hardware Debugging and RP2040 Peripherals Lab},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{codeblue} DAY 5 ASSIGNMENT}\\[0.5cm]
+    {\Large Hardware Debugging and RP2040 Peripherals Lab}\\[0.3cm]
+    {\large Complete Hardware-in-the-Loop Validation System}\\[0.2cm]
+    {\normalsize Due: End of Day 5 + Homework Extension}
+\end{center}
+
+\vspace{1cm}
+
+\section{Assignment Overview}
+
+\subsection{Learning Objectives}
+By completing this assignment, you will:
+\begin{itemize}
+    \item Master advanced debugging techniques for embedded systems
+    \item Program RP2040 peripherals (GPIO, ADC, timers, interrupts)
+    \item Implement hardware-in-the-loop testing frameworks
+    \item Create fault injection and recovery systems
+    \item Optimize code for real-time embedded constraints
+    \item Build production-ready validation systems
+\end{itemize}
+
+\subsection{Assignment Context}
+You will create a comprehensive hardware validation system that runs on the RP2040, utilizing real peripherals to perform actual hardware testing. This represents the culmination of your embedded programming skills and demonstrates real-world validation engineering capabilities.
+
+\section{Part 1: In-Class Lab (3.5 hours)}
+
+\subsection{Setup and Hardware Preparation}
+\begin{enumerate}
+    \item Accept the Day 5 GitHub Classroom assignment
+    \item Verify RP2040 hardware is functional and connected
+    \item Test serial communication with your development environment
+    \item Ensure all previous day's code is committed and builds successfully
+    \item Create new branch: \texttt{git checkout -b day5-hardware-validation}
+\end{enumerate}
+
+\subsection{Task 1: Advanced Debugging Infrastructure (60 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement multi-level debug output system
+    \item Create LED-based visual debugging indicators
+    \item Add performance monitoring and timing analysis
+    \item Implement watchdog protection system
+\end{itemize}
+
+\textbf{Debug Infrastructure Files:}
+\begin{itemize}
+    \item \texttt{include/debug\_system.h}
+    \item \texttt{src/debug\_system.c}
+    \item \texttt{include/performance\_monitor.h}
+    \item \texttt{src/performance\_monitor.c}
+\end{itemize}
+
+\textbf{Debug System Interface:}
+\begin{lstlisting}[language=C]
+// debug_system.h
+#ifndef DEBUG_SYSTEM_H
+#define DEBUG_SYSTEM_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+// Debug levels
+typedef enum {
+    DEBUG_LEVEL_NONE = 0,
+    DEBUG_LEVEL_ERROR,
+    DEBUG_LEVEL_WARNING,
+    DEBUG_LEVEL_INFO,
+    DEBUG_LEVEL_VERBOSE
+} debug_level_t;
+
+// LED debug patterns
+typedef enum {
+    LED_PATTERN_OFF,
+    LED_PATTERN_SOLID,
+    LED_PATTERN_SLOW_BLINK,
+    LED_PATTERN_FAST_BLINK,
+    LED_PATTERN_HEARTBEAT,
+    LED_PATTERN_ERROR_CODE
+} led_pattern_t;
+
+// Debug system functions
+void debug_init(debug_level_t level);
+void debug_print(debug_level_t level, const char* format, ...);
+void debug_led_set_pattern(led_pattern_t pattern);
+void debug_led_show_error_code(uint8_t error_code);
+void debug_assert(bool condition, const char* message);
+
+// Watchdog functions
+void watchdog_init(uint32_t timeout_ms);
+void watchdog_feed(void);
+bool watchdog_caused_reset(void);
+
+// Performance monitoring
+void perf_counter_start(const char* name);
+void perf_counter_end(const char* name);
+void perf_print_report(void);
+void perf_reset_counters(void);
+
+#endif // DEBUG_SYSTEM_H
+\end{lstlisting}
+
+\subsection{Task 2: GPIO Comprehensive Testing Suite (60 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Test all available GPIO pins systematically
+    \item Implement input/output functionality validation
+    \item Add pull-up/pull-down resistance testing
+    \item Create GPIO stress testing and reliability checks
+\end{itemize}
+
+\textbf{GPIO Testing Files:}
+\begin{itemize}
+    \item \texttt{include/gpio\_validator.h}
+    \item \texttt{src/gpio\_validator.c}
+\end{itemize}
+
+\textbf{GPIO Test Framework:}
+\begin{lstlisting}[language=C]
+// gpio_validator.h
+#ifndef GPIO_VALIDATOR_H
+#define GPIO_VALIDATOR_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#define MAX_GPIO_PINS 29
+#define GPIO_TEST_PATTERNS 8
+
+typedef struct {
+    uint8_t pin;
+    bool output_test_pass;
+    bool input_test_pass;
+    bool pullup_test_pass;
+    bool pulldown_test_pass;
+    bool speed_test_pass;
+    uint32_t toggle_frequency_hz;
+    char error_message[64];
+} gpio_test_result_t;
+
+typedef struct {
+    gpio_test_result_t results[MAX_GPIO_PINS];
+    int pins_tested;
+    int pins_passed;
+    int pins_failed;
+    float overall_success_rate;
+} gpio_test_summary_t;
+
+// GPIO testing functions
+int gpio_validator_init(void);
+int test_single_gpio_pin(uint8_t pin, gpio_test_result_t* result);
+int test_gpio_range(uint8_t start_pin, uint8_t end_pin, gpio_test_summary_t* summary);
+int test_gpio_patterns(uint8_t pin, uint32_t* patterns, int pattern_count);
+int test_gpio_speed(uint8_t pin, uint32_t target_frequency_hz);
+void print_gpio_test_report(const gpio_test_summary_t* summary);
+
+// Advanced GPIO tests
+int test_gpio_interrupt_functionality(uint8_t pin);
+int test_gpio_drive_strength(uint8_t pin);
+int stress_test_gpio_reliability(uint8_t pin, uint32_t iterations);
+
+#endif // GPIO_VALIDATOR_H
+\end{lstlisting}
+
+\subsection{Task 3: ADC and Analog Validation (60 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement comprehensive ADC testing across all channels
+    \item Add voltage reference validation and calibration
+    \item Create noise analysis and signal quality assessment
+    \item Implement temperature sensor validation
+\end{itemize}
+
+\textbf{ADC Testing Files:}
+\begin{itemize}
+    \item \texttt{include/adc\_validator.h}
+    \item \texttt{src/adc\_validator.c}
+\end{itemize}
+
+\textbf{ADC Validation Framework:}
+\begin{lstlisting}[language=C]
+// adc_validator.h
+#ifndef ADC_VALIDATOR_H
+#define ADC_VALIDATOR_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#define ADC_CHANNELS 4
+#define ADC_SAMPLES_PER_TEST 1000
+#define ADC_REFERENCE_VOLTAGE 3.3f
+
+typedef struct {
+    uint8_t channel;
+    float voltage_reading;
+    float expected_voltage;
+    float voltage_error;
+    float noise_level_mv;
+    uint16_t raw_value;
+    bool calibration_valid;
+    bool within_tolerance;
+} adc_test_result_t;
+
+typedef struct {
+    adc_test_result_t channel_results[ADC_CHANNELS];
+    float reference_voltage_measured;
+    float temperature_celsius;
+    bool temperature_sensor_valid;
+    int channels_tested;
+    int channels_passed;
+} adc_test_summary_t;
+
+// ADC validation functions
+int adc_validator_init(void);
+int test_adc_channel(uint8_t channel, float expected_voltage, adc_test_result_t* result);
+int test_all_adc_channels(adc_test_summary_t* summary);
+float measure_adc_noise(uint8_t channel, int sample_count);
+int calibrate_adc_channel(uint8_t channel);
+float read_internal_temperature(void);
+
+// Advanced ADC tests
+int test_adc_linearity(uint8_t channel, float* test_voltages, int voltage_count);
+int test_adc_settling_time(uint8_t channel);
+int stress_test_adc_stability(uint8_t channel, uint32_t duration_ms);
+
+#endif // ADC_VALIDATOR_H
+\end{lstlisting>
+
+\subsection{Task 4: Timer and Interrupt Validation (60 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement precise timing measurement and validation
+    \item Create interrupt-based event detection system
+    \item Add timer accuracy and drift analysis
+    \item Implement real-time constraint validation
+\end{itemize}
+
+\textbf{Timer Testing Files:}
+\begin{itemize}
+    \item \texttt{include/timer\_validator.h}
+    \item \texttt{src/timer\_validator.c}
+\end{itemize}
+
+\textbf{Timer Validation Framework:}
+\begin{lstlisting}[language=C]
+// timer_validator.h
+#ifndef TIMER_VALIDATOR_H
+#define TIMER_VALIDATOR_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef struct {
+    uint32_t expected_interval_us;
+    uint32_t measured_interval_us;
+    int32_t timing_error_us;
+    float timing_accuracy_percent;
+    bool within_tolerance;
+} timer_test_result_t;
+
+typedef struct {
+    volatile uint32_t interrupt_count;
+    volatile uint64_t last_interrupt_time;
+    volatile bool test_complete;
+    uint32_t expected_interrupts;
+    uint32_t test_duration_ms;
+} interrupt_test_context_t;
+
+// Timer validation functions
+int timer_validator_init(void);
+int test_timer_accuracy(uint32_t interval_us, uint32_t duration_ms, timer_test_result_t* result);
+int test_interrupt_timing(uint32_t interval_us, uint32_t count, interrupt_test_context_t* context);
+uint64_t measure_function_execution_time(void (*function)(void));
+int validate_real_time_constraints(void (*function)(void), uint32_t max_time_us);
+
+// Advanced timer tests
+int test_timer_drift_over_time(uint32_t interval_us, uint32_t duration_minutes);
+int test_interrupt_latency(void);
+int stress_test_timer_under_load(void);
+
+#endif // TIMER_VALIDATOR_H
+\end{lstlisting>
+
+\subsection{Task 5: Fault Injection and Recovery Testing (30 minutes)}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Implement controlled fault injection mechanisms
+    \item Create system recovery and resilience testing
+    \item Add error detection and classification
+    \item Implement graceful degradation strategies
+\end{itemize}
+
+\textbf{Fault Injection Framework:}
+\begin{lstlisting}[language=C]
+// fault_injection.h
+#ifndef FAULT_INJECTION_H
+#define FAULT_INJECTION_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef enum {
+    FAULT_TYPE_NONE,
+    FAULT_TYPE_POWER_GLITCH,
+    FAULT_TYPE_CLOCK_GLITCH,
+    FAULT_TYPE_MEMORY_CORRUPTION,
+    FAULT_TYPE_INTERRUPT_STORM,
+    FAULT_TYPE_PERIPHERAL_FAILURE
+} fault_type_t;
+
+typedef struct {
+    fault_type_t type;
+    uint32_t duration_ms;
+    uint32_t intensity;
+    bool recovery_successful;
+    uint32_t recovery_time_ms;
+    char description[128];
+} fault_test_result_t;
+
+// Fault injection functions
+int fault_injection_init(void);
+int inject_fault(fault_type_t type, uint32_t duration_ms, uint32_t intensity);
+int test_system_recovery(fault_type_t fault_type, fault_test_result_t* result);
+bool check_system_health(void);
+int implement_graceful_degradation(fault_type_t active_fault);
+
+#endif // FAULT_INJECTION_H
+\end{lstlisting>
+
+\section{Part 2: Homework Extension (2 hours)}
+
+\subsection{Task 6: Advanced Peripheral Integration}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Integrate UART, SPI, and I2C communication testing
+    \item Add PWM signal generation and validation
+    \item Implement DMA-based data transfer validation
+    \item Create multi-peripheral coordination tests
+\end{itemize}
+
+\textbf{Communication Protocol Testing:}
+\begin{lstlisting}[language=C]
+// communication_validator.h
+typedef struct {
+    bool uart_loopback_test;
+    bool spi_transfer_test;
+    bool i2c_device_scan;
+    uint32_t uart_baud_rate_actual;
+    uint32_t spi_frequency_actual;
+    bool communication_errors_detected;
+} communication_test_results_t;
+
+int test_uart_communication(uint32_t baud_rate, communication_test_results_t* results);
+int test_spi_communication(uint32_t frequency, communication_test_results_t* results);
+int test_i2c_communication(communication_test_results_t* results);
+int test_pwm_output(uint8_t pin, uint32_t frequency, float duty_cycle);
+\end{lstlisting}
+
+\subsection{Task 7: System Integration and Stress Testing}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create comprehensive system-level validation suite
+    \item Implement concurrent peripheral testing
+    \item Add thermal and power consumption monitoring
+    \item Create long-duration reliability testing
+\end{itemize}
+
+\textbf{System Integration Framework:}
+\begin{lstlisting}[language=C]
+// system_validator.h
+typedef struct {
+    float cpu_utilization_percent;
+    uint32_t memory_usage_bytes;
+    float temperature_celsius;
+    float power_consumption_mw;
+    uint32_t uptime_seconds;
+    uint32_t error_count;
+    bool system_stable;
+} system_health_t;
+
+int run_comprehensive_system_test(uint32_t duration_minutes);
+int monitor_system_health(system_health_t* health);
+int stress_test_all_peripherals(uint32_t duration_minutes);
+int validate_system_under_load(void);
+\end{lstlisting>
+
+\subsection{Task 8: Production-Ready Features}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Add configuration management and persistence
+    \item Implement test result logging and export
+    \item Create automated test scheduling
+    \item Add remote monitoring and control capabilities
+\end{itemize}
+
+\section{Submission Requirements}
+
+\subsection{Hardware Verification Checklist}
+\begin{itemize}
+    \item[$\square$] All GPIO pins tested and documented
+    \item[$\square$] ADC channels calibrated and validated
+    \item[$\square$] Timer accuracy verified within specifications
+    \item[$\square$] Interrupt system functioning correctly
+    \item[$\square$] Fault injection and recovery working
+    \item[$\square$] System runs stably for extended periods
+    \item[$\square$] Debug output clear and informative
+    \item[$\square$] LED indicators provide useful feedback
+\end{itemize}
+
+\subsection{Documentation Requirements}
+\begin{itemize}
+    \item \textbf{HARDWARE\_TEST\_REPORT.md:} Comprehensive test results and analysis
+    \item \textbf{DEBUGGING\_GUIDE.md:} Guide to using the debug infrastructure
+    \item \textbf{PERIPHERAL\_REFERENCE.md:} Documentation of all peripheral tests
+    \item \textbf{PERFORMANCE\_ANALYSIS.md:} Timing and performance measurements
+    \item \textbf{FAULT\_TESTING\_RESULTS.md:} Fault injection test outcomes
+\end{itemize}
+
+\subsection{Code Quality Standards}
+\begin{itemize}
+    \item \textbf{Real-Time Safety:} No blocking operations in interrupt handlers
+    \item \textbf{Resource Management:} Proper initialization and cleanup
+    \item \textbf{Error Handling:} Comprehensive error detection and recovery
+    \item \textbf{Performance:} Optimized for embedded constraints
+    \item \textbf{Reliability:} Robust operation under stress conditions
+\end{itemize}
+
+\section{Grading Rubric}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
+\hline
+Task 1: Debug Infrastructure & 20 & Comprehensive debugging tools \\
+Task 2: GPIO Testing & 20 & Complete GPIO validation suite \\
+Task 3: ADC Validation & 20 & Accurate analog measurements \\
+Task 4: Timer/Interrupt & 20 & Precise timing validation \\
+Task 5: Fault Injection & 15 & Robust fault testing \\
+Task 6: Advanced Peripherals & 15 & Communication protocol testing \\
+Task 7: System Integration & 15 & Comprehensive system tests \\
+Task 8: Production Features & 10 & Professional-grade features \\
+Hardware Verification & 20 & Actual hardware testing \\
+Documentation & 15 & Complete technical documentation \\
+\hline
+\textbf{Total} & \textbf{170} & \textbf{Production-ready validation system} \\
+\hline
+\end{tabular}
+\end{center>
+
+\section{Hardware Safety and Best Practices}
+
+\subsection{Safety Guidelines}
+\begin{itemize}
+    \item \textbf{Voltage Limits:} Never exceed 3.3V on any RP2040 pin
+    \item \textbf{Current Limits:} Maximum 12mA per GPIO pin, 50mA total
+    \item \textbf{ESD Protection:} Use anti-static precautions when handling hardware
+    \item \textbf{Power Management:} Monitor power consumption during stress tests
+    \item \textbf{Thermal Management:} Monitor temperature during extended testing
+\end{itemize}
+
+\subsection{Testing Best Practices}
+\begin{itemize}
+    \item Start with low-stress tests and gradually increase intensity
+    \item Always implement emergency shutdown procedures
+    \item Use current-limited power supplies for safety
+    \item Monitor system health continuously during tests
+    \item Keep backup hardware available for critical testing
+\end{itemize}
+
+\section{Troubleshooting Guide}
+
+\subsection{Common Hardware Issues}
+\begin{itemize}
+    \item \textbf{GPIO not responding:} Check pin initialization and direction
+    \item \textbf{ADC readings unstable:} Verify reference voltage and grounding
+    \item \textbf{Timer inaccuracy:} Check clock configuration and crystal accuracy
+    \item \textbf{Interrupt not firing:} Verify interrupt enable and handler registration
+    \item \textbf{System crashes:} Check stack usage and memory allocation
+\end{itemize}
+
+\subsection{Debug Strategies}
+\begin{itemize}
+    \item Use LED patterns to indicate system state without serial output
+    \item Implement progressive testing (test one peripheral at a time)
+    \item Use oscilloscope or logic analyzer for signal verification
+    \item Monitor power consumption for abnormal behavior detection
+    \item Implement comprehensive logging for post-mortem analysis
+\end{itemize>
+
+\section{Performance Optimization}
+
+\subsection{Embedded Optimization Techniques}
+\begin{itemize}
+    \item \textbf{Memory Usage:} Minimize dynamic allocation, use static buffers
+    \item \textbf{CPU Efficiency:} Optimize critical loops, use appropriate data types
+    \item \textbf{Interrupt Latency:} Keep interrupt handlers short and fast
+    \item \textbf{Power Consumption:} Use sleep modes when appropriate
+    \item \textbf{Code Size:} Optimize for flash memory constraints
+\end{itemize}
+
+\subsection{Real-Time Considerations}
+\begin{itemize}
+    \item Ensure deterministic execution times for critical functions
+    \item Avoid blocking operations in time-critical code paths
+    \item Use appropriate priority levels for different tasks
+    \item Implement proper synchronization for shared resources
+    \item Monitor worst-case execution times under all conditions
+\end{itemize>
+
+\section{Extension Opportunities}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item \textbf{Multi-Core Utilization:} Use both RP2040 cores for parallel testing
+    \item \textbf{Custom Protocols:} Implement proprietary communication protocols
+    \item \textbf{Machine Learning:} Add anomaly detection using TensorFlow Lite
+    \item \textbf{Wireless Communication:} Add WiFi or Bluetooth validation
+    \item \textbf{External Sensors:} Interface with I2C/SPI sensors for environmental monitoring
+\end{itemize}
+
+\subsection{Professional Development}
+\begin{itemize}
+    \item Study commercial ATE (Automated Test Equipment) systems
+    \item Research industry standards for hardware validation
+    \item Explore professional debugging tools and techniques
+    \item Investigate certification requirements for embedded systems
+    \item Learn about production testing and quality assurance processes
+\end{itemize>
+
+\section{Success Tips}
+
+\begin{itemize}
+    \item \textbf{Hardware First:} Verify basic hardware functionality before complex tests
+    \item \textbf{Incremental Development:} Build and test one feature at a time
+    \item \textbf{Document Everything:} Record all test results and observations
+    \item \textbf{Safety First:} Always consider hardware safety in your designs
+    \item \textbf{Think Like a Validator:} Consider what could go wrong and test for it
+    \item \textbf{Performance Matters:} Optimize for the embedded environment
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{You're now a hardware validation expert!}\\
+\textit{These skills directly translate to professional validation engineering roles.}
+\end{center>
+
+\end{document>
+

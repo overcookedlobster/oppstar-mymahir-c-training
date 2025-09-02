@@ -1,0 +1,118 @@
+\documentclass[11pt,landscape]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{fontspec}
+\usepackage{hyperref}
+
+% Page setup for certificate
+\geometry{margin=0.5in}
+\pagestyle{empty}
+
+% Colors
+\definecolor{certificateblue}{RGB}{0,102,204}
+\definecolor{certificategold}{RGB}{255,215,0}
+\definecolor{certificatesilver}{RGB}{192,192,192}
+
+% Custom fonts (if available)
+\setmainfont{Times New Roman}
+
+\begin{document}
+
+\begin{tikzpicture}[remember picture,overlay]
+% Certificate border
+\draw[line width=3pt, certificateblue]
+    ([shift={(0.3in,0.3in)}]current page.south west) rectangle
+    ([shift={(-0.3in,-0.3in)}]current page.north east);
+
+\draw[line width=1pt, certificategold]
+    ([shift={(0.4in,0.4in)}]current page.south west) rectangle
+    ([shift={(-0.4in,-0.4in)}]current page.north east);
+
+% Decorative corners
+\foreach \corner in {south west, south east, north west, north east} {
+    \node[certificateblue] at ([shift={(0.6in,0.6in)}]current page.\corner)
+        {\fontsize{24}{24}\selectfont $\star$};
+}
+
+% Header
+\node[certificateblue] at ([yshift=-1.5in]current page.north)
+    {\fontsize{36}{36}\selectfont\textbf{CERTIFICATE OF COMPLETION}};
+
+% Course title
+\node[certificateblue] at ([yshift=-2.5in]current page.north)
+    {\fontsize{24}{24}\selectfont\textbf{C Programming for Post-Silicon Validation Engineers}};
+
+\node[black] at ([yshift=-3in]current page.north)
+    {\fontsize{18}{18}\selectfont 6-Day Intensive Bootcamp};
+
+% Presented to
+\node[black] at ([yshift=-4in]current page.north)
+    {\fontsize{16}{16}\selectfont This certifies that};
+
+% Name placeholder
+\node[certificateblue] at ([yshift=-4.8in]current page.north)
+    {\fontsize{32}{32}\selectfont\textbf{[PARTICIPANT NAME]}};
+
+% Achievement text
+\node[black] at ([yshift=-5.6in]current page.north)
+    {\fontsize{16}{16}\selectfont has successfully completed the comprehensive training program};
+
+\node[black] at ([yshift=-6in]current page.north)
+    {\fontsize{16}{16}\selectfont and demonstrated proficiency in C programming and embedded validation};
+
+% Date and signatures
+\node[black] at ([shift={(-3in,-7.2in)}]current page.north)
+    {\fontsize{14}{14}\selectfont Completed on: \textbf{[DATE]}};
+
+\node[black] at ([shift={(3in,-7.2in)}]current page.north)
+    {\fontsize{14}{14}\selectfont Certificate ID: \textbf{[CERT-ID]}};
+
+% Signature lines
+\draw[black, line width=1pt] ([shift={(-4in,-8.2in)}]current page.north) --
+    ([shift={(-1in,-8.2in)}]current page.north);
+\node[black] at ([shift={(-2.5in,-8.5in)}]current page.north)
+    {\fontsize{12}{12}\selectfont Lead Instructor};
+
+\draw[black, line width=1pt] ([shift={(1in,-8.2in)}]current page.north) --
+    ([shift={(4in,-8.2in)}]current page.north);
+\node[black] at ([shift={(2.5in,-8.5in)}]current page.north)
+    {\fontsize{12}{12}\selectfont Program Director};
+
+% Skills achieved
+\node[certificateblue] at ([shift={(-5in,-1in)}]current page.center)
+    {\fontsize{14}{14}\selectfont\textbf{Skills Demonstrated:}};
+
+\node[black, text width=4in, align=left] at ([shift={(-5in,-2in)}]current page.center)
+    {\fontsize{11}{11}\selectfont
+    $\bullet$ C Programming Fundamentals\\
+    $\bullet$ Embedded Systems Development\\
+    $\bullet$ Cross-Compilation for ARM\\
+    $\bullet$ Hardware Debugging Techniques\\
+    $\bullet$ Validation System Design\\
+    $\bullet$ Professional Development Practices};
+
+% Course statistics
+\node[certificateblue] at ([shift={(5in,-1in)}]current page.center)
+    {\fontsize{14}{14}\selectfont\textbf{Program Statistics:}};
+
+\node[black, text width=4in, align=left] at ([shift={(5in,-2in)}]current page.center)
+    {\fontsize{11}{11}\selectfont
+    $\bullet$ 42 Hours of Intensive Training\\
+    $\bullet$ 6 Days of Hands-On Labs\\
+    $\bullet$ Real RP2040 Hardware Experience\\
+    $\bullet$ Professional Portfolio Development\\
+    $\bullet$ Industry-Standard Tools \& Practices\\
+    $\bullet$ Capstone Project Completion};
+
+% Footer
+\node[certificategold] at ([yshift=0.8in]current page.south)
+    {\fontsize{12}{12}\selectfont\textit{Empowering the Next Generation of Validation Engineers}};
+
+\end{tikzpicture}
+
+\end{document}
+

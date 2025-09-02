@@ -1,0 +1,487 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multirow}
+
+% Page setup
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{C Programming for Post-Silicon Validation - Syllabus}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{6-Day Intensive Course}
+
+% Colors
+\definecolor{courseblue}{RGB}{0,102,204}
+\definecolor{sectiongray}{RGB}{240,240,240}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries\color{courseblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=courseblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={C Programming for Post-Silicon Validation - Syllabus},
+    pdfauthor={Course Instructor},
+}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\Huge\bfseries\color{courseblue} COURSE SYLLABUS}\\[0.5cm]
+    {\Large C Programming for Post-Silicon Validation Engineers}\\[0.3cm]
+    {\large 6-Day Intensive Bootcamp}\\[0.2cm]
+    {\normalsize Version 1.0 - 2025}
+\end{center}
+
+\vspace{1cm}
+
+\section{Course Information}
+
+\begin{tabular}{ll}
+\textbf{Course Title:} & C Programming for Post-Silicon Validation Engineers \\
+\textbf{Duration:} & 6 Days (42 Contact Hours) \\
+\textbf{Format:} & Intensive Bootcamp (In-Person/Hybrid) \\
+\textbf{Class Size:} & 20 Participants Maximum \\
+\textbf{Prerequisites:} & None (Designed for Programming Beginners) \\
+\textbf{Target Audience:} & Engineers Transitioning to Post-Silicon Validation \\
+\textbf{Hardware Platform:} & Raspberry Pi Pico (RP2040) \\
+\textbf{Primary Tools:} & GCC, GDB, GitHub, VS Code, Pico SDK \\
+\end{tabular}
+
+\section{Instructor Information}
+
+\begin{tabular}{ll}
+\textbf{Lead Instructor:} & [Instructor Name] \\
+\textbf{Email:} & [instructor@company.com] \\
+\textbf{Office Hours:} & By appointment during course week \\
+\textbf{Teaching Assistants:} & 1-2 TAs for hands-on support \\
+\textbf{Response Time:} & Within 4 hours during course days \\
+\end{tabular}
+
+\section{Course Description}
+
+This intensive 6-day course transforms engineers with no programming experience into proficient C developers capable of creating embedded validation tools for semiconductor post-silicon testing. The curriculum emphasizes practical, hands-on learning with real hardware and industry-standard development practices.
+
+Participants will progress from basic C syntax to developing complete validation systems running on ARM Cortex-M0+ microcontrollers. All examples and projects simulate real-world post-silicon validation scenarios, including register manipulation, fault detection, timing analysis, and automated testing procedures.
+
+\section{Learning Objectives}
+
+Upon successful completion of this course, participants will be able to:
+
+\subsection{Technical Skills}
+\begin{enumerate}
+    \item Write, compile, and debug C programs using industry-standard tools (GCC, GDB)
+    \item Cross-compile applications for ARM Cortex-M0+ embedded targets
+    \item Develop embedded applications using the Raspberry Pi Pico SDK
+    \item Implement bit manipulation and register access patterns common in validation
+    \item Create modular, maintainable code following industry best practices
+    \item Use version control (Git/GitHub) for collaborative development
+    \item Apply debugging techniques for both native and embedded targets
+\end{enumerate}
+
+\subsection{Validation-Specific Skills}
+\begin{enumerate}
+    \item Design and implement automated test sequences for hardware validation
+    \item Simulate fault injection and detection mechanisms
+    \item Create register monitoring and manipulation routines
+    \item Develop timing-critical validation procedures
+    \item Implement data logging and result reporting systems
+    \item Build hardware-in-the-loop testing frameworks
+\end{enumerate}
+
+\subsection{Professional Skills}
+\begin{enumerate}
+    \item Collaborate effectively using GitHub workflows
+    \item Document code and projects professionally
+    \item Present technical work to peers and stakeholders
+    \item Evaluate and integrate AI coding assistance responsibly
+    \item Plan and execute complex technical projects
+    \item Build a professional portfolio of validation projects
+\end{enumerate}
+
+\section{Course Schedule}
+
+\subsection{Daily Structure}
+Each day follows a consistent 7-hour format:
+\begin{itemize}
+    \item \textbf{Morning Session (2.5 hours):} Interactive lectures with live coding demonstrations
+    \item \textbf{Break (30 minutes):} Networking and informal discussion
+    \item \textbf{Afternoon Session (3.5 hours):} Hands-on labs and collaborative projects
+    \item \textbf{Wrap-up (30 minutes):} Q\&A, troubleshooting, and next-day preview
+    \item \textbf{Evening (1-2 hours):} Optional homework and reading assignments
+\end{itemize}
+
+\subsection{Weekly Overview}
+
+\begin{longtable}{|p{1.5cm}|p{4cm}|p{6cm}|p{3cm}|}
+\hline
+\textbf{Day} & \textbf{Focus Area} & \textbf{Key Topics} & \textbf{Deliverables} \\
+\hline
+\endhead
+
+\textbf{Day 1} & C Fundamentals \& Compilation &
+\begin{itemize}[nosep]
+    \item Variables and data types
+    \item Operators and expressions
+    \item Input/output operations
+    \item GCC compilation process
+    \item Basic validation calculations
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item Voltage validator program
+    \item GitHub repository setup
+    \item Compilation workflow
+\end{itemize} \\
+\hline
+
+\textbf{Day 2} & Control Flow \& Debugging &
+\begin{itemize}[nosep]
+    \item Conditional statements
+    \item Loops and iteration
+    \item Function definition/calling
+    \item GDB debugging basics
+    \item Test sequence design
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item Register monitor program
+    \item Debugging session logs
+    \item Function library
+\end{itemize} \\
+\hline
+
+\textbf{Day 3} & Memory \& Data Structures &
+\begin{itemize}[nosep]
+    \item Pointers and memory addressing
+    \item Arrays and strings
+    \item Structures and typedef
+    \item Bit manipulation operations
+    \item AI tool introduction
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item Chip state monitor
+    \item Bit manipulation library
+    \item AI evaluation report
+\end{itemize} \\
+\hline
+
+\textbf{Day 4} & Advanced Functions \& Cross-Compilation &
+\begin{itemize}[nosep]
+    \item Modular programming
+    \item Header files and linking
+    \item Cross-compilation setup
+    \item Pico SDK introduction
+    \item CMake build system
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item Modular test suite
+    \item ARM cross-compiled binary
+    \item CMake configuration
+\end{itemize} \\
+\hline
+
+\textbf{Day 5} & Hardware Debugging \& RP2040 &
+\begin{itemize}[nosep]
+    \item Advanced GDB techniques
+    \item RP2040 GPIO control
+    \item Peripheral programming
+    \item Hardware-in-the-loop testing
+    \item Fault injection methods
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item GPIO validation suite
+    \item Hardware test results
+    \item Debugging documentation
+\end{itemize} \\
+\hline
+
+\textbf{Day 6} & Capstone Project \& Integration &
+\begin{itemize}[nosep]
+    \item Project planning and design
+    \item Full system integration
+    \item Results presentation
+    \item Portfolio development
+    \item Career planning
+\end{itemize} &
+\begin{itemize}[nosep]
+    \item Complete validation system
+    \item Project presentation
+    \item Professional portfolio
+\end{itemize} \\
+\hline
+
+\end{longtable}
+
+\section{Assessment Methods}
+
+\subsection{Grading Distribution}
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Component} & \textbf{Weight} & \textbf{Description} \\
+\hline
+Daily Lab Assignments & 35\% & Auto-graded GitHub submissions \\
+Capstone Project & 35\% & Comprehensive validation system \\
+Participation \& Collaboration & 30\% & GitHub activity, peer feedback \\
+\hline
+\textbf{Total} & \textbf{100\%} & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Assessment Criteria}
+
+\subsubsection{Daily Labs (35\%)}
+\begin{itemize}
+    \item Code compilation and execution (auto-graded)
+    \item Unit test passage rates
+    \item Code quality and style adherence
+    \item Documentation completeness
+    \item GitHub workflow compliance
+\end{itemize}
+
+\subsubsection{Capstone Project (35\%)}
+\begin{itemize}
+    \item Technical implementation quality (40\%)
+    \item Problem-solving approach (25\%)
+    \item Documentation and presentation (20\%)
+    \item Innovation and creativity (15\%)
+\end{itemize}
+
+\subsubsection{Participation \& Collaboration (30\%)}
+\begin{itemize}
+    \item Active engagement in discussions and activities
+    \item Quality of peer code reviews and feedback
+    \item Contribution to team projects
+    \item Help provided to fellow participants
+    \item Professional communication in GitHub
+\end{itemize}
+
+\subsection{Success Metrics}
+\begin{itemize}
+    \item \textbf{Proficiency Threshold:} 80\% overall score required for certification
+    \item \textbf{Skill Demonstration:} Successful completion of all core lab assignments
+    \item \textbf{Portfolio Quality:} Professional-grade GitHub repository with documented projects
+    \item \textbf{Peer Evaluation:} Positive feedback from collaborative activities
+\end{itemize}
+
+\section{Required Materials}
+
+\subsection{Hardware (Provided)}
+\begin{itemize}
+    \item Raspberry Pi Pico (RP2040 microcontroller board)
+    \item USB-A to micro-USB cable
+    \item Breadboard and jumper wires (for advanced projects)
+    \item LEDs and resistors for visual feedback
+    \item Backup hardware for troubleshooting
+\end{itemize}
+
+\subsection{Software (Free/Open Source)}
+\begin{itemize}
+    \item GCC compiler suite (native and ARM cross-compiler)
+    \item Git version control system
+    \item VS Code editor with C/C++ extensions
+    \item Raspberry Pi Pico SDK
+    \item CMake build system
+    \item GDB debugger
+    \item QEMU emulator (backup/simulation)
+\end{itemize}
+
+\subsection{Accounts and Access}
+\begin{itemize}
+    \item GitHub account (free tier sufficient)
+    \item Access to course GitHub Classroom organization
+    \item Course Slack workspace (optional for communication)
+    \item Shared Google Drive for resources (optional)
+\end{itemize}
+
+\section{Pre-Course Requirements}
+
+\subsection{Mandatory Setup (Due 1 Week Before Course)}
+\begin{enumerate}
+    \item Complete development environment installation following provided guide
+    \item Verify tool functionality with provided test programs
+    \item Complete Git/GitHub tutorial (2-3 hours)
+    \item Watch introductory C programming videos (CS50 lectures 1-2)
+    \item Submit setup confirmation via GitHub issue
+\end{enumerate}
+
+\subsection{Recommended Preparation}
+\begin{itemize}
+    \item Review basic digital electronics concepts
+    \item Familiarize yourself with command-line interfaces
+    \item Read overview of post-silicon validation processes
+    \item Join course communication channels
+\end{itemize}
+
+\section{Course Policies}
+
+\subsection{Attendance Policy}
+\begin{itemize}
+    \item Full attendance required for all 6 days
+    \item Maximum 2 hours of excused absence with prior notification
+    \item Make-up sessions available for emergency absences
+    \item Late arrivals must catch up during breaks or after hours
+\end{itemize}
+
+\subsection{Collaboration Policy}
+\begin{itemize}
+    \item \textbf{Encouraged:} Pair programming, code reviews, debugging assistance
+    \item \textbf{Required:} Attribution of help received in commit messages
+    \item \textbf{Prohibited:} Direct copying of solutions without understanding
+    \item \textbf{AI Tools:} Allowed from Day 3 onward with documentation requirements
+\end{itemize}
+
+\subsection{Late Submission Policy}
+\begin{itemize}
+    \item Daily labs: 10\% penalty per day late (maximum 3 days)
+    \item Capstone project: No late submissions accepted
+    \item Extensions available for documented emergencies
+    \item GitHub timestamps used for submission verification
+\end{itemize}
+
+\subsection{Academic Integrity}
+\begin{itemize}
+    \item All submitted work must be your own or properly attributed
+    \item Collaboration must be documented in commit messages
+    \item AI assistance must be acknowledged and evaluated
+    \item Plagiarism detection tools used on all submissions
+    \item Violations result in course failure and reporting
+\end{itemize}
+
+\section{Support Resources}
+
+\subsection{During Course Hours}
+\begin{itemize}
+    \item Lead instructor for conceptual questions and advanced topics
+    \item Teaching assistants for hands-on debugging and technical support
+    \item Peer support through structured pair programming
+    \item Real-time help via course communication channels
+\end{itemize}
+
+\subsection{Outside Course Hours}
+\begin{itemize}
+    \item Recorded lecture materials for review
+    \item Comprehensive documentation and reference materials
+    \item Online forums for asynchronous Q\&A
+    \item Office hours by appointment
+    \item Emergency contact for critical technical issues
+\end{itemize}
+
+\subsection{Technical Support}
+\begin{itemize}
+    \item Hardware troubleshooting and replacement
+    \item Software installation and configuration assistance
+    \item GitHub and development workflow support
+    \item Backup development environments (Docker containers)
+    \item Alternative solutions for accessibility needs
+\end{itemize}
+
+\section{Post-Course Development}
+
+\subsection{Extended Learning Program (Optional)}
+\begin{itemize}
+    \item 4-week structured homework assignments
+    \item Weekly virtual check-ins with instructors
+    \item Advanced project challenges
+    \item Portfolio development guidance
+    \item Career transition support
+\end{itemize}
+
+\subsection{Certification and Recognition}
+\begin{itemize}
+    \item Course completion certificate for successful participants
+    \item LinkedIn skill endorsements
+    \item Reference letters for exceptional performance
+    \item Alumni network access for ongoing support
+    \item Continuing education pathway recommendations
+\end{itemize}
+
+\subsection{Career Integration}
+\begin{itemize}
+    \item Professional portfolio development
+    \item Technical interview preparation
+    \item Industry mentor connections
+    \item Job placement assistance
+    \item Advanced certification pathways
+\end{itemize}
+
+\section{Course Evaluation}
+
+\subsection{Continuous Feedback}
+\begin{itemize}
+    \item Daily exit tickets for immediate course adjustments
+    \item Mid-course survey for major feedback incorporation
+    \item Real-time polls during lectures for engagement monitoring
+    \item Anonymous suggestion box for sensitive feedback
+\end{itemize}
+
+\subsection{Final Evaluation}
+\begin{itemize}
+    \item Comprehensive course evaluation survey
+    \item Skills assessment pre/post comparison
+    \item Long-term follow-up surveys (3, 6, 12 months)
+    \item Employer feedback collection (where applicable)
+    \item Course improvement recommendations
+\end{itemize}
+
+\section{Emergency Procedures}
+
+\subsection{Technical Emergencies}
+\begin{itemize}
+    \item Backup hardware available for immediate replacement
+    \item Alternative development environments (cloud-based, Docker)
+    \item Recorded sessions for missed content due to technical issues
+    \item One-on-one catch-up sessions for significant disruptions
+\end{itemize}
+
+\subsection{Health and Safety}
+\begin{itemize}
+    \item COVID-19 protocols as per institutional guidelines
+    \item Ergonomic considerations for extended computer use
+    \item Break schedules to prevent fatigue
+    \item Accessibility accommodations as needed
+    \item Emergency contact procedures
+\end{itemize}
+
+\section{Contact Information}
+
+\subsection{Primary Contacts}
+\begin{itemize}
+    \item \textbf{Course Coordinator:} [Name, Email, Phone]
+    \item \textbf{Lead Instructor:} [Name, Email, Office Hours]
+    \item \textbf{Technical Support:} [Email, Response Time]
+    \item \textbf{Administrative Support:} [Name, Email, Phone]
+\end{itemize}
+
+\subsection{Communication Channels}
+\begin{itemize}
+    \item \textbf{Primary:} Course GitHub organization discussions
+    \item \textbf{Urgent:} Email to instructor and coordinator
+    \item \textbf{Informal:} Course Slack workspace (optional)
+    \item \textbf{Emergency:} Phone contact for critical issues
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Welcome to C Programming for Post-Silicon Validation Engineers!}\\
+\textit{We look forward to your transformation from programming novice to embedded validation expert.}
+\end{center}
+
+\end{document}
+
