@@ -9,9 +9,18 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 
-% Theme
-\usetheme{Madrid}
-\usecolortheme{default}
+% Theme - Import oppstar theme from beamer-template directory
+% Add beamer-template directory to LaTeX search path
+\makeatletter
+\def\input@path{{./beamer-template/}}
+\makeatother
+
+% Now load the theme components
+\usepackage{./beamer-template/beamercolorthemeoppstar}
+\usepackage{./beamer-template/beamerfontthemeoppstar}
+\usepackage{./beamer-template/beamerinnerthemeoppstar}
+\usepackage{./beamer-template/beamerouterthemeoppstar}
+\usepackage{./beamer-template/beamerthemeoppstar}
 
 % Colors
 \definecolor{codeblue}{RGB}{0,102,204}

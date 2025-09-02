@@ -1,0 +1,42 @@
+% Create placeholder images for the template
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+\definecolor{oppstarblue}{RGB}{25,55,109}
+\definecolor{oppstarlightblue}{RGB}{65,105,225}
+
+\begin{document}
+
+% Upper right corner placeholder
+\begin{tikzpicture}
+\fill[oppstarlightblue] (0,0) rectangle (2,2);
+\node[white,font=\Large\bfseries] at (1,1) {UR};
+\end{tikzpicture}
+
+\newpage
+
+% Upper middle placeholder
+\begin{tikzpicture}
+\fill[oppstarblue] (0,0) rectangle (3,2);
+\node[white,font=\Large\bfseries] at (1.5,1) {UM};
+\end{tikzpicture}
+
+\newpage
+
+% Bottom right placeholder
+\begin{tikzpicture}
+\fill[oppstarlightblue] (0,0) rectangle (1.5,1.5);
+\node[white,font=\small\bfseries] at (0.75,0.75) {BR};
+\end{tikzpicture}
+
+\newpage
+
+% Bottom left placeholder
+\begin{tikzpicture}
+\fill[oppstarblue] (0,0) rectangle (1.5,1.5);
+\node[white,font=\small\bfseries] at (0.75,0.75) {BL};
+\end{tikzpicture}
+
+\end{document}
+
