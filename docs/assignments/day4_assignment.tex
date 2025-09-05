@@ -11,9 +11,11 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{amssymb}
 
 % Page setup
 \geometry{margin=1in}
+\setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Day 4 Assignment: Cross-Compilation and Modular Programming Lab}
@@ -107,24 +109,24 @@ You will transform your validation system into a professional, modular codebase 
 \textbf{Required File Structure:}
 \begin{verbatim}
 validation_suite/
-├── src/
-│   ├── main.c
-│   ├── validation_core.c
-│   ├── register_access.c
-│   ├── bit_operations.c
-│   ├── chip_monitor.c
-│   └── hardware_abstraction.c
-├── include/
-│   ├── validation_core.h
-│   ├── register_access.h
-│   ├── bit_operations.h
-│   ├── chip_monitor.h
-│   ├── hardware_abstraction.h
-│   └── common_types.h
-├── tests/
-│   └── unit_tests.c
-├── CMakeLists.txt
-└── README.md
+|-- src/
+|   |-- main.c
+|   |-- validation_core.c
+|   |-- register_access.c
+|   |-- bit_operations.c
+|   |-- chip_monitor.c
+|   \-- hardware_abstraction.c
+|-- include/
+|   |-- validation_core.h
+|   |-- register_access.h
+|   |-- bit_operations.h
+|   |-- chip_monitor.h
+|   |-- hardware_abstraction.h
+|   \-- common_types.h
+|-- tests/
+|   \-- unit_tests.c
+|-- CMakeLists.txt
+\-- README.md
 \end{verbatim}
 
 \textbf{Header File Requirements:}
@@ -221,7 +223,7 @@ void hal_debug_print(const char *format, ...);
 \end{itemize}
 
 \textbf{CMake Configuration:}
-\begin{lstlisting}[language=cmake]
+\begin{lstlisting}[language=bash]
 cmake_minimum_required(VERSION 3.13)
 
 # Detect if building for Pico
@@ -355,7 +357,7 @@ make -j4
 \end{itemize}
 
 \textbf{Advanced CMake Features:}
-\begin{lstlisting}[language=cmake]
+\begin{lstlisting}[language=bash]
 # Build type configuration
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -397,7 +399,7 @@ endif()
 \end{itemize}
 
 \textbf{Library CMake Configuration:}
-\begin{lstlisting}[language=cmake]
+\begin{lstlisting}[language=bash]
 # Create validation library
 add_library(validation_lib STATIC
     src/validation_core.c
@@ -523,8 +525,8 @@ Documentation & 15 & Complete, clear documentation \\
 \hline
 \textbf{Total} & \textbf{150} & \textbf{Professional-grade embedded system} \\
 \hline
-\end{tabular>
-\end{center>
+\end{tabular}
+\end{center}
 
 \section{Troubleshooting Guide}
 
@@ -617,7 +619,6 @@ Documentation & 15 & Complete, clear documentation \\
 \begin{center}
 \textbf{Welcome to embedded systems development!}\\
 \textit{You're now building professional-grade validation tools.}
-\end{center>
+\end{center}
 
-\end{document>
-
+\end{document}

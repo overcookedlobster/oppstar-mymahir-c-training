@@ -111,7 +111,7 @@ This comprehensive 6-day course transforms engineers with no coding experience i
 By the end of this course, participants will be able to:
 \begin{itemize}
     \item Write, compile, and debug C programs using GCC and GDB
-    \item Cross-compile code for ARM Cortex-M0+ microcontrollers
+    \item Cross-compile code for RISC-V processors
     \item Develop embedded applications for the MicroBlaze-V platform
     \item Implement validation routines simulating post-silicon testing scenarios
     \item Use GitHub for version control and collaborative development
@@ -123,7 +123,7 @@ By the end of this course, participants will be able to:
     \item \textbf{Validation-Focused}: All examples simulate real-world post-silicon scenarios
     \item \textbf{Hands-On Learning}: 60\% lab time with scaffolded GitHub Classroom assignments
     \item \textbf{Progressive Complexity}: From basic syntax to embedded hardware programming
-    \item \textbf{Industry Tools}: GCC, GDB, GitHub, VS Code, Pico SDK
+    \item \textbf{Industry Tools}: GCC, GDB, GitHub, VS Code, RISC-V Toolchain
     \item \textbf{AI Integration}: Responsible introduction of AI coding assistants
     \item \textbf{Portfolio Building}: GitHub-based projects for professional development
 \end{itemize}
@@ -146,15 +146,15 @@ Participants must complete the following setup 1 week before the course:
     \item \textbf{Development Environment}
     \begin{itemize}
         \item GCC compiler (native)
-        \item ARM cross-compiler (arm-none-eabi-gcc)
+        \item RISC-V cross-compiler (riscv64-unknown-elf-gcc)
         \item CMake (version 3.13+)
         \item Git version control
         \item VS Code with C/C++ extension
     \end{itemize}
 
-    \item \textbf{MicroBlaze-V Development Tools}
+    \item \textbf{RISC-V Development Tools}
     \begin{itemize}
-        \item Pico SDK (latest version)
+        \item RISC-V GNU Toolchain (latest version)
         \item Python 3.x for build scripts
         \item QEMU RISC-V emulator (virt machine) for fallback simulation
     \end{itemize}
@@ -170,7 +170,7 @@ Participants must complete the following setup 1 week before the course:
 \begin{itemize}
     \item Complete Git tutorial (2 hours): clone, commit, push, pull requests
     \item Watch CS50 C introduction videos (first 2 lectures)
-    \item Read Pico SDK GPIO documentation overview
+    \item Read RISC-V GPIO and memory-mapped I/O documentation overview
 \end{itemize}
 
 \section{Daily Curriculum Overview}
@@ -401,8 +401,9 @@ project(validation_suite C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Initialize the Pico SDK
-pico_sdk_init()
+# Set RISC-V toolchain
+set(CMAKE_C_COMPILER riscv64-unknown-elf-gcc)
+set(CMAKE_CXX_COMPILER riscv64-unknown-elf-g++)
 
 # Add executable
 add_executable(validation_suite
@@ -412,20 +413,24 @@ add_executable(validation_suite
     src/timing_tests.c
 )
 
-# Link libraries
-target_link_libraries(validation_suite
-    pico_stdlib
-    hardware_gpio
-    hardware_timer
-    hardware_adc
+# RISC-V specific flags
+target_compile_options(validation_suite PRIVATE
+    -march=rv32i
+    -mabi=ilp32
+    -mcmodel=medlow
 )
 
-# Enable USB output
-pico_enable_stdio_usb(validation_suite 1)
-pico_enable_stdio_uart(validation_suite 0)
+# Link libraries (standard C library for RISC-V)
+target_link_libraries(validation_suite
+    c
+    m
+)
 
-# Create map/bin/hex/uf2 files
-pico_add_extra_outputs(validation_suite)
+# Create binary and hex files for FPGA deployment
+add_custom_command(TARGET validation_suite POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:validation_suite> validation_suite.bin
+    COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:validation_suite> validation_suite.hex
+)
 \end{lstlisting}
 
 \subsection{Day 5: Hardware Debugging and MicroBlaze-V Peripherals}
@@ -451,10 +456,10 @@ pico_add_extra_outputs(validation_suite)
 Implement actual hardware tests using MicroBlaze-V peripherals to simulate post-silicon validation scenarios.
 
 \begin{lstlisting}[language=C, caption=Day 5 Example: GPIO Validation Test]
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
-#include "hardware/adc.h"
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <unistd.h>
 
 #define LED_PIN 25
 #define TEST_PIN_START 2
@@ -468,21 +473,20 @@ typedef struct {
 } gpio_test_result_t;
 
 void init_test_hardware(void) {
-    stdio_init_all();
+    // Initialize UART for stdio
+    printf("Initializing RISC-V FPGA test hardware...\n");
 
-    // Initialize LED
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    // Initialize GPIO memory-mapped registers
+    // Base addresses would be defined in hardware specification
+    volatile uint32_t *gpio_base = (volatile uint32_t *)0x10012000;
 
-    // Initialize test pins
+    // Configure LED pin as output
+    gpio_base[GPIO_OUTPUT_EN] |= (1 << LED_PIN);
+
+    // Configure test pins as outputs
     for (int i = 0; i < TEST_PIN_COUNT; i++) {
-        gpio_init(TEST_PIN_START + i);
-        gpio_set_dir(TEST_PIN_START + i, GPIO_OUT);
+        gpio_base[GPIO_OUTPUT_EN] |= (1 << (TEST_PIN_START + i));
     }
-
-    // Initialize ADC for voltage monitoring
-    adc_init();
-    adc_gpio_init(26); // ADC0
 }
 
 int run_gpio_validation_suite(gpio_test_result_t results[]) {
@@ -532,7 +536,7 @@ int main() {
 
     init_test_hardware();
 
-    printf("MicroBlaze-V GPIO Validation Suite v1.0\n");
+    printf("RISC-V FPGA GPIO Validation Suite v1.0\n");
     printf("Testing %d GPIO pins...\n", TEST_PIN_COUNT);
 
     int passed = run_gpio_validation_suite(test_results);
