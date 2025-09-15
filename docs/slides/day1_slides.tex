@@ -53,7 +53,7 @@
 % Title page info
 \title{Day 1: C Fundamentals and Compilation}
 \subtitle{C Programming for Post-Silicon Validation Engineers}
-\author{Course Instructor}
+\author{Yahwista Salomo}
 \date{6-Day Intensive Bootcamp}
 \institute{Post-Silicon Validation Training Program}
 
@@ -282,19 +282,19 @@ int main() {
 \end{frame}
 
 \begin{frame}
-\frametitle{QEMU MicroBlaze Development Environment}
+\frametitle{QEMU MicroBlaze-V Development Environment}
 \textbf{Why QEMU for Validation?}
 \begin{itemize}
-    \item Test MicroBlaze code without hardware
+    \item Test MicroBlaze-V code without hardware
     \item Consistent development environment
     \item Backup when FPGA boards unavailable
     \item Automated testing and CI/CD integration
 \end{itemize}
 
 \vspace{0.5cm}
-\textbf{QEMU MicroBlaze features:}
+\textbf{QEMU MicroBlaze-V features:}
 \begin{itemize}
-    \item 32-bit MicroBlaze processor emulation
+    \item 32-bit MicroBlaze-V (RISC-V) processor emulation
     \item UART console for I/O
     \item Memory-mapped devices
     \item Timer and interrupt support
@@ -322,16 +322,16 @@ Power consumption: 1.650 W
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{MicroBlaze Cross-Compilation}
+\frametitle{MicroBlaze-V Cross-Compilation}
 \textbf{For FPGA deployment:}
 \begin{verbatim}
-$ microblaze-elf-gcc -mcpu=v11.0 -mxl-soft-mul \
+$ riscv32-unknown-elf-gcc -march=rv32imafczicsr_zifencei -mabi=ilp32f \
   -Wall -g voltage_check.c -o voltage_check_mb
 \end{verbatim}
 
 \textbf{QEMU testing:}
 \begin{verbatim}
-$ qemu-system-microblaze -M microblaze-fdt-plnx \
+$ qemu-system-riscv32 -M virt \
   -kernel voltage_check_mb -nographic
 \end{verbatim}
 
