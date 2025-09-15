@@ -61,7 +61,7 @@
     filecolor=magenta,
     urlcolor=cyan,
     pdftitle={Day 4 Assignment - Cross-Compilation and Modular Programming Lab},
-    pdfauthor={Course Instructor},
+    pdfauthor={Yahwista Salomo},
 }
 
 \begin{document}
@@ -70,7 +70,7 @@
 \begin{center}
     {\Huge\bfseries\color{codeblue} DAY 4 ASSIGNMENT}\\[0.5cm]
     {\Large Cross-Compilation and Modular Programming Lab}\\[0.3cm]
-    {\large RP2040 Embedded Validation System}\\[0.2cm]
+    {\large MicroBlaze-V Embedded Validation System}\\[0.2cm]
     {\normalsize Due: End of Day 4 + Homework Extension}
 \end{center}
 
@@ -82,7 +82,7 @@
 By completing this assignment, you will:
 \begin{itemize}
     \item Design modular code architecture with header files and libraries
-    \item Master cross-compilation for ARM Cortex-M0+ embedded targets
+    \item Master cross-compilation for RISC-V RV32I embedded targets
     \item Configure and use CMake build systems for embedded projects
     \item Develop portable code that runs on both desktop and embedded platforms
     \item Create professional-grade validation libraries for reuse
@@ -96,8 +96,8 @@ You will transform your validation system into a professional, modular codebase 
 \subsection{Setup and Environment Verification}
 \begin{enumerate}
     \item Accept the Day 4 GitHub Classroom assignment
-    \item Verify cross-compilation toolchain: \texttt{arm-none-eabi-gcc --version}
-    \item Check Pico SDK installation: \texttt{echo \$PICO\_SDK\_PATH}
+    \item Verify cross-compilation toolchain: \texttt{riscv32-unknown-elf-gcc --version}
+    \item Check MicroBlaze-V SDK installation: \texttt{echo \$MICROBLAZE\_SDK\_PATH}
     \item Test CMake version: \texttt{cmake --version} (should be 3.13+)
     \item Create new branch: \texttt{git checkout -b day4-embedded-port}
 \end{enumerate}
@@ -162,7 +162,7 @@ void export_results_csv(const char *filename, const test_result_t *results, int 
 \textbf{Requirements:}
 \begin{itemize}
     \item Create platform-independent hardware interface
-    \item Support both desktop simulation and RP2040 hardware
+    \item Support both desktop simulation and MicroBlaze-V hardware
     \item Implement conditional compilation for different targets
     \item Provide consistent API across platforms
 \end{itemize}
@@ -296,9 +296,9 @@ endif()
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Successfully compile for both desktop and RP2040 targets
+    \item Successfully compile for both desktop and MicroBlaze-V targets
     \item Test desktop version with comprehensive validation
-    \item Generate RP2040 UF2 file for hardware deployment
+    \item Generate MicroBlaze-V binary file for hardware deployment
     \item Verify cross-compiled binary functionality
 \end{itemize}
 
