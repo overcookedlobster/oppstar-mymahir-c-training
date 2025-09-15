@@ -14,6 +14,7 @@
 
 % Page setup
 \geometry{margin=1in}
+\setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Day 6 Assignment: Capstone Project}
@@ -94,7 +95,7 @@ By completing this capstone project, you will:
 Your team will create a complete validation system that demonstrates mastery of:
 \begin{itemize}
     \item C programming fundamentals and advanced concepts
-    \item Embedded systems programming for RP2040
+    \item Embedded systems programming for MicroBlaze-V
     \item Hardware-in-the-loop testing methodologies
     \item Professional software development practices
     \item Technical communication and documentation
@@ -113,7 +114,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 \textbf{For 3-Person Teams:}
 \begin{itemize}
     \item \textbf{Project Lead:} Overall coordination, integration, and timeline management
-    \item \textbf{Hardware Specialist:} RP2040 programming, peripheral integration, debugging
+    \item \textbf{Hardware Specialist:} MicroBlaze-V programming, peripheral integration, debugging
     \item \textbf{Software Architect:} Code structure, optimization, testing framework
 \end{itemize}
 
@@ -137,7 +138,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 
 \subsubsection{1. Multi-Peripheral Validation System}
 \begin{itemize}
-    \item Test at least 3 different RP2040 peripherals (GPIO, ADC, timers, etc.)
+    \item Test at least 3 different MicroBlaze-V peripherals (GPIO, ADC, timers, etc.)
     \item Implement comprehensive test suites for each peripheral
     \item Provide pass/fail criteria and detailed reporting
     \item Include error detection and recovery mechanisms
@@ -153,7 +154,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 
 \subsubsection{3. Cross-Platform Compatibility}
 \begin{itemize}
-    \item Code compiles and runs on both desktop and RP2040
+    \item Code compiles and runs on both desktop and MicroBlaze-V
     \item CMake build system supporting both targets
     \item Consistent behavior across platforms (where applicable)
     \item Platform-specific optimizations where needed
@@ -161,7 +162,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 
 \subsubsection{4. Hardware-in-the-Loop Testing}
 \begin{itemize}
-    \item Actual hardware testing on RP2040 platform
+    \item Actual hardware testing on MicroBlaze-V platform
     \item Real-time constraint validation
     \item Hardware-specific validation scenarios
     \item Integration with physical test setup
@@ -228,7 +229,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 \subsection{Innovation and Creativity (10\% of Grade)}
 \begin{itemize}
     \item Novel approaches to validation challenges
-    \item Creative use of RP2040 capabilities
+    \item Creative use of MicroBlaze-V capabilities
     \item Innovative user interfaces or interaction methods
     \item Unique integration of course concepts
     \item Original solutions to technical problems
@@ -259,7 +260,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 \begin{itemize}
     \item Multi-peripheral integration
     \item Cross-compilation setup and testing
-    \item Hardware testing on RP2040
+    \item Hardware testing on MicroBlaze-V
     \item Error handling and recovery implementation
 \end{itemize}
 
@@ -300,7 +301,7 @@ Your team will create a complete validation system that demonstrates mastery of:
 \section{Suggested Project Themes}
 
 \subsection{Theme 1: Multi-Chip Validation Network}
-\textbf{Concept:} Create a system that can validate multiple RP2040 boards simultaneously
+\textbf{Concept:} Create a system that can validate multiple MicroBlaze-V boards simultaneously
 \begin{itemize}
     \item Master-slave communication architecture
     \item Distributed testing coordination
@@ -360,37 +361,37 @@ Your team will create a complete validation system that demonstrates mastery of:
 \textbf{Directory Structure:}
 \begin{verbatim}
 capstone_project/
-├── src/
-│   ├── main.c
-│   ├── validation_core.c
-│   ├── [peripheral]_validator.c
-│   ├── hardware_abstraction.c
-│   ├── test_framework.c
-│   └── [advanced_feature].c
-├── include/
-│   ├── validation_core.h
-│   ├── [peripheral]_validator.h
-│   ├── hardware_abstraction.h
-│   ├── test_framework.h
-│   ├── common_types.h
-│   └── [advanced_feature].h
-├── tests/
-│   ├── unit_tests.c
-│   └── integration_tests.c
-├── docs/
-│   ├── README.md
-│   ├── API_REFERENCE.md
-│   ├── ARCHITECTURE.md
-│   ├── USER_GUIDE.md
-│   └── TEST_RESULTS.md
-├── scripts/
-│   ├── build_desktop.sh
-│   ├── build_pico.sh
-│   └── run_tests.sh
-├── CMakeLists.txt
-└── .github/
-    └── workflows/
-        └── ci.yml
+|-- src/
+|   |-- main.c
+|   |-- validation_core.c
+|   |-- [peripheral]_validator.c
+|   |-- hardware_abstraction.c
+|   |-- test_framework.c
+|   +-- [advanced_feature].c
+|-- include/
+|   |-- validation_core.h
+|   |-- [peripheral]_validator.h
+|   |-- hardware_abstraction.h
+|   |-- test_framework.h
+|   |-- common_types.h
+|   +-- [advanced_feature].h
+|-- tests/
+|   |-- unit_tests.c
+|   +-- integration_tests.c
+|-- docs/
+|   |-- README.md
+|   |-- API_REFERENCE.md
+|   |-- ARCHITECTURE.md
+|   |-- USER_GUIDE.md
+|   +-- TEST_RESULTS.md
+|-- scripts/
+|   |-- build_desktop.sh
+|   |-- build_pico.sh
+|   +-- run_tests.sh
+|-- CMakeLists.txt
++-- .github/
+    +-- workflows/
+        +-- ci.yml
 \end{verbatim}
 
 \subsection{Code Quality Standards}
@@ -419,7 +420,7 @@ capstone_project/
     \item \textbf{Duration:} 7-10 minutes per team
     \item \textbf{Format:} Live demonstration with slides
     \item \textbf{Audience:} Classmates, instructors, and optional industry guests
-    \item \textbf{Equipment:} Projector, RP2040 hardware, laptop
+    \item \textbf{Equipment:} Projector, MicroBlaze-V hardware, laptop
 \end{itemize}
 
 \subsection{Presentation Structure}
@@ -506,7 +507,7 @@ Innovation & 3 & Creative solutions, novel approaches \\
 \hline
 \textbf{Total} & \textbf{100} & \textbf{Professional validation engineering project} \\
 \hline
-\end{tabular>
+\end{tabular}
 \end{center}
 
 \subsection{Grading Scale}
@@ -526,8 +527,8 @@ Innovation & 3 & Creative solutions, novel approaches \\
     \item \textbf{Teaching Assistants:} Hands-on technical support and debugging help
     \item \textbf{Peer Teams:} Cross-team collaboration and knowledge sharing encouraged
     \item \textbf{AI Tools:} Access to coding assistants with evaluation requirements
-    \item \textbf{Hardware:} Backup RP2040 boards and debugging equipment
-\end{itemize>
+    \item \textbf{Hardware:} Backup MicroBlaze-V boards and debugging equipment
+\end{itemize}
 
 \subsection{Emergency Procedures}
 \begin{itemize}
@@ -541,11 +542,11 @@ Innovation & 3 & Creative solutions, novel approaches \\
 \subsection{Resource Library}
 \begin{itemize}
     \item All previous day's code examples and solutions
-    \item RP2040 datasheet and SDK documentation
+    \item MicroBlaze-V datasheet and SDK documentation
     \item Course slides and reference materials
     \item Example project structures and templates
     \item Debugging guides and troubleshooting resources
-\end{itemize>
+\end{itemize}
 
 \section{Portfolio Development}
 
@@ -588,7 +589,7 @@ Your capstone project will serve as a centerpiece of your professional portfolio
     \item Create detailed technical blog posts about your project
     \item Contribute to open-source embedded systems projects
     \item Mentor future course participants
-\end{itemize>
+\end{itemize}
 
 \section{Success Tips and Best Practices}
 
@@ -608,7 +609,7 @@ Your capstone project will serve as a centerpiece of your professional portfolio
     \item \textbf{Performance Focus:} Keep embedded constraints in mind throughout development
     \item \textbf{Code Reviews:} Review each other's code for quality and learning
     \item \textbf{Hardware Testing:} Test on actual hardware early and often
-\end{itemize>
+\end{itemize}
 
 \subsection{Presentation Preparation}
 \begin{itemize}
@@ -617,7 +618,7 @@ Your capstone project will serve as a centerpiece of your professional portfolio
     \item \textbf{Tell a Story:} Structure your presentation as a compelling narrative
     \item \textbf{Time Management:} Practice staying within the time limit
     \item \textbf{Engage Audience:} Make eye contact and explain technical concepts clearly
-\end{itemize>
+\end{itemize}
 
 \section{Reflection and Evaluation}
 
@@ -629,7 +630,7 @@ At the end of the project, reflect on:
     \item What would you do differently if you started the project over?
     \item How will you apply these skills in your future career?
     \item What additional skills do you want to develop next?
-\end{itemize>
+\end{itemize}
 
 \subsection{Peer Evaluation}
 Provide feedback on your teammates':
@@ -639,7 +640,7 @@ Provide feedback on your teammates':
     \item Reliability and commitment to the project
     \item Leadership and initiative in driving progress
     \item Areas for improvement and growth
-\end{itemize>
+\end{itemize}
 
 \vspace{1cm}
 
@@ -647,7 +648,7 @@ Provide feedback on your teammates':
 \textbf{Congratulations on reaching the capstone!}\\
 \textit{This project represents the culmination of your transformation into a validation engineer.}\\
 \textbf{Show the world what you've learned and built!}
-\end{center>
+\end{center}
 
-\end{document>
+\end{document}
 

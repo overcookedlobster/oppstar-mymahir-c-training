@@ -11,12 +11,14 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{amssymb}
 
 % Page setup
 \geometry{margin=1in}
+\setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Day 5 Assignment: Hardware Debugging and RP2040 Peripherals Lab}
+\fancyhead[L]{Day 5 Assignment: Hardware Debugging and MicroBlaze-V Peripherals Lab}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{C Programming for Post-Silicon Validation Engineers}
 
@@ -58,7 +60,7 @@
     linkcolor=codeblue,
     filecolor=magenta,
     urlcolor=cyan,
-    pdftitle={Day 5 Assignment - Hardware Debugging and RP2040 Peripherals Lab},
+    pdftitle={Day 5 Assignment - Hardware Debugging and MicroBlaze-V Peripherals Lab},
     pdfauthor={Yahwista Salomo},
 }
 
@@ -67,7 +69,7 @@
 % Header
 \begin{center}
     {\Huge\bfseries\color{codeblue} DAY 5 ASSIGNMENT}\\[0.5cm]
-    {\Large Hardware Debugging and RP2040 Peripherals Lab}\\[0.3cm]
+    {\Large Hardware Debugging and MicroBlaze-V Peripherals Lab}\\[0.3cm]
     {\large Complete Hardware-in-the-Loop Validation System}\\[0.2cm]
     {\normalsize Due: End of Day 5 + Homework Extension}
 \end{center}
@@ -80,7 +82,7 @@
 By completing this assignment, you will:
 \begin{itemize}
     \item Master advanced debugging techniques for embedded systems
-    \item Program RP2040 peripherals (GPIO, ADC, timers, interrupts)
+    \item Program MicroBlaze-V peripherals (GPIO, ADC, timers, interrupts)
     \item Implement hardware-in-the-loop testing frameworks
     \item Create fault injection and recovery systems
     \item Optimize code for real-time embedded constraints
@@ -88,14 +90,14 @@ By completing this assignment, you will:
 \end{itemize}
 
 \subsection{Assignment Context}
-You will create a comprehensive hardware validation system that runs on the RP2040, utilizing real peripherals to perform actual hardware testing. This represents the culmination of your embedded programming skills and demonstrates real-world validation engineering capabilities.
+You will create a comprehensive hardware validation system that runs on the MicroBlaze-V, utilizing real peripherals to perform actual hardware testing. This represents the culmination of your embedded programming skills and demonstrates real-world validation engineering capabilities.
 
 \section{Part 1: In-Class Lab (3.5 hours)}
 
 \subsection{Setup and Hardware Preparation}
 \begin{enumerate}
     \item Accept the Day 5 GitHub Classroom assignment
-    \item Verify RP2040 hardware is functional and connected
+    \item Verify MicroBlaze-V hardware is functional and connected
     \item Test serial communication with your development environment
     \item Ensure all previous day's code is committed and builds successfully
     \item Create new branch: \texttt{git checkout -b day5-hardware-validation}
@@ -294,7 +296,7 @@ int test_adc_settling_time(uint8_t channel);
 int stress_test_adc_stability(uint8_t channel, uint32_t duration_ms);
 
 #endif // ADC_VALIDATOR_H
-\end{lstlisting>
+\end{lstlisting}
 
 \subsection{Task 4: Timer and Interrupt Validation (60 minutes)}
 
@@ -350,7 +352,7 @@ int test_interrupt_latency(void);
 int stress_test_timer_under_load(void);
 
 #endif // TIMER_VALIDATOR_H
-\end{lstlisting>
+\end{lstlisting}
 
 \subsection{Task 5: Fault Injection and Recovery Testing (30 minutes)}
 
@@ -397,7 +399,7 @@ bool check_system_health(void);
 int implement_graceful_degradation(fault_type_t active_fault);
 
 #endif // FAULT_INJECTION_H
-\end{lstlisting>
+\end{lstlisting}
 
 \section{Part 2: Homework Extension (2 hours)}
 
@@ -456,7 +458,7 @@ int run_comprehensive_system_test(uint32_t duration_minutes);
 int monitor_system_health(system_health_t* health);
 int stress_test_all_peripherals(uint32_t duration_minutes);
 int validate_system_under_load(void);
-\end{lstlisting>
+\end{lstlisting}
 
 \subsection{Task 8: Production-Ready Features}
 
@@ -521,13 +523,13 @@ Documentation & 15 & Complete technical documentation \\
 \textbf{Total} & \textbf{170} & \textbf{Production-ready validation system} \\
 \hline
 \end{tabular}
-\end{center>
+\end{center}
 
 \section{Hardware Safety and Best Practices}
 
 \subsection{Safety Guidelines}
 \begin{itemize}
-    \item \textbf{Voltage Limits:} Never exceed 3.3V on any RP2040 pin
+    \item \textbf{Voltage Limits:} Never exceed 3.3V on any MicroBlaze-V pin
     \item \textbf{Current Limits:} Maximum 12mA per GPIO pin, 50mA total
     \item \textbf{ESD Protection:} Use anti-static precautions when handling hardware
     \item \textbf{Power Management:} Monitor power consumption during stress tests
@@ -561,7 +563,7 @@ Documentation & 15 & Complete technical documentation \\
     \item Use oscilloscope or logic analyzer for signal verification
     \item Monitor power consumption for abnormal behavior detection
     \item Implement comprehensive logging for post-mortem analysis
-\end{itemize>
+\end{itemize}
 
 \section{Performance Optimization}
 
@@ -581,13 +583,13 @@ Documentation & 15 & Complete technical documentation \\
     \item Use appropriate priority levels for different tasks
     \item Implement proper synchronization for shared resources
     \item Monitor worst-case execution times under all conditions
-\end{itemize>
+\end{itemize}
 
 \section{Extension Opportunities}
 
 \subsection{Advanced Features}
 \begin{itemize}
-    \item \textbf{Multi-Core Utilization:} Use both RP2040 cores for parallel testing
+    \item \textbf{Multi-Core Utilization:} Use both MicroBlaze-V cores for parallel testing
     \item \textbf{Custom Protocols:} Implement proprietary communication protocols
     \item \textbf{Machine Learning:} Add anomaly detection using TensorFlow Lite
     \item \textbf{Wireless Communication:} Add WiFi or Bluetooth validation
@@ -601,7 +603,7 @@ Documentation & 15 & Complete technical documentation \\
     \item Explore professional debugging tools and techniques
     \item Investigate certification requirements for embedded systems
     \item Learn about production testing and quality assurance processes
-\end{itemize>
+\end{itemize}
 
 \section{Success Tips}
 
@@ -619,7 +621,7 @@ Documentation & 15 & Complete technical documentation \\
 \begin{center}
 \textbf{You're now a hardware validation expert!}\\
 \textit{These skills directly translate to professional validation engineering roles.}
-\end{center>
+\end{center}
 
-\end{document>
+\end{document}
 

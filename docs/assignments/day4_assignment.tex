@@ -89,7 +89,7 @@ By completing this assignment, you will:
 \end{itemize}
 
 \subsection{Assignment Context}
-You will transform your validation system into a professional, modular codebase that can be cross-compiled for the RP2040 microcontroller. This assignment focuses on software engineering best practices, build system configuration, and the transition from desktop to embedded development.
+You will transform your validation system into a professional, modular codebase that can be cross-compiled for the MicroBlaze-V microcontroller. This assignment focuses on software engineering best practices, build system configuration, and the transition from desktop to embedded development.
 
 \section{Part 1: In-Class Lab (3.5 hours)}
 
@@ -217,7 +217,7 @@ void hal_debug_print(const char *format, ...);
 \textbf{Requirements:}
 \begin{itemize}
     \item Support both native and cross-compilation builds
-    \item Configure Pico SDK integration
+    \item Configure MicroBlaze-V SDK integration
     \item Set up proper compiler flags and optimizations
     \item Enable conditional compilation based on target
 \end{itemize}
@@ -226,11 +226,11 @@ void hal_debug_print(const char *format, ...);
 \begin{lstlisting}[language=bash]
 cmake_minimum_required(VERSION 3.13)
 
-# Detect if building for Pico
-if(DEFINED ENV{PICO_SDK_PATH})
-    # Include Pico SDK
-    include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
-    set(PICO_BUILD ON)
+# Detect if building for MicroBlaze-V
+if(DEFINED ENV{MICROBLAZE_SDK_PATH})
+    # Include MicroBlaze-V SDK
+    include($ENV{MICROBLAZE_SDK_PATH}/external/microblaze_sdk_import.cmake)
+    set(MICROBLAZE_BUILD ON)
 endif()
 
 project(validation_suite C CXX ASM)
@@ -238,7 +238,7 @@ project(validation_suite C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Initialize Pico SDK if available
+# Initialize MicroBlaze-V SDK if available
 if(PICO_BUILD)
     pico_sdk_init()
     add_compile_definitions(PICO_BUILD=1)
@@ -262,7 +262,7 @@ add_executable(validation_suite ${SOURCES})
 
 # Platform-specific configuration
 if(PICO_BUILD)
-    # Pico-specific libraries
+    # MicroBlaze-V-specific libraries
     target_link_libraries(validation_suite
         pico_stdlib
         hardware_gpio
@@ -310,11 +310,11 @@ cmake ..
 make -j4
 ./validation_suite
 
-# RP2040 cross-compilation build
+# MicroBlaze-V cross-compilation build
 mkdir build-pico && cd build-pico
 cmake ..
 make -j4
-# Result: validation_suite.uf2 ready for Pico
+# Result: validation_suite.bin ready for MicroBlaze-V
 \end{verbatim}
 
 \textbf{Testing Requirements:}
@@ -325,11 +325,11 @@ make -j4
     \item Both versions use the same source code
 \end{itemize}
 
-\subsection{Task 5: RP2040 Hardware Integration (30 minutes)}
+\subsection{Task 5: MicroBlaze-V Hardware Integration (30 minutes)}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Flash UF2 file to RP2040 hardware
+    \item Flash binary file to MicroBlaze-V hardware
     \item Verify basic functionality (LED blink, serial output)
     \item Test GPIO operations through HAL
     \item Document hardware behavior vs. simulation
@@ -337,7 +337,7 @@ make -j4
 
 \textbf{Hardware Verification Checklist:}
 \begin{itemize}
-    \item[$\square$] UF2 file flashes successfully to Pico
+    \item[$\square$] Binary file flashes successfully to MicroBlaze-V
     \item[$\square$] Serial output appears in terminal
     \item[$\square$] LED blinks to indicate system activity
     \item[$\square$] GPIO operations work as expected
@@ -499,8 +499,8 @@ void reset_performance_stats(void);
     \item[$\square$] Complete modular source code with headers
     \item[$\square$] Working CMakeLists.txt for both platforms
     \item[$\square$] Successfully compiled desktop executable
-    \item[$\square$] Successfully generated RP2040 UF2 file
-    \item[$\square$] Hardware verification on actual RP2040
+    \item[$\square$] Successfully generated MicroBlaze-V binary file
+    \item[$\square$] Hardware verification on actual MicroBlaze-V
     \item[$\square$] Comprehensive documentation
     \item[$\square$] Performance analysis and optimization
 \end{itemize}
@@ -516,7 +516,7 @@ Task 1: Modular Architecture & 20 & Clean separation, proper headers \\
 Task 2: Hardware Abstraction & 20 & Platform independence, consistent API \\
 Task 3: CMake Configuration & 20 & Correct build system, both platforms \\
 Task 4: Cross-Compilation & 15 & Successful builds, working binaries \\
-Task 5: Hardware Integration & 15 & RP2040 deployment, verification \\
+Task 5: Hardware Integration & 15 & MicroBlaze-V deployment, verification \\
 Task 6: Advanced Build & 10 & Optimization, static analysis \\
 Task 7: Library Creation & 10 & Reusable library, packaging \\
 Task 8: Performance & 10 & Profiling, optimization \\
@@ -534,7 +534,7 @@ Documentation & 15 & Complete, clear documentation \\
 \begin{itemize}
     \item \textbf{PICO\_SDK\_PATH not set:} Export environment variable correctly
     \item \textbf{CMake version too old:} Upgrade to 3.13 or newer
-    \item \textbf{Cross-compiler not found:} Install arm-none-eabi-gcc toolchain
+    \item \textbf{Cross-compiler not found:} Install riscv32-unknown-elf-gcc toolchain
     \item \textbf{Missing dependencies:} Install required development packages
 \end{itemize}
 
@@ -550,7 +550,7 @@ Documentation & 15 & Complete, clear documentation \\
 \begin{itemize}
     \item \textbf{UF2 not recognized:} Hold BOOTSEL button while connecting USB
     \item \textbf{No serial output:} Check USB serial configuration in code
-    \item \textbf{Program doesn't start:} Verify UF2 file integrity and Pico reset
+    \item \textbf{Program doesn't start:} Verify binary file integrity and MicroBlaze-V reset
     \item \textbf{GPIO not working:} Check pin initialization and direction settings
 \end{itemize}
 
@@ -567,7 +567,7 @@ Documentation & 15 & Complete, clear documentation \\
 
 \subsection{Embedded Testing}
 \begin{enumerate}
-    \item Flash UF2 to RP2040 and verify boot
+    \item Flash binary to MicroBlaze-V and verify boot
     \item Test serial communication and debug output
     \item Verify GPIO operations and LED control
     \item Test timing functions and delays

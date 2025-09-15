@@ -132,6 +132,7 @@ int main() {
 \begin{frame}
 \frametitle{Logical Operators in Validation}
 \begin{center}
+% the table goes over the boundary too large to the right side
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Operator} & \textbf{Meaning} & \textbf{Validation Example} \\
@@ -143,14 +144,14 @@ int main() {
 \end{tabular}
 \end{center}
 
-\vspace{0.5cm}
+\vspace{0.1cm}
 \begin{exampleblock}{Complex Validation Logic}
 \texttt{if (voltage >= min\_v \&\& voltage <= max\_v \&\& !error\_flag) \{\\
 \quad // System is ready for testing\\
 \}}
 \end{exampleblock}
 
-\vspace{0.5cm}
+\vspace{0.1cm}
 \textbf{Validation Tip:} Always check multiple parameters for robust testing!
 \end{frame}
 
@@ -210,6 +211,7 @@ int main() {
 \begin{frame}
 \frametitle{Function Anatomy}
 \begin{center}
+% the tikz picture return tpe and function name is crashing into one another and the block boundary shifts to the right too much and crosses the boundary
 \begin{tikzpicture}
 \node[draw, rectangle, minimum width=8cm, minimum height=1cm] at (0,0)
 {\texttt{int check\_voltage(float voltage, float min, float max)}};

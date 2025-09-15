@@ -5,7 +5,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{tikz}
-\usetikzlibrary{positioning}
+\usetikzlibrary{positioning,shadows}
 \usepackage{amsmath}
 \usepackage{hyperref}
 
@@ -76,7 +76,7 @@
 
 \vspace{0.5cm}
 \begin{center}
-\textit{"Every expert was once a beginner"}
+\textit{"Building robust validation starts with solid fundamentals"}
 \end{center}
 \end{frame}
 
@@ -175,7 +175,7 @@ int main() {
 
 \begin{frame}[fragile]
 \frametitle{Variables and Declarations}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\scriptsize]
 #include <stdio.h>
 
 int main() {
@@ -232,7 +232,7 @@ int main() {
 
 \begin{frame}[fragile]
 \frametitle{Input/Output with printf and scanf}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\tiny]
 #include <stdio.h>
 
 int main() {
@@ -259,25 +259,45 @@ int main() {
 \begin{frame}
 \frametitle{The Compilation Process}
 \begin{center}
-\begin{tikzpicture}[node distance=2cm]
-\node (source) [draw, rectangle, text width=2cm, align=center] {Source Code\\(.c file)};
-\node (preprocessor) [draw, rectangle, right=of source] {Preprocessor};
-\node (compiler) [draw, rectangle, right=of preprocessor] {Compiler};
-\node (linker) [draw, rectangle, below=of compiler] {Linker};
-\node (executable) [draw, rectangle, left=of linker, text width=2cm, align=center] {Executable\\Program};
+\begin{tikzpicture}[
+    node distance=0.35cm and 0.35cm,
+    box/.style={draw, rectangle, rounded corners=2pt, minimum width=1.8cm, minimum height=0.7cm, align=center, fill=gray!5, thick},
+    process/.style={box, fill=blue!15, text=black, font=\tiny},
+    file/.style={box, fill=green!10, text=black, font=\tiny},
+    arrow/.style={->, thick, black!80, >=stealth}
+]
 
-\draw [->] (source) -- (preprocessor);
-\draw [->] (preprocessor) -- (compiler);
-\draw [->] (compiler) -- (linker);
-\draw [->] (linker) -- (executable);
+% Process nodes in a row at the top
+\node (cpp) [process] {Preprocessor};
+\node (cc1) [process, right=of cpp] {Compiler};
+\node (as) [process, right=of cc1] {Assembler};
+\node (ld) [process, right=of as] {Linker};
+
+% File nodes - source staggered left, intermediary files between processes
+\node (source) [file, above=0.6cm of cpp, xshift=-0.35cm] {\textbf{Source}\\\texttt{.c}};
+\node (preprocessed) [file, below=0.6cm of cpp, xshift=0.35cm] {\textbf{Preprocessed}\\\texttt{.i}};
+\node (assembly) [file, below=0.6cm of cc1, xshift=0.35cm] {\textbf{Assembly}\\\texttt{.s}};
+\node (object) [file, below=0.6cm of as, xshift=0.35cm] {\textbf{Object}\\\texttt{.o}};
+\node (executable) [file, right=0.35cm of object] {\textbf{Executable}};
+
+% Draw arrows
+\draw [arrow] (source) -- (cpp);
+\draw [arrow] (cpp) -- (preprocessed);
+\draw [arrow] (preprocessed) -- (cc1);
+\draw [arrow] (cc1) -- (assembly);
+\draw [arrow] (assembly) -- (as);
+\draw [arrow] (as) -- (object);
+\draw [arrow] (object) -- (ld);
+\draw [arrow] (ld) -- (executable);
+
 \end{tikzpicture}
 \end{center}
 
-\textbf{GCC Command:} \texttt{gcc program.c -o program}
+\textbf{GCC:} \texttt{gcc -Wall -g program.c -o program}
 \begin{itemize}
-    \item \texttt{-o} specifies output filename
-    \item \texttt{-Wall} enables all warnings
-    \item \texttt{-g} includes debugging information
+    \item \texttt{-o} output filename
+    \item \texttt{-Wall} show warnings
+    \item \texttt{-g} debug symbols
 \end{itemize}
 \end{frame}
 
@@ -325,7 +345,8 @@ Power consumption: 1.650 W
 \frametitle{MicroBlaze-V Cross-Compilation}
 \textbf{For FPGA deployment:}
 \begin{verbatim}
-$ riscv32-unknown-elf-gcc -march=rv32imafczicsr_zifencei -mabi=ilp32f \
+$ riscv64-unknown-elf-gcc -march=rv32imafc \
+  -mabi=ilp32f -nostdlib \
   -Wall -g voltage_check.c -o voltage_check_mb
 \end{verbatim}
 
@@ -348,7 +369,7 @@ $ qemu-system-riscv32 -M virt \
 \frametitle{Handling Compilation Errors}
 \textbf{Common errors and fixes:}
 
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\scriptsize]
 // ERROR: Missing semicolon
 int voltage = 3.3  // Missing ;
 

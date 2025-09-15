@@ -168,7 +168,7 @@ Result: PASS - Voltage within acceptable range
 \begin{itemize}
     \item Combine voltage and power validation
     \item Add temperature validation (< 85°C)
-    \item Add clock frequency validation (1MHz - 133MHz for RP2040)
+    \item Add clock frequency validation (1MHz - 100MHz for MicroBlaze-V)
     \item Provide comprehensive pass/fail summary
     \item Calculate and display overall system health score
 \end{itemize}
@@ -252,20 +252,20 @@ int get_valid_voltage(float *voltage) {
 \begin{itemize}
     \item Read validation parameters from \texttt{config.txt}
     \item Support customizable voltage, power, and temperature limits
-    \item Allow different chip profiles (RP2040, STM32, etc.)
+    \item Allow different chip profiles (MicroBlaze-V, STM32, etc.)
     \item Implement configuration file parsing
 \end{itemize}
 
 \textbf{Sample config.txt:}
 \begin{verbatim}
 # Chip Validation Configuration
-CHIP_TYPE=RP2040
+CHIP_TYPE=MicroBlaze-V
 MIN_VOLTAGE=1.8
 MAX_VOLTAGE=3.6
 MAX_POWER=5.0
 MAX_TEMPERATURE=85.0
 MIN_FREQUENCY=1000000
-MAX_FREQUENCY=133000000
+MAX_FREQUENCY=100000000
 \end{verbatim}
 
 \subsection{Task 7: Batch Testing Mode}
@@ -378,7 +378,7 @@ GitHub Usage & 5 & Commit quality, PR submission \\
 
 \subsection{Real-World Connections}
 \begin{itemize}
-    \item Research actual RP2040 specifications and compare to your limits
+    \item Research actual MicroBlaze-V specifications and compare to your limits
     \item Investigate post-silicon validation practices in industry
     \item Explore how validation tools are used in semiconductor companies
     \item Connect with professionals in validation engineering roles
