@@ -59,15 +59,15 @@
 \textbf{Class Size:} & 20 Participants Maximum \\
 \textbf{Prerequisites:} & None (Designed for Programming Beginners) \\
 \textbf{Target Audience:} & Engineers Transitioning to Post-Silicon Validation \\
-\textbf{Hardware Platform:} & FPGA Development Boards (MicroBlaze) \\
+\textbf{Hardware Platform:} & FPGA Development Boards (MicroBlaze-V (RISC-V based)) \\
 \textbf{Primary Tools:} & GCC, GDB, GitHub, VS Code, QEMU, Vivado/Quartus \\
 \end{tabular}
 
 \section{Instructor Information}
 
 \begin{tabular}{ll}
-\textbf{Lead Instructor:} & [Instructor Name] \\
-\textbf{Email:} & [instructor@company.com] \\
+\textbf{Lead Instructor:} & Yahwista Salomo \\
+\textbf{Email:} & yahwistasalomo.pv@oppstar.com.my \\
 \textbf{Office Hours:} & By appointment during course week \\
 \textbf{Teaching Assistants:} & 1-2 TAs for hands-on support \\
 \textbf{Response Time:} & Within 4 hours during course days \\
@@ -77,7 +77,7 @@
 
 This intensive 6-day course transforms engineers with no programming experience into proficient C developers capable of creating embedded validation tools for semiconductor post-silicon testing. The curriculum emphasizes practical, hands-on learning with real hardware and industry-standard development practices.
 
-Participants will progress from basic C syntax to developing complete validation systems running on MicroBlaze processors implemented in FPGAs. All examples and projects simulate real-world post-silicon validation scenarios, including register manipulation, fault detection, timing analysis, and automated testing procedures.
+Participants will progress from basic C syntax to developing complete validation systems running on MicroBlaze-V (RISC-V based) processors implemented in FPGAs. All examples and projects simulate real-world post-silicon validation scenarios, including register manipulation, fault detection, timing analysis, and automated testing procedures.
 
 \section{Learning Objectives}
 
@@ -86,7 +86,7 @@ Upon successful completion of this course, participants will be able to:
 \subsection{Technical Skills}
 \begin{enumerate}
     \item Write, compile, and debug C programs using industry-standard tools (GCC, GDB)
-    \item Cross-compile applications for MicroBlaze embedded targets
+    \item Cross-compile applications for MicroBlaze-V (RISC-V based) embedded targets
     \item Develop embedded applications for FPGA-based validation systems
     \item Implement bit manipulation and register access patterns common in validation
     \item Create modular, maintainable code following industry best practices
@@ -184,12 +184,12 @@ Each day follows a consistent 7-hour format:
     \item Modular programming
     \item Header files and linking
     \item Cross-compilation setup
-    \item MicroBlaze toolchain introduction
+    \item RISC-V toolchain (riscv32-unknown-elf-gcc) introduction
     \item CMake build system
 \end{itemize} &
 \begin{itemize}[nosep]
     \item Modular test suite
-    \item MicroBlaze cross-compiled binary
+    \item MicroBlaze-V (RISC-V based) cross-compiled binary
     \item CMake configuration
 \end{itemize} \\
 \hline
@@ -283,7 +283,7 @@ Participation \& Collaboration & 30\% & GitHub activity, peer feedback \\
 
 \subsection{Hardware (Provided)}
 \begin{itemize}
-    \item FPGA Development Board (with RISC-V core)
+    \item FPGA Development Board (with MicroBlaze-V (RISC-V based) core)
     \item USB programming cable and JTAG debugger
     \item Breadboard and jumper wires (for advanced projects)
     \item LEDs and resistors for visual feedback
@@ -292,13 +292,13 @@ Participation \& Collaboration & 30\% & GitHub activity, peer feedback \\
 
 \subsection{Software (Free/Open Source)}
 \begin{itemize}
-    \item GCC compiler suite (native and MicroBlaze cross-compiler)
+    \item GCC compiler suite (native and RISC-V toolchain (riscv32-unknown-elf-gcc))
     \item Git version control system
     \item VS Code editor with C/C++ extensions
-    \item MicroBlaze toolchain and libraries
+    \item RISC-V toolchain (riscv32-unknown-elf-gcc) and libraries
     \item CMake build system
     \item GDB debugger
-    \item QEMU MicroBlaze emulator for backup/simulation
+    \item QEMU MicroBlaze-V (RISC-V based) emulator for backup/simulation
     \item Vivado/Quartus (FPGA development tools)
 \end{itemize}
 
@@ -463,10 +463,10 @@ Participation \& Collaboration & 30\% & GitHub activity, peer feedback \\
 
 \subsection{Primary Contacts}
 \begin{itemize}
-    \item \textbf{Course Coordinator:} [Name, Email, Phone]
-    \item \textbf{Lead Instructor:} [Name, Email, Office Hours]
-    \item \textbf{Technical Support:} [Email, Response Time]
-    \item \textbf{Administrative Support:} [Name, Email, Phone]
+    \item \textbf{Course Coordinator:} Yahwista Salomo, yahwistasalomo.pv@oppstar.com.my
+    \item \textbf{Lead Instructor:} Yahwista Salomo, yahwistasalomo.pv@oppstar.com.my, By appointment during course week
+    \item \textbf{Technical Support:} yahwistasalomo.pv@oppstar.com.my, Within 4 hours during course days
+    \item \textbf{Administrative Support:} Yahwista Salomo, yahwistasalomo.pv@oppstar.com.my
 \end{itemize}
 
 \subsection{Communication Channels}
