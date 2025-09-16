@@ -5,6 +5,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 \usepackage{amsmath}
 \usepackage{hyperref}
 
@@ -102,7 +103,7 @@ Today's concepts are fundamental to embedded programming!
 \begin{frame}
 \frametitle{Memory: The Foundation}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.7]
 % Memory blocks
 \foreach \i in {0,1,2,3,4,5} {
     \draw (0,\i) rectangle (2,\i+1);
@@ -123,8 +124,8 @@ Today's concepts are fundamental to embedded programming!
 \node[right] at (4.5,3) {\textbf{Values}};
 
 % Arrow pointing to specific location
-\draw[thick,->] (5,2.5) -- (4.5,2.5);
-\node[right] at (5,2.5) {Register value};
+\draw[thick,->] (5,1.5) -- (4.5,1.5);
+\node[right] at (5,1.5) {Register value};
 \end{tikzpicture}
 \end{center}
 
@@ -139,7 +140,7 @@ Today's concepts are fundamental to embedded programming!
 
 \begin{frame}[fragile]
 \frametitle{Pointers: Your Gateway to Hardware}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include <stdio.h>
 
 int main() {
@@ -167,35 +168,35 @@ int main() {
 \begin{center}
 \begin{tikzpicture}
 % Declaration
-\node[draw, rectangle, minimum width=6cm] at (0,3) {\texttt{int *voltage\_ptr;}};
-\node[above] at (-2,3.7) {\textbf{Type}};
-\node[above] at (-0.5,3.7) {\textbf{* means pointer}};
-\node[above] at (1.5,3.7) {\textbf{Variable name}};
+\node[draw, rectangle, minimum width=6cm, fill=blue!15, draw=blue!60] (decl) at (0,3) {\texttt{int *voltage\_ptr;}};
+\node[anchor=south west, color=blue!70] at ([yshift=0.2cm, xshift=1.2cm]decl.west) {\textbf{\tiny Type}};
+\node[anchor=south, color=purple!70] at ([yshift=0.5cm]decl.center) {\textbf{\tiny * means pointer}};
+\node[anchor=south east, color=teal!70] at ([yshift=0.23cm, xshift=-1.8cm]decl.east) {\textbf{\tiny Variable name}};
 
 % Assignment
-\node[draw, rectangle, minimum width=6cm] at (0,1.5) {\texttt{voltage\_ptr = \&voltage;}};
-\node[above] at (-1.5,2.2) {\textbf{Pointer variable}};
-\node[above] at (1,2.2) {\textbf{\& gets address}};
+\node[draw, rectangle, minimum width=6cm, fill=teal!15, draw=teal!60] (assign) at (0,1.5) {\texttt{voltage\_ptr = \&voltage;}};
+\node[anchor=south west, color=teal!70] at ([yshift=0.2cm, xshift=0.9cm]assign.west) {\textbf{\tiny Pointer variable}};
+\node[anchor=south east, color=orange!70] at ([yshift=0.2cm, xshift=-0.8cm]assign.east) {\tiny \textbf{\& gets address}};
 
 % Dereferencing
-\node[draw, rectangle, minimum width=6cm] at (0,0) {\texttt{*voltage\_ptr = 5000;}};
-\node[above] at (-1.5,0.7) {\textbf{* accesses value}};
-\node[above] at (1,0.7) {\textbf{New value}};
+\node[draw, rectangle, minimum width=6cm, fill=purple!15, draw=purple!60] (deref) at (0,0) {\texttt{*voltage\_ptr = 5000;}};
+\node[anchor=south west, color=purple!70] at ([yshift=0.2cm, xshift=1.2cm]deref.west) {\tiny \textbf{* accesses value}};
+\node[anchor=south east, color=blue!70] at ([yshift=0.2cm, xshift=-1.0cm]deref.east) {\tiny \textbf{New value}};
 \end{tikzpicture}
 \end{center}
 
 \vspace{0.5cm}
 \textbf{Memory mantra:}
 \begin{itemize}
-    \item \texttt{\&} = "address of"
-    \item \texttt{*} = "value at" (when used with pointer)
-    \item \texttt{*} = "pointer to" (when declaring)
+    \item \textcolor{orange!70}{\texttt{\&}} = \textcolor{orange!70}{"address of"}
+    \item \textcolor{purple!70}{\texttt{*}} = \textcolor{purple!70}{"value at"} (when used with pointer)
+    \item \textcolor{purple!70}{\texttt{*}} = \textcolor{purple!70}{"pointer to"} (when declaring)
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Pointers in Hardware Validation}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{7}\selectfont\ttfamily]
 #include <stdio.h>
 #include <stdint.h>
 
@@ -226,7 +227,7 @@ uint32_t read_status_register(void) {
 
 \begin{frame}[fragile]
 \frametitle{Arrays: Collections of Data}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include <stdio.h>
 
 int main() {
@@ -261,7 +262,7 @@ int main() {
 
 \begin{frame}[fragile]
 \frametitle{Strings: Arrays of Characters}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include <stdio.h>
 #include <string.h>
 
@@ -291,7 +292,7 @@ int main() {
 
 \begin{frame}[fragile]
 \frametitle{Structures: Modeling Hardware Components}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include <stdio.h>
 #include <stdint.h>
 
@@ -349,7 +350,7 @@ int main() {
 
 \begin{frame}[fragile]
 \frametitle{Bit Manipulation: Register Control}
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include <stdio.h>
 #include <stdint.h>
 
@@ -385,6 +386,7 @@ int main() {
 \begin{frame}
 \frametitle{Bit Operations Cheat Sheet}
 \begin{center}
+    \footnotesize
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Operation} & \textbf{Code} & \textbf{Purpose} \\
@@ -397,24 +399,25 @@ Check bit & \texttt{(reg >> n) \& 1} & Test if bit n is set \\
 \end{tabular}
 \end{center}
 
-\vspace{0.5cm}
-\textbf{Common validation patterns:}
-\begin{itemize}
-    \item \textbf{Enable/Disable:} Set control bits
-    \item \textbf{Status Check:} Read status bits
-    \item \textbf{Error Flags:} Check error bits
-    \item \textbf{Configuration:} Set multiple bits at once
-\end{itemize}
+\vspace{0.2cm}
 
-\vspace{0.5cm}
+{\footnotesize\textbf{Common validation patterns:}
+\begin{itemize}
+    \item\footnotesize\textbf{Enable/Disable:} Set control bits
+    \item\footnotesize\textbf{Status Check:} Read status bits
+    \item\footnotesize\textbf{Error Flags:} Check error bits
+    \item\footnotesize\textbf{Configuration:} Set multiple bits at once
+\end{itemize}}
+
+\vspace{0.2cm}
 \begin{exampleblock}{Real Example}
-\texttt{if (CHECK\_BIT(status\_reg, 7)) \{ /* Ready bit set */ \}}
+\footnotesize\texttt{if (CHECK\_BIT(status\_reg, 7)) \{ /* Ready bit set */ \}}
 \end{exampleblock}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Complete Chip Validation Example}
-\begin{lstlisting}[language=C, basicstyle=\tiny]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{4}{3}\selectfont\ttfamily]
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -445,17 +448,14 @@ void print_chip_status(ChipState *chip) {
 
 int validate_chip(ChipState *chip) {
     int errors = 0;
-
     if (chip->temperature > 85.0) {
         printf("ERROR: Temperature too high!\n");
         errors++;
     }
-
     if (!CHECK_BIT(chip->status_reg, 0)) {
         printf("ERROR: Power not enabled!\n");
         errors++;
     }
-
     return errors;
 }
 \end{lstlisting}
@@ -464,22 +464,24 @@ int validate_chip(ChipState *chip) {
 \begin{frame}
 \frametitle{Memory Safety: Common Pitfalls}
 \begin{alertblock}{Dangerous Mistakes}
+\footnotesize
 \begin{enumerate}
-    \item \textbf{Null Pointer Dereference:} \texttt{*ptr} when \texttt{ptr == NULL}
-    \item \textbf{Uninitialized Pointers:} Using pointer before assignment
-    \item \textbf{Array Bounds:} Accessing \texttt{array[10]} when size is 10
-    \item \textbf{Dangling Pointers:} Pointer to freed/invalid memory
-    \item \textbf{Memory Leaks:} Forgetting to free allocated memory
+    \item \footnotesize \textbf{Null Pointer Dereference:} \texttt{*ptr} when \texttt{ptr == NULL}
+    \item \footnotesize \textbf{Uninitialized Pointers:} Using pointer before assignment
+    \item \footnotesize \textbf{Array Bounds:} Accessing \texttt{array[10]} when size is 10
+    \item \footnotesize \textbf{Dangling Pointers:} Pointer to freed/invalid memory
+    \item \footnotesize \textbf{Memory Leaks:} Forgetting to free allocated memory
 \end{enumerate}
 \end{alertblock}
 
-\vspace{0.5cm}
+\vspace{0.3cm}
+\footnotesize
 \textbf{Safety practices:}
 \begin{itemize}
-    \item Always check pointers before use: \texttt{if (ptr != NULL)}
-    \item Initialize pointers: \texttt{int *ptr = NULL;}
-    \item Use array bounds checking
-    \item Use tools like Valgrind for memory debugging
+    \item \footnotesize Always check pointers before use: \texttt{if (ptr != NULL)}
+    \item \footnotesize Initialize pointers: \texttt{int *ptr = NULL;}
+    \item \footnotesize Use array bounds checking
+    \item \footnotesize Use tools like Valgrind for memory debugging
 \end{itemize}
 \end{frame}
 

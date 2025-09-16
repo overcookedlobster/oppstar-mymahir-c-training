@@ -296,39 +296,51 @@ microblaze-v-project/
 
 \begin{frame}[fragile]
 \frametitle{Makefile Configuration for Microblaze-V}
-\textbf{\footnotesize Makefile for embedded project:}
-\begin{lstlisting}[basicstyle=\fontsize{5}{5}\selectfont\ttfamily]
+\textbf{Makefile for embedded project:}
+\begin{lstlisting}[basicstyle=\fontsize{5}{6}\selectfont\ttfamily]
 # Microblaze-V Validation Suite Makefile
+
 # Toolchain
 CC = riscv64-unknown-elf-gcc
 OBJDUMP = riscv64-unknown-elf-objdump
 OBJCOPY = riscv64-unknown-elf-objcopy
+
 # Flags
 CFLAGS = -march=rv32imafc -mabi=ilp32f -nostdlib -Iinclude
 LDFLAGS = -T linker/microblaze_v.ld
+
 # Directories
 SRCDIR = src
 INCDIR = include
 BUILDDIR = build
+
 # Source files
 ASM_SOURCES = $(SRCDIR)/start.s
 C_SOURCES = $(SRCDIR)/main.c $(SRCDIR)/validation.c \
             $(SRCDIR)/peripherals.c $(SRCDIR)/gpio_tests.c
+
 # Object files
 ASM_OBJECTS = $(ASM_SOURCES:$(SRCDIR)/%.s=$(BUILDDIR)/%.o)
 C_OBJECTS = $(C_SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
 OBJECTS = $(ASM_OBJECTS) $(C_OBJECTS)
+
 # Target
 TARGET = $(BUILDDIR)/validation_suite
+
 all: $(TARGET)
+
 $(TARGET): $(BUILDDIR) $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS)
+
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
 $(BUILDDIR)/%.o: $(SRCDIR)/%.s
 	$(CC) $(CFLAGS) -c $< -o $@
+
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
+
 clean:
 	rm -rf $(BUILDDIR)
 \end{lstlisting}
@@ -336,8 +348,8 @@ clean:
 
 \begin{frame}[fragile]
 \frametitle{Cross-Compilation Workflow}
-\textbf{\small Build process:}
-\begin{lstlisting}[basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
+\textbf{Build process:}
+\begin{verbatim}
 # 1. Build the project
 make
 
@@ -353,20 +365,20 @@ make disasm
 # 5. Result files:
 # build/validation_suite  - Executable for QEMU
 # Can generate .bin and .hex with objcopy if needed
-\end{lstlisting}
+\end{verbatim}
 
-\textbf{\small Running on Microblaze-V QEMU:}
+\textbf{Running on Microblaze-V QEMU:}
 \begin{enumerate}
-    \item \footnotesize Build the project with \texttt{make}
-    \item \footnotesize Launch QEMU with \texttt{make run}
-    \item \footnotesize Program loads at address 0x00000000
-    \item \footnotesize Monitor output via serial console
+    \item Build the project with \texttt{make}
+    \item Launch QEMU with \texttt{make run}
+    \item Program loads at address 0x00000000
+    \item Monitor output via serial console
 \end{enumerate}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Assembly Startup File}
-\textbf{\footnotesize Assembly startup file (src/start.s):}
+\frametitle{Assembly Startup and Linker Script}
+\textbf{Assembly startup file (src/start.s):}
 \begin{lstlisting}[language={[x86masm]Assembler}, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 .section .text
 .global _start
@@ -388,19 +400,7 @@ stack:
 _stack_top:
 \end{lstlisting}
 
-\textbf{\footnotesize What this startup code does:}
-\begin{itemize}
-    \item \tiny \textbf{\_start:} Entry point for the program (first code executed)
-    \item \tiny \textbf{la sp, \_stack\_top:} Load stack pointer to top of allocated stack
-    \item \tiny \textbf{call main:} Jump to the main C function
-    \item \tiny \textbf{Infinite loop:} If main returns, loop forever (embedded safety)
-    \item \tiny \textbf{Stack allocation:} Reserve 4KB of memory for function calls
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Linker Script Configuration}
-\textbf{\footnotesize Linker script (linker/microblaze\_v.ld):}
+\textbf{Linker script (linker/microblaze\_v.ld):}
 \begin{lstlisting}[basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 MEMORY \{
     BRAM : ORIGIN = 0x00000000, LENGTH = 128K
@@ -415,52 +415,71 @@ SECTIONS \{
     \_stack\_top = ORIGIN(BRAM) + LENGTH(BRAM);
 \}
 \end{lstlisting}
-
-\textbf{\footnotesize What this linker script does:}
-\begin{itemize} \tiny
-    \item \tiny \textbf{MEMORY:} Define available memory regions (128KB BRAM at 0x0)
-    \item \tiny \textbf{.text:} Place executable code in BRAM
-    \item \tiny \textbf{.rodata:} Place read-only data (constants) in BRAM
-    \item \tiny \textbf{.data:} Place initialized variables in BRAM
-    \item \tiny \textbf{.bss:} Place uninitialized variables in BRAM
-    \item \tiny \textbf{\_stack\_top:} Calculate stack top address for startup code
-\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Validation Example: GPIO Testing}
-\begin{lstlisting}[language=C, basicstyle=\fontsize{4}{5}\selectfont\ttfamily]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily]
 #include "peripherals.h"
 #include <stdint.h>
+
 #define GPIO_BASE        0x40000000
-#define TEST_PIN_COUNT   4
+#define TEST_PIN_START   0
+#define TEST_PIN_COUNT   8
+
+typedef struct {
+    uint8_t pin;
+    int test_passed;
+    char result_msg[64];
+} gpio_test_result_t;
 
 int test_gpio_pin(uint8_t pin) {
     volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_BASE;
-    // Set pin high
+    volatile uint32_t *gpio_tri = (volatile uint32_t *)(GPIO_BASE + 0x04);
+
+    // Configure pin as output
+    *gpio_tri &= ~(1 << pin);
+
+    // Test high output
     *gpio_data |= (1 << pin);
     delay_ms(10);
     int high_read = (*gpio_data >> pin) & 1;
-    // Set pin low
+
+    // Test low output
     *gpio_data &= ~(1 << pin);
     delay_ms(10);
     int low_read = (*gpio_data >> pin) & 1;
-    // Test passes if high reads 1 and low reads 0
+
+    // Validation: high should read 1, low should read 0
     return (high_read == 1) && (low_read == 0);
 }
 
-int run_gpio_tests(void) {
-    int passed = 0;
-    uartlite_puts("Testing GPIO pins...\n");
-    for (int pin = 0; pin < TEST_PIN_COUNT; pin++) {
-        if (test_gpio_pin(pin)) {
-            uartlite_puts("Pin PASS\n");
-            passed++;
+int run_gpio_validation_suite(gpio_test_result_t results[]) {
+    int passed_tests = 0;
+
+    uartlite_puts("Starting GPIO validation suite...\n");
+
+    for (int i = 0; i < TEST_PIN_COUNT; i++) {
+        uint8_t pin = TEST_PIN_START + i;
+        results[i].pin = pin;
+        results[i].test_passed = test_gpio_pin(pin);
+
+        if (results[i].test_passed) {
+            uartlite_puts("Pin ");
+            uartlite_putc('0' + pin);
+            uartlite_puts(": PASS\n");
+            passed_tests++;
         } else {
-            uartlite_puts("Pin FAIL\n");
+            uartlite_puts("Pin ");
+            uartlite_putc('0' + pin);
+            uartlite_puts(": FAIL\n");
         }
+
+        // Brief delay between tests
+        delay_ms(100);
     }
-    return passed;
+
+    return passed_tests;
 }
 \end{lstlisting}
 \end{frame}
@@ -472,26 +491,26 @@ int run_gpio_tests(void) {
 \hline
 \textbf{Aspect} & \textbf{Desktop} & \textbf{Embedded} \\
 \hline
-\footnotesize Memory & \footnotesize GBs available & \footnotesize KBs available \\
-\footnotesize Storage & \footnotesize GBs/TBs & \footnotesize KBs/MBs \\
-\footnotesize OS & \footnotesize Full OS (Linux/Windows) & \footnotesize Bare metal/RTOS \\
-\footnotesize Libraries & \footnotesize Full standard library & \footnotesize Limited stdlib \\
-\footnotesize Debugging & \footnotesize GDB, IDE debuggers & \footnotesize Hardware debuggers \\
-\footnotesize I/O & \footnotesize Files, network, GUI & \footnotesize GPIO, UART, SPI \\
-\footnotesize Performance & \footnotesize Less critical & \footnotesize Highly optimized \\
-\footnotesize Power & \footnotesize Unlimited & \footnotesize Battery constrained \\
+Memory & GBs available & KBs available \\
+Storage & GBs/TBs & KBs/MBs \\
+OS & Full OS (Linux/Windows) & Bare metal/RTOS \\
+Libraries & Full standard library & Limited stdlib \\
+Debugging & GDB, IDE debuggers & Hardware debuggers \\
+I/O & Files, network, GUI & GPIO, UART, SPI \\
+Performance & Less critical & Highly optimized \\
+Power & Unlimited & Battery constrained \\
 \hline
 \end{tabular}
 \end{center}
 
-\vspace{0.1cm}
+\vspace{0.5cm}
 \textbf{Embedded programming considerations:}
 \begin{itemize}
-    \item \footnotesize Memory usage optimization
-    \item \footnotesize Real-time constraints
-    \item \footnotesize Hardware-specific code
-    \item \footnotesize Power management
-    \item \footnotesize Reliability and fault tolerance
+    \item Memory usage optimization
+    \item Real-time constraints
+    \item Hardware-specific code
+    \item Power management
+    \item Reliability and fault tolerance
 \end{itemize}
 \end{frame}
 
@@ -529,7 +548,7 @@ void blink_status_led(void) {
 \frametitle{Static vs Dynamic Memory}
 \textbf{Embedded systems prefer static allocation:}
 
-\begin{columns}[T]
+\begin{columns}
 \begin{column}{0.5\textwidth}
 \textbf{Static (Good):}
 \begin{lstlisting}[language=C]
@@ -562,7 +581,7 @@ void test_function(int n) {
 \end{column}
 \end{columns}
 
-\vspace{0.2cm}
+\vspace{0.5cm}
 \textbf{Why avoid dynamic allocation?}
 \begin{itemize}
     \item Limited heap space
@@ -719,7 +738,7 @@ int main(void);
 \textbf{Day 5 topics:}
 \begin{itemize}
     \item Advanced GDB techniques for embedded systems
-    \item Microblaze-V peripheral programming (timers, UART)
+    \item Microblaze-V peripheral programming (ADC, timers, UART)
     \item Hardware-in-the-loop testing concepts
     \item Fault injection and detection methods
     \item Real-time debugging strategies

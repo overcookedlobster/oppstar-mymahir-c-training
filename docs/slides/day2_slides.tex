@@ -132,14 +132,13 @@ int main() {
 \begin{frame}
 \frametitle{Logical Operators in Validation}
 \begin{center}
-% the table goes over the boundary too large to the right side
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|p{1.5cm}|p{1.5cm}|p{6cm}|}
 \hline
 \textbf{Operator} & \textbf{Meaning} & \textbf{Validation Example} \\
 \hline
-\texttt{\&\&} & AND & \texttt{voltage > 1.8 \&\& voltage < 3.6} \\
-\texttt{||} & OR & \texttt{error\_code == 1 || error\_code == 2} \\
-\texttt{!} & NOT & \texttt{!system\_ready} \\
+\small\texttt{\&\&} & \small AND & \footnotesize\texttt{voltage > 1.8 \&\& voltage < 3.6} \\
+\small\texttt{||} & \small OR & \footnotesize\texttt{error\_code == 1 || error\_code == 2} \\
+\small\texttt{!} & \small NOT & \footnotesize\texttt{!system\_ready} \\
 \hline
 \end{tabular}
 \end{center}
@@ -211,19 +210,18 @@ int main() {
 \begin{frame}
 \frametitle{Function Anatomy}
 \begin{center}
-% the tikz picture return tpe and function name is crashing into one another and the block boundary shifts to the right too much and crosses the boundary
 \begin{tikzpicture}
-\node[draw, rectangle, minimum width=8cm, minimum height=1cm] at (0,0)
-{\texttt{int check\_voltage(float voltage, float min, float max)}};
+\node[draw, rectangle, minimum width=6cm, minimum height=0.8cm] at (0,0)
+{\footnotesize\texttt{\textcolor{teal}{int} \textcolor{purple}{check\_voltage}\textcolor{orange}{(float voltage, float min, float max)}}};
 
-\node[above] at (-3,0.7) {\textbf{Return Type}};
-\draw[->] (-3,0.5) -- (-3,0.2);
+\node[above, teal] at (-4,0.6) {\tiny\textbf{Return Type}};
+\draw[->, teal] (-4,0.7) -- (-4.2,0.2);
 
-\node[above] at (-1,0.7) {\textbf{Function Name}};
-\draw[->] (-1,0.5) -- (-1,0.2);
+\node[above, purple] at (-2.5,0.63) {\tiny\textbf{Function Name}};
+\draw[->, purple] (-2.5,0.7) -- (-2.7,0.2);
 
-\node[above] at (2,0.7) {\textbf{Parameters}};
-\draw[->] (2,0.5) -- (2,0.2);
+\node[above, orange] at (1.3,0.63) {\tiny\textbf{Parameters}};
+\draw[->, orange] (1.3,0.7) -- (1.3,0.2);
 \end{tikzpicture}
 \end{center}
 
@@ -235,7 +233,7 @@ int main() {
     \item \textbf{Maintenance:} Changes in one place affect everywhere
 \end{itemize}
 
-\vspace{0.5cm}
+\vspace{0.3cm}
 \textbf{Validation Tip:} Create separate functions for each test type!
 \end{frame}
 
@@ -247,6 +245,7 @@ $ gcc -g -Wall program.c -o program
 \end{verbatim}
 
 \textbf{Start GDB:}
+\begin{small}
 \begin{verbatim}
 $ gdb ./program
 (gdb) break main          # Set breakpoint at main
@@ -256,14 +255,23 @@ $ gdb ./program
 (gdb) continue            # Continue execution
 (gdb) quit                # Exit GDB
 \end{verbatim}
+\end{small}
 
 \textbf{Why GDB for validation?}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-    \item Step through test sequences
-    \item Inspect register values
-    \item Find where tests fail
-    \item Understand program flow
+    \item \footnotesize Step through test sequences
+    \item \footnotesize Inspect register values
 \end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+    \item \footnotesize Find where tests fail
+    \item \footnotesize Understand program flow
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -273,39 +281,36 @@ $ gdb ./program
 \hline
 \textbf{Command} & \textbf{Purpose} \\
 \hline
-\texttt{break function\_name} & Set breakpoint \\
-\texttt{run} & Start program \\
-\texttt{next} & Execute next line \\
-\texttt{step} & Step into functions \\
-\texttt{print variable} & Show variable value \\
-\texttt{info locals} & Show all local variables \\
-\texttt{backtrace} & Show call stack \\
-\texttt{continue} & Resume execution \\
+\small\texttt{break function\_name} & \small Set breakpoint \\
+\small\texttt{run} & \small Start program \\
+\small\texttt{next} & \small Execute next line \\
+\small\texttt{step} & \small Step into functions \\
+\small\texttt{print variable} & \small Show variable value \\
+\small\texttt{info locals} & \small Show all local variables \\
+\small\texttt{backtrace} & \small Show call stack \\
+\small\texttt{continue} & \small Resume execution \\
 \hline
 \end{tabular}
 \end{center}
 
-\vspace{0.5cm}
 \begin{exampleblock}{Debugging Session}
-\texttt{(gdb) break check\_voltage}\\
-\texttt{(gdb) run}\\
-\texttt{(gdb) print voltage}\\
-\texttt{(gdb) next}
+\small\texttt{(gdb) break check\_voltage}\\
+\small\texttt{(gdb) run}\\
+\small\texttt{(gdb) print voltage}\\
+\small\texttt{(gdb) next}
 \end{exampleblock}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Validation Example: Register Monitor}
-\begin{lstlisting}[language=C, basicstyle=\tiny]
+\begin{lstlisting}[language=C, basicstyle=\fontsize{4}{5}\selectfont\ttfamily]
 #include <stdio.h>
-
 // Simulate reading hardware register
 int read_register(int address) {
     // In real hardware: return *(volatile int*)address;
     static int sim_values[] = {0x1234, 0x5678, 0x9ABC, 0xDEF0};
     return sim_values[address % 4];
 }
-
 // Validate single register
 int validate_register(int address, int expected) {
     int actual = read_register(address);
@@ -320,17 +325,14 @@ int validate_register(int address, int expected) {
         return 0;
     }
 }
-
 // Run complete register test suite
 int run_register_tests() {
     int passed = 0;
     int total = 4;
-
     passed += validate_register(0x1000, 0x1234);
     passed += validate_register(0x1001, 0x5678);
     passed += validate_register(0x1002, 0x9ABC);
     passed += validate_register(0x1003, 0xDEF0);
-
     printf("\nResults: %d/%d tests passed\\n", passed, total);
     return (passed == total);
 }
