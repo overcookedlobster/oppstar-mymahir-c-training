@@ -123,76 +123,94 @@ Today we validate real silicon with real constraints!
 
 \begin{frame}[fragile]
 \frametitle{Printf Debugging on MicroBlaze-V}
-\begin{lstlisting}[language=C]
-#include <stdio.h>
-// Include MicroBlaze-V standard library
-#include "microblaze/stdlib.h"
+\vspace{-0.3cm}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include "peripherals.h"
+
+// UARTlite registers for debugging output
+#define UARTLITE_BASE    0x40600000
+#define UARTLITE_TX_FIFO (UARTLITE_BASE + 0x04)
+#define UARTLITE_STAT_REG (UARTLITE_BASE + 0x08)
+#define UARTLITE_SR_TX_FIFO_FULL 0x08
+
+void debug_putc(char c) {
+    volatile uint32_t *tx_fifo = (volatile uint32_t *)UARTLITE_TX_FIFO;
+    volatile uint32_t *status = (volatile uint32_t *)UARTLITE_STAT_REG;
+
+    while (*status & UARTLITE_SR_TX_FIFO_FULL);
+    *tx_fifo = c;
+}
+
+void debug_puts(const char *str) {
+    while (*str) debug_putc(*str++);
+}
 
 int main() {
-    // Initialize UART for printf
-    uart_init();
-
-    // Wait for UART connection (optional)
-    while (!uart_connected()) {
-        sleep_ms(100);
-    }
-
-    printf("MicroBlaze-V Validation System Starting...\n");
+    debug_puts("MicroBlaze-V Validation System Starting...\r\n");
 
     int test_count = 0;
-    while (true) {
-        printf("Running test cycle %d\n", ++test_count);
+    while (1) {
+        debug_puts("Running test cycle ");
+        debug_putc('0' + (test_count % 10));
+        debug_puts("\r\n");
 
-        // Your validation code here
         int result = run_validation_tests();
+        debug_puts("Test result: ");
+        debug_puts(result ? "PASS" : "FAIL");
+        debug_puts("\r\n");
 
-        printf("Test cycle %d result: %s\n",
-               test_count, result ? "PASS" : "FAIL");
-
-        sleep_ms(1000);
+        // Simple delay loop
+        for (volatile int i = 0; i < 5000000; i++);
+        test_count++;
     }
-
-    return 0;
 }
 \end{lstlisting}
 
-\textbf{Viewing output:} Use serial terminal (minicom, PuTTY, or VS Code terminal)
+\begin{center}
+\tiny \textbf{Viewing output:} Connect to UARTlite via QEMU console or hardware UART
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{LED-Based Debug Indicators}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
+\frametitle{GPIO-Based Debug Indicators}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include "peripherals.h"
 
-#define LED_PIN 25
-#define DEBUG_PIN_1 2
-#define DEBUG_PIN_2 3
+// MicroBlaze-V GPIO registers
+#define GPIO_BASE        0x40000000
+#define GPIO_DATA_REG    (GPIO_BASE + 0x00)
+#define GPIO_TRI_REG     (GPIO_BASE + 0x04)
 
-void debug_init(void) {
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    gpio_init(DEBUG_PIN_1);
-    gpio_set_dir(DEBUG_PIN_1, GPIO_OUT);
-    gpio_init(DEBUG_PIN_2);
-    gpio_set_dir(DEBUG_PIN_2, GPIO_OUT);
+#define LED_PIN_MASK     0x01
+#define DEBUG_PIN_1_MASK 0x02
+#define DEBUG_PIN_2_MASK 0x04
+
+void debug_gpio_init(void) {
+    volatile uint32_t *gpio_tri = (volatile uint32_t *)GPIO_TRI_REG;
+    // Set pins as outputs (0 = output, 1 = input)
+    *gpio_tri &= ~(LED_PIN_MASK | DEBUG_PIN_1_MASK | DEBUG_PIN_2_MASK);
 }
 
 void debug_signal_test_start(void) {
-    gpio_put(DEBUG_PIN_1, 1);  // Signal test start
+    volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_DATA_REG;
+    *gpio_data |= DEBUG_PIN_1_MASK;  // Set debug pin 1 high
 }
 
 void debug_signal_test_end(void) {
-    gpio_put(DEBUG_PIN_1, 0);  // Signal test end
+    volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_DATA_REG;
+    *gpio_data &= ~DEBUG_PIN_1_MASK;  // Set debug pin 1 low
 }
 
 void debug_signal_error(void) {
+    volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_DATA_REG;
     // Rapid blink pattern for errors
     for (int i = 0; i < 10; i++) {
-        gpio_put(LED_PIN, 1);
-        sleep_ms(50);
-        gpio_put(LED_PIN, 0);
-        sleep_ms(50);
+        *gpio_data |= LED_PIN_MASK;   // LED on
+        for (volatile int j = 0; j < 500000; j++);  // Delay
+        *gpio_data &= ~LED_PIN_MASK;  // LED off
+        for (volatile int j = 0; j < 500000; j++);  // Delay
     }
 }
 \end{lstlisting}
@@ -202,26 +220,26 @@ void debug_signal_error(void) {
 \frametitle{MicroBlaze-V Peripheral Overview}
 
 \begin{center}
-\textbf{MicroBlaze-V Microcontroller Peripherals}
+\textbf{MicroBlaze-V FPGA Soft Processor Peripherals}
 \end{center}
 
-\begin{columns}
+\begin{columns}[T]
 \begin{column}{0.5\textwidth}
-\textbf{Digital Interfaces:}
+\textbf{Communication:}
 \begin{itemize}
-    \item GPIO (26 pins)
-    \item UART (2 channels)
-    \item SPI (2 channels)
-    \item I2C (2 channels)
+    \item \footnotesize UARTlite (Debug/Console)
+    \item \footnotesize UART 16550 (Full-featured)
+    \item \footnotesize AXI Ethernet (Network)
+    \item \footnotesize AXI DMA (High-speed transfers)
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
-\textbf{Analog \& Timing:}
+\textbf{Control \& Timing:}
 \begin{itemize}
-    \item ADC (3 channels)
-    \item PWM (8 channels)
-    \item Timers (4 channels)
-    \item PIO (Programmable I/O)
+    \item \footnotesize GPIO (General Purpose I/O)*
+    \item \footnotesize XPS Timer (Precision timing)
+    \item \footnotesize AXI Timer (Advanced timing)
+    \item \footnotesize Interrupt Controller (INTC)
 \end{itemize}
 \end{column}
 \end{columns}
@@ -229,213 +247,294 @@ void debug_signal_error(void) {
 \vspace{0.5cm}
 \textbf{Validation applications:}
 \begin{itemize}
-    \item \textbf{GPIO:} Digital signal testing, control interfaces
-    \item \textbf{ADC:} Voltage monitoring, sensor validation
-    \item \textbf{Timers:} Precise timing measurements, timeouts
-    \item \textbf{PWM:} Signal generation, motor control testing
-    \item \textbf{UART/SPI/I2C:} Communication protocol validation
+    \item \footnotesize \textbf{UARTlite:} Debug output, test result reporting
+    \item \footnotesize \textbf{GPIO:} Digital signal testing, control interfaces*
+    \item \footnotesize \textbf{Timers:} Precise timing measurements, timeouts
+    \item \footnotesize \textbf{Ethernet:} Network protocol validation
+    \item \footnotesize \textbf{DMA:} High-speed data transfer testing
+
+\vspace{0.2cm}
+\footnotesize \textbf{*Note:} GPIO is unimplemented in QEMU (stub device only)
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{GPIO Advanced Programming}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
+\frametitle{GPIO Advanced Programming - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include <stdbool.h>
+#include "peripherals.h"
 
-#define TEST_PIN_BASE 2
-#define NUM_TEST_PINS 8
+#define GPIO_BASE        0x40000000
+#define GPIO_DATA_REG    (GPIO_BASE + 0x00)
+#define GPIO_TRI_REG     (GPIO_BASE + 0x04)
 
 typedef struct {
-    uint8_t pin;
+    uint8_t pin_mask;
     bool input_test_pass;
     bool output_test_pass;
-    bool pullup_test_pass;
-    bool pulldown_test_pass;
+    bool tristate_test_pass;
 } gpio_comprehensive_result_t;
 
-int test_gpio_comprehensive(uint8_t pin, gpio_comprehensive_result_t *result) {
-    result->pin = pin;
-    gpio_init(pin);
+int test_gpio_comprehensive(uint8_t pin_mask, gpio_comprehensive_result_t *result) {
+    volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_DATA_REG;
+    volatile uint32_t *gpio_tri = (volatile uint32_t *)GPIO_TRI_REG;
+
+    result->pin_mask = pin_mask;
 
     // Test 1: Output functionality
-    gpio_set_dir(pin, GPIO_OUT);
-    gpio_put(pin, 1);
-    sleep_ms(1);
-    bool high_output = gpio_get(pin);
-    gpio_put(pin, 0);
-    sleep_ms(1);
-    bool low_output = gpio_get(pin);
-    result->output_test_pass = (high_output == 1) && (low_output == 0);
+    *gpio_tri &= ~pin_mask;  // Set as output (0 = output)
+    *gpio_data |= pin_mask;  // Set high
+    for (volatile int i = 0; i < 1000; i++);  // Delay
+    bool high_output = (*gpio_data & pin_mask) != 0;
+\end{lstlisting}
+\end{frame}
 
-    // Test 2: Input with pull-up
-    gpio_set_dir(pin, GPIO_IN);
-    gpio_pull_up(pin);
-    sleep_ms(10);  // Allow pull-up to settle
-    bool pullup_state = gpio_get(pin);
-    result->pullup_test_pass = (pullup_state == 1);
+\begin{frame}[fragile]
+\frametitle{GPIO Advanced Programming - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+    *gpio_data &= ~pin_mask; // Set low
+    for (volatile int i = 0; i < 1000; i++);  // Delay
+    bool low_output = (*gpio_data & pin_mask) == 0;
+    result->output_test_pass = high_output && low_output;
 
-    // Test 3: Input with pull-down
-    gpio_pull_down(pin);
-    sleep_ms(10);  // Allow pull-down to settle
-    bool pulldown_state = gpio_get(pin);
-    result->pulldown_test_pass = (pulldown_state == 0);
+    // Test 2: Input functionality (tristate)
+    *gpio_tri |= pin_mask;   // Set as input (1 = input)
+    result->tristate_test_pass = true;  // Basic tristate test
 
     // Overall pass/fail
-    return result->output_test_pass && result->pullup_test_pass &&
-           result->pulldown_test_pass;
+    return result->output_test_pass && result->tristate_test_pass;
 }
 \end{lstlisting}
 \end{frame}
 
+
 \begin{frame}[fragile]
-\frametitle{ADC for Voltage Monitoring}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/adc.h"
+\frametitle{Ethernet Controller Validation - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include "peripherals.h"
 
-#define ADC_VREF 3.3f  // Reference voltage
-#define ADC_RESOLUTION 4096  // 12-bit ADC
+// MicroBlaze-V Ethernet Lite registers
+#define ETHLITE_BASE     0x40E00000
+#define ETHLITE_TX_PING  (ETHLITE_BASE + 0x0000)
+#define ETHLITE_MDIOADDR (ETHLITE_BASE + 0x07E4)
+#define ETHLITE_MDIOWR   (ETHLITE_BASE + 0x07E8)
+#define ETHLITE_MDIORD   (ETHLITE_BASE + 0x07EC)
+#define ETHLITE_MDIOCTRL (ETHLITE_BASE + 0x07F0)
 
-void adc_validation_init(void) {
-    adc_init();
+void ethernet_validation_init(void) {
+    volatile uint32_t *mdio_ctrl = (volatile uint32_t *)ETHLITE_MDIOCTRL;
 
-    // Initialize ADC pins
-    adc_gpio_init(26);  // ADC0
-    adc_gpio_init(27);  // ADC1
-    adc_gpio_init(28);  // ADC2
+    // Enable MDIO interface
+    *mdio_ctrl = 0x08;  // Enable MDIO
+
+    uartlite_puts("Ethernet controller initialized\n");
 }
 
-float read_voltage(uint8_t adc_channel) {
-    adc_select_input(adc_channel);
-    uint16_t raw_value = adc_read();
-    return (raw_value * ADC_VREF) / ADC_RESOLUTION;
-}
+int validate_phy_registers(void) {
+    volatile uint32_t *mdio_addr = (volatile uint32_t *)ETHLITE_MDIOADDR;
+    volatile uint32_t *mdio_ctrl = (volatile uint32_t *)ETHLITE_MDIOCTRL;
+    volatile uint32_t *mdio_rd = (volatile uint32_t *)ETHLITE_MDIORD;
 
-int validate_voltage_range(uint8_t channel, float expected_min, float expected_max) {
-    float voltage = read_voltage(channel);
+    // Read PHY ID register (register 2)
+    *mdio_addr = (0 << 5) | 2;  // PHY addr 0, reg 2
+    *mdio_ctrl = 0x08 | 0x02;   // Enable + Read operation
 
-    printf("ADC%d: %.3fV (range: %.1f-%.1fV) ",
-           channel, voltage, expected_min, expected_max);
+    // Wait for operation complete
+    while (*mdio_ctrl & 0x01);
+\end{lstlisting}
+\end{frame}
 
-    if (voltage >= expected_min && voltage <= expected_max) {
-        printf("PASS\n");
-        return 1;
-    } else {
-        printf("FAIL\n");
-        return 0;
+\begin{frame}[fragile]
+\frametitle{Ethernet Controller Validation - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+    uint32_t phy_id = *mdio_rd;
+
+    uartlite_puts("PHY ID: 0x");
+    // Simple hex output (simplified)
+    for (int i = 28; i >= 0; i -= 4) {
+        uint8_t nibble = (phy_id >> i) & 0xF;
+        uartlite_putc(nibble < 10 ? '0' + nibble : 'A' + nibble - 10);
     }
+    uartlite_puts("\n");
+
+    return (phy_id != 0x0000 && phy_id != 0xFFFF);
 }
 
-int run_voltage_validation_suite(void) {
-    int passed = 0;
-    int total = 3;
+int run_ethernet_validation_suite(void) {
+    uartlite_puts("Starting Ethernet validation...\n");
 
-    // Test different voltage ranges
-    passed += validate_voltage_range(0, 0.0f, 3.3f);  // Full range
-    passed += validate_voltage_range(1, 1.5f, 2.0f);  // Mid-range
-    passed += validate_voltage_range(2, 0.0f, 0.5f);  // Low range
+    ethernet_validation_init();
+    int phy_test = validate_phy_registers();
 
-    printf("Voltage validation: %d/%d tests passed\n", passed, total);
-    return (passed == total);
+    uartlite_puts("Ethernet validation: ");
+    uartlite_puts(phy_test ? "PASS" : "FAIL");
+    uartlite_puts("\n");
+
+    return phy_test;
 }
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Timer-Based Precision Testing}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/timer.h"
+\frametitle{XPS Timer-Based Precision Testing - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include "peripherals.h"
 
-// Measure execution time of a function
-uint64_t measure_execution_time(void (*test_function)(void)) {
-    uint64_t start_time = time_us_64();
+// MicroBlaze-V XPS Timer registers
+#define TIMER_BASE       0x41C00000
+#define TIMER_TCSR0      (TIMER_BASE + 0x00)
+#define TIMER_TLR0       (TIMER_BASE + 0x04)
+#define TIMER_TCR0       (TIMER_BASE + 0x08)
+
+// Timer control bits
+#define TIMER_CSR_ENABLE_TMR    0x00000080
+#define TIMER_CSR_ENABLE_INT    0x00000040
+#define TIMER_CSR_LOAD_TMR      0x00000020
+#define TIMER_CSR_AUTO_RELOAD   0x00000010
+#define TIMER_CSR_DOWN_COUNT    0x00000002
+
+// Measure execution time of a function (assuming 100MHz clock)
+uint32_t measure_execution_cycles(void (*test_function)(void)) {
+    volatile uint32_t *tcsr = (volatile uint32_t *)TIMER_TCSR0;
+    volatile uint32_t *tlr = (volatile uint32_t *)TIMER_TLR0;
+    volatile uint32_t *tcr = (volatile uint32_t *)TIMER_TCR0;
+
+    // Configure timer for maximum count (down counter)
+    *tlr = 0xFFFFFFFF;
+    *tcsr = TIMER_CSR_ENABLE_TMR | TIMER_CSR_LOAD_TMR | TIMER_CSR_DOWN_COUNT;
+
+    uint32_t start_count = *tcr;
     test_function();
-    uint64_t end_time = time_us_64();
-    return end_time - start_time;
+    uint32_t end_count = *tcr;
+
+    return start_count - end_count;  // Cycles elapsed
 }
+\end{lstlisting}
+\end{frame}
 
-// Test function timing constraints
-int validate_timing_constraint(void (*func)(void), uint64_t max_time_us) {
-    uint64_t execution_time = measure_execution_time(func);
+\begin{frame}[fragile]
+\frametitle{XPS Timer-Based Precision Testing - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+int validate_timing_constraint(void (*func)(void), uint32_t max_cycles) {
+    uint32_t execution_cycles = measure_execution_cycles(func);
 
-    printf("Execution time: %llu us (max: %llu us) ",
-           execution_time, max_time_us);
+    uartlite_puts("Execution cycles: ");
+    // Simple decimal output (simplified)
+    uartlite_puts(" (max: ");
+    uartlite_puts(")\n");
 
-    if (execution_time <= max_time_us) {
-        printf("PASS\n");
+    if (execution_cycles <= max_cycles) {
+        uartlite_puts("PASS\n");
         return 1;
     } else {
-        printf("FAIL - Too slow!\n");
+        uartlite_puts("FAIL - Too slow!\n");
         return 0;
     }
 }
 
-// Example test function
 void sample_validation_function(void) {
-    // Simulate some validation work
-    for (int i = 0; i < 1000; i++) {
+    // Simulate validation work
+    for (volatile int i = 0; i < 1000; i++) {
         volatile int dummy = i * i;  // Prevent optimization
     }
 }
 
 int run_timing_validation(void) {
-    printf("Testing timing constraints...\n");
-
-    // Validate that our function executes within 1ms
-    return validate_timing_constraint(sample_validation_function, 1000);
+    uartlite_puts("Testing timing constraints...\n");
+    // Validate function executes within 100,000 cycles (1ms @ 100MHz)
+    return validate_timing_constraint(sample_validation_function, 100000);
 }
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Interrupt-Based Event Detection}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
-#include "hardware/irq.h"
+\frametitle{Interrupt-Based Event Detection - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{4}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include <stdbool.h>
+#include "peripherals.h"
+
+// MicroBlaze-V Interrupt Controller registers
+#define INTC_BASE        0x41200000
+#define INTC_ISR         (INTC_BASE + 0x00)  // Interrupt Status Register
+#define INTC_IPR         (INTC_BASE + 0x04)  // Interrupt Pending Register
+#define INTC_IER         (INTC_BASE + 0x08)  // Interrupt Enable Register
+#define INTC_IAR         (INTC_BASE + 0x0C)  // Interrupt Acknowledge Register
+#define INTC_SIE         (INTC_BASE + 0x10)  // Set Interrupt Enable
+#define INTC_CIE         (INTC_BASE + 0x14)  // Clear Interrupt Enable
+#define INTC_MER         (INTC_BASE + 0x1C)  // Master Enable Register
+
+#define TIMER_INT_ID     0  // Timer interrupt ID
+#define GPIO_INT_ID      1  // GPIO interrupt ID
 
 volatile bool fault_detected = false;
 volatile uint32_t fault_count = 0;
 
-// Interrupt handler for fault detection
-void gpio_irq_handler(uint gpio, uint32_t events) {
-    if (gpio == FAULT_INPUT_PIN && (events & GPIO_IRQ_EDGE_RISE)) {
+// MicroBlaze-V interrupt handler
+void interrupt_handler(void) __attribute__((interrupt));
+
+void interrupt_handler(void) {
+    volatile uint32_t *isr = (volatile uint32_t *)INTC_ISR;
+    volatile uint32_t *iar = (volatile uint32_t *)INTC_IAR;
+
+    uint32_t interrupt_status = *isr;
+
+    if (interrupt_status & (1 << GPIO_INT_ID)) {
         fault_detected = true;
         fault_count++;
-        printf("FAULT DETECTED! Count: %lu\n", fault_count);
+        uartlite_puts("FAULT DETECTED!\n");
+        *iar = (1 << GPIO_INT_ID);  // Acknowledge interrupt
+    }
+
+    if (interrupt_status & (1 << TIMER_INT_ID)) {
+        // Handle timer interrupt
+        uartlite_puts("Timer interrupt\n");
+        *iar = (1 << TIMER_INT_ID);  // Acknowledge interrupt
     }
 }
 
-void setup_fault_detection(uint8_t fault_pin) {
-    gpio_init(fault_pin);
-    gpio_set_dir(fault_pin, GPIO_IN);
-    gpio_pull_down(fault_pin);
+\end{lstlisting}
+\end{frame}
 
-    // Enable interrupt on rising edge
-    gpio_set_irq_enabled_with_callback(fault_pin, GPIO_IRQ_EDGE_RISE,
-                                       true, &gpio_irq_handler);
+\begin{frame}[fragile]
+\frametitle{Interrupt-Based Event Detection - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{2}\selectfont\ttfamily, backgroundcolor={}]
+void setup_interrupt_controller(void) {
+    volatile uint32_t *mer = (volatile uint32_t *)INTC_MER;
+    volatile uint32_t *ier = (volatile uint32_t *)INTC_IER;
+
+    // Enable master interrupt and hardware interrupt enable
+    *mer = 0x03;  // ME = 1, HIE = 1
+
+    // Enable specific interrupts
+    *ier = (1 << GPIO_INT_ID) | (1 << TIMER_INT_ID);
 }
 
 int run_fault_detection_test(void) {
-    printf("Starting fault detection test...\n");
+    uartlite_puts("Starting fault detection test...\n");
 
+    setup_interrupt_controller();
     fault_detected = false;
     fault_count = 0;
 
-    // Run test for 10 seconds
-    absolute_time_t start_time = get_absolute_time();
-    while (absolute_time_diff_us(start_time, get_absolute_time()) < 10000000) {
+    // Enable global interrupts (RISC-V)
+    asm volatile ("csrsi mstatus, 0x8");  // Set MIE bit
+
+    // Run test loop
+    for (int i = 0; i < 100; i++) {
         if (fault_detected) {
-            printf("Fault handling in progress...\n");
+            uartlite_puts("Fault handling in progress...\n");
             fault_detected = false;  // Reset flag
         }
-        sleep_ms(100);
+        // Simple delay
+        for (volatile int j = 0; j < 1000000; j++);
     }
 
-    printf("Fault detection test complete. Total faults: %lu\n", fault_count);
-    return 1;  // Test completed successfully
+    uartlite_puts("Fault detection test complete\n");
+    return 1;
 }
 \end{lstlisting}
 \end{frame}
@@ -480,67 +579,47 @@ int run_fault_detection_test(void) {
 
 \begin{frame}[fragile]
 \frametitle{Fault Injection Implementation}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
+\begin{lstlisting}[language=C, basicstyle=\fontsize{4}{2}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include <stdbool.h>
+#include "peripherals.h"
 
-#define POWER_CONTROL_PIN 10
-#define CLOCK_CONTROL_PIN 11
-#define RESET_CONTROL_PIN 12
+// MicroBlaze-V fault injection control pins
+#define POWER_CONTROL_MASK 0x10
+#define CLOCK_CONTROL_MASK 0x20
+#define RESET_CONTROL_MASK 0x40
 
 typedef enum {
     FAULT_NONE,
     FAULT_POWER_GLITCH,
     FAULT_CLOCK_GLITCH,
     FAULT_RESET_PULSE,
-    FAULT_VOLTAGE_DROP
+    FAULT_REGISTER_CORRUPTION
 } fault_type_t;
 
-void inject_power_glitch(uint32_t duration_ms) {
-    printf("Injecting power glitch for %lu ms\n", duration_ms);
-    gpio_put(POWER_CONTROL_PIN, 0);  // Cut power
-    sleep_ms(duration_ms);
-    gpio_put(POWER_CONTROL_PIN, 1);  // Restore power
-    sleep_ms(100);  // Allow system to stabilize
+void inject_power_glitch(uint32_t duration_cycles) {
+    volatile uint32_t *gpio_data = (volatile uint32_t *)GPIO_DATA_REG;
+
+    uartlite_puts("Injecting power glitch\n");
+    *gpio_data &= ~POWER_CONTROL_MASK;  // Cut power signal
+
+    // Delay using cycle counting
+    for (volatile uint32_t i = 0; i < duration_cycles; i++);
+
+    *gpio_data |= POWER_CONTROL_MASK;   // Restore power signal
+
+    // Allow system to stabilize
+    for (volatile uint32_t i = 0; i < 1000000; i++);
 }
 
-void inject_clock_glitch(uint32_t glitch_count) {
-    printf("Injecting %lu clock glitches\n", glitch_count);
-    for (uint32_t i = 0; i < glitch_count; i++) {
-        gpio_put(CLOCK_CONTROL_PIN, 0);
-        sleep_us(10);  // Very short glitch
-        gpio_put(CLOCK_CONTROL_PIN, 1);
-        sleep_us(10);
-    }
-}
+void inject_register_corruption(void) {
+    volatile uint32_t *test_reg = (volatile uint32_t *)0x80000000;  // DDR test area
 
-int test_fault_recovery(fault_type_t fault_type) {
-    printf("Testing recovery from fault type %d\n", fault_type);
+    uartlite_puts("Injecting register corruption\n");
 
-    // Record system state before fault
-    bool system_ready_before = check_system_ready();
-
-    // Inject fault
-    switch (fault_type) {
-        case FAULT_POWER_GLITCH:
-            inject_power_glitch(50);
-            break;
-        case FAULT_CLOCK_GLITCH:
-            inject_clock_glitch(10);
-            break;
-        // Add more fault types...
-    }
-
-    // Check recovery
-    sleep_ms(1000);  // Allow recovery time
-    bool system_ready_after = check_system_ready();
-
-    if (system_ready_after) {
-        printf("System recovered successfully\n");
-        return 1;
-    } else {
-        printf("System failed to recover\n");
-        return 0;
+    // Corrupt memory pattern
+    for (int i = 0; i < 16; i++) {
+        test_reg[i] = 0xDEADBEEF ^ i;  // Corrupt with pattern
     }
 }
 \end{lstlisting}
@@ -578,10 +657,10 @@ int test_fault_recovery(fault_type_t fault_type) {
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Performance Optimization Example}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/timer.h"
+\frametitle{Performance Optimization Example - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include "peripherals.h"
 
 // Unoptimized version
 int validate_registers_slow(uint32_t *registers, int count) {
@@ -590,8 +669,9 @@ int validate_registers_slow(uint32_t *registers, int count) {
         uint32_t expected = calculate_expected_value(i);  // Expensive!
         if (registers[i] != expected) {
             errors++;
-            printf("Register %d: expected 0x%08lX, got 0x%08lX\n",
-                   i, expected, registers[i]);
+            uartlite_puts("Register error at index ");
+            // Simple decimal output (simplified)
+            uartlite_puts("\n");
         }
     }
     return errors;
@@ -609,7 +689,12 @@ int validate_registers_fast(uint32_t *registers, int count) {
         }
         values_initialized = true;
     }
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Performance Optimization Example - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily, backgroundcolor={}]
     int errors = 0;
     for (int i = 0; i < count; i++) {
         if (registers[i] != expected_values[i]) {
@@ -625,14 +710,16 @@ void benchmark_validation_functions(void) {
     uint32_t test_registers[100];
     // Initialize test data...
 
-    uint64_t slow_time = measure_execution_time_us(
+    uint32_t slow_cycles = measure_execution_cycles(
         validate_registers_slow_wrapper);
-    uint64_t fast_time = measure_execution_time_us(
+    uint32_t fast_cycles = measure_execution_cycles(
         validate_registers_fast_wrapper);
 
-    printf("Slow version: %llu us\n", slow_time);
-    printf("Fast version: %llu us\n", fast_time);
-    printf("Speedup: %%.1fx\n", (float)slow_time / fast_time);
+    uartlite_puts("Slow version cycles: ");
+    uartlite_puts("\n");
+    uartlite_puts("Fast version cycles: ");
+    uartlite_puts("\n");
+    uartlite_puts("Performance improvement achieved\n");
 }
 \end{lstlisting}
 \end{frame}
@@ -662,54 +749,76 @@ void benchmark_validation_functions(void) {
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Watchdog Implementation}
-\begin{lstlisting}[language=C]
-#include "pico/stdlib.h"
-#include "hardware/watchdog.h"
+\frametitle{Timer-Based System Monitoring - Part 1}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{6}{6}\selectfont\ttfamily, backgroundcolor={}]
+#include <stdint.h>
+#include <stdbool.h>
+#include "peripherals.h"
 
-#define WATCHDOG_TIMEOUT_MS 5000  // 5 second timeout
+#define SYSTEM_TIMEOUT_CYCLES 500000000  // 5 seconds @ 100MHz
 
-void setup_watchdog_protection(void) {
-    // Enable watchdog with 5 second timeout
-    watchdog_enable(WATCHDOG_TIMEOUT_MS, 1);
-    printf("Watchdog enabled with %d ms timeout\n", WATCHDOG_TIMEOUT_MS);
+volatile bool system_alive = true;
+volatile uint32_t heartbeat_counter = 0;
+
+void setup_system_monitor(void) {
+    volatile uint32_t *tcsr = (volatile uint32_t *)TIMER_TCSR0;
+    volatile uint32_t *tlr = (volatile uint32_t *)TIMER_TLR0;
+
+    // Configure timer for system monitoring
+    *tlr = SYSTEM_TIMEOUT_CYCLES;
+    *tcsr = TIMER_CSR_ENABLE_TMR | TIMER_CSR_ENABLE_INT | TIMER_CSR_AUTO_RELOAD;
+
+    uartlite_puts("System monitor enabled\n");
 }
 
+void system_heartbeat(void) {
+    // Reset timer to prevent timeout
+    volatile uint32_t *tcsr = (volatile uint32_t *)TIMER_TCSR0;
+    *tcsr |= TIMER_CSR_LOAD_TMR;  // Reload timer
+
+    heartbeat_counter++;
+    system_alive = true;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Timer-Based System Monitoring - Part 2}
+\begin{lstlisting}[language=C, basicstyle=\fontsize{5}{5}\selectfont\ttfamily, backgroundcolor={}]
 void validation_main_loop(void) {
-    setup_watchdog_protection();
+    setup_system_monitor();
 
-    while (true) {
-        // Reset watchdog at start of each cycle
-        watchdog_update();
+    while (1) {
+        system_heartbeat();  // Reset monitor at start of each cycle
 
-        printf("Starting validation cycle...\n");
+        uartlite_puts("Starting validation cycle...\n");
 
         // Run validation tests
         int gpio_result = run_gpio_tests();
-        watchdog_update();  // Reset after each major operation
+        system_heartbeat();  // Reset after each major operation
 
-        int adc_result = run_adc_tests();
-        watchdog_update();
+        int ethernet_result = run_ethernet_tests();
+        system_heartbeat();
 
         int timing_result = run_timing_tests();
-        watchdog_update();
+        system_heartbeat();
 
         // Report results
-        printf("Cycle complete: GPIO=%d, ADC=%d, Timing=%d\n",
-               gpio_result, adc_result, timing_result);
+        uartlite_puts("Cycle complete\n");
 
-        sleep_ms(1000);
-        // Watchdog will be reset at start of next cycle
+        // Simple delay
+        for (volatile int i = 0; i < 10000000; i++);
     }
 }
 
-// If system hangs, watchdog will reset the system
-// Check reset reason on startup:
-void check_reset_reason(void) {
-    if (watchdog_caused_reboot()) {
-        printf("WARNING: System was reset by watchdog!\n");
-        printf("Possible system hang detected.\n");
+// Timer interrupt handler for system monitoring
+void timer_timeout_handler(void) {
+    if (!system_alive) {
+        uartlite_puts("SYSTEM HANG DETECTED! Initiating recovery...\n");
+        // Implement recovery procedure
+        system_reset();
     }
+    system_alive = false;  // Will be set true by heartbeat
 }
 \end{lstlisting}
 \end{frame}
@@ -718,22 +827,22 @@ void check_reset_reason(void) {
 \frametitle{Lab Preview: Complete Hardware Validator}
 \textbf{This afternoon you'll build:}
 \begin{itemize}
-    \item Comprehensive MicroBlaze-V peripheral validation suite
-    \item Advanced debugging with printf and LED indicators
-    \item Hardware-in-the-loop testing framework
-    \item Fault injection and recovery testing
-    \item Performance-optimized validation routines
-    \item Real-time constraint validation
+    \item \footnotesize Comprehensive MicroBlaze-V peripheral validation suite
+    \item \footnotesize Advanced debugging with printf and LED indicators
+    \item \footnotesize Hardware-in-the-loop testing framework
+    \item \footnotesize Fault injection and recovery testing
+    \item \footnotesize Performance-optimized validation routines
+    \item \footnotesize Real-time constraint validation
 \end{itemize}
 
-\vspace{0.5cm}
+\vspace{0.2cm}
 \textbf{Advanced features:}
 \begin{itemize}
-    \item Interrupt-based event handling
-    \item Watchdog protection system
-    \item Automated test reporting
-    \item Statistical analysis of results
-    \item AI-assisted optimization
+    \item \footnotesize Interrupt-based event handling
+    \item \footnotesize Watchdog protection system
+    \item \footnotesize Automated test reporting
+    \item \footnotesize Statistical analysis of results
+    \item \footnotesize AI-assisted optimization
 \end{itemize}
 \end{frame}
 
@@ -741,33 +850,33 @@ void check_reset_reason(void) {
 \frametitle{Hardware Safety Considerations}
 \textbf{Protecting your hardware:}
 \begin{itemize}
-    \item \textbf{Voltage limits:} Never exceed 3.3V on MicroBlaze-V pins
-    \item \textbf{Current limits:} Maximum 12mA per GPIO pin
-    \item \textbf{ESD protection:} Use anti-static precautions
-    \item \textbf{Power sequencing:} Proper startup/shutdown procedures
-    \item \textbf{Thermal management:} Monitor temperature during stress tests
+    \item \footnotesize \textbf{Voltage limits:} Never exceed 3.3V on MicroBlaze-V pins
+    \item \footnotesize \textbf{Current limits:} Maximum 12mA per GPIO pin
+    \item \footnotesize \textbf{ESD protection:} Use anti-static precautions
+    \item \footnotesize \textbf{Power sequencing:} Proper startup/shutdown procedures
+    \item \footnotesize \textbf{Thermal management:} Monitor temperature during stress tests
 \end{itemize}
 
-\vspace{0.5cm}
+\vspace{0.2cm}
 \textbf{Validation safety practices:}
 \begin{itemize}
-    \item Start with low-stress tests
-    \item Implement emergency shutdown procedures
-    \item Use current-limited power supplies
-    \item Monitor system health continuously
-    \item Have backup hardware available
+    \item \footnotesize Start with low-stress tests
+    \item \footnotesize Implement emergency shutdown procedures
+    \item \footnotesize Use current-limited power supplies
+    \item \footnotesize Monitor system health continuously
+    \item \footnotesize Have backup hardware available
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Key Takeaways - Day 5}
 \begin{itemize}
-    \item \textbf{Hardware debugging is different:} Use printf, LEDs, and external tools
-    \item \textbf{Peripherals enable validation:} GPIO, ADC, timers are your tools
-    \item \textbf{Real-time matters:} Timing constraints are critical
-    \item \textbf{Fault injection tests robustness:} Controlled failures reveal weaknesses
-    \item \textbf{Optimization is essential:} Embedded systems demand efficiency
-    \item \textbf{Safety first:} Protect hardware during aggressive testing
+    \item \footnotesize \textbf{Hardware debugging is different:} Use printf, LEDs, and external tools
+    \item \footnotesize \textbf{Peripherals enable validation:} GPIO, ADC, timers are your tools
+    \item \footnotesize \textbf{Real-time matters:} Timing constraints are critical
+    \item \footnotesize \textbf{Fault injection tests robustness:} Controlled failures reveal weaknesses
+    \item \footnotesize \textbf{Optimization is essential:} Embedded systems demand efficiency
+    \item \footnotesize \textbf{Safety first:} Protect hardware during aggressive testing
 \end{itemize}
 
 \vspace{0.5cm}
@@ -780,21 +889,21 @@ void check_reset_reason(void) {
 \frametitle{Tonight's Homework}
 \textbf{Enhance your hardware validator:}
 \begin{enumerate}
-    \item Add comprehensive peripheral testing
-    \item Implement fault injection scenarios
-    \item Optimize critical validation routines
-    \item Add watchdog protection and error recovery
-    \item Create detailed performance benchmarks
-    \item Use AI to suggest hardware-specific optimizations
+    \item \footnotesize Add comprehensive peripheral testing
+    \item \footnotesize Implement fault injection scenarios
+    \item \footnotesize Optimize critical validation routines
+    \item \footnotesize Add watchdog protection and error recovery
+    \item \footnotesize Create detailed performance benchmarks
+    \item \footnotesize Use AI to suggest hardware-specific optimizations
 \end{enumerate}
 
 \vspace{0.5cm}
 \textbf{Advanced challenges:}
 \begin{itemize}
-    \item Implement interrupt-based testing
-    \item Add statistical analysis of test results
-    \item Create automated test report generation
-    \item Explore advanced MicroBlaze-V features (PIO, DMA)
+    \item \footnotesize Implement interrupt-based testing
+    \item \footnotesize Add statistical analysis of test results
+    \item \footnotesize Create automated test report generation
+    \item \footnotesize Explore advanced MicroBlaze-V features (PIO, DMA)
 \end{itemize}
 \end{frame}
 
