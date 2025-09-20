@@ -80,17 +80,28 @@
 \subsection{Learning Objectives}
 By completing this assignment, you will:
 \begin{itemize}
-    \item Master conditional statements and loops for test automation
-    \item Create and use functions for modular test design
-    \item Use GDB for systematic debugging and problem solving
-    \item Implement automated test sequences for hardware validation
-    \item Design robust error handling and recovery mechanisms
+    \item Learn to create and call simple functions in C
+    \item Practice basic loops (for and while) for repetitive tasks
+    \item Understand function parameters and return values
+    \item Get introduced to basic arrays and array processing
+    \item Learn basic debugging techniques using printf
+    \item Build simple programs that use functions and loops together
+\end{itemize}
+
+\subsection{Prerequisites}
+Before starting this assignment, you should have completed Day 1 and be comfortable with:
+\begin{itemize}
+    \item Basic C syntax and variable declarations
+    \item Using printf and scanf for input/output
+    \item Simple if-else statements and comparisons
+    \item Compiling C programs with GCC
+    \item Basic Git operations (covered in previous sessions)
 \end{itemize}
 
 \subsection{Assignment Context}
-You will build a comprehensive register monitoring system that simulates post-silicon validation of hardware registers. This system will automatically test multiple registers, detect anomalies, and provide detailed reporting - essential skills for validation engineering.
+You will learn fundamental programming concepts by building simple validation tools. We'll start with basic functions, then add loops to automate repetitive tasks, and finally combine everything into useful programs. The focus is on mastering C fundamentals through practical, step-by-step exercises.
 
-\section{Part 1: In-Class Lab (3.5 hours)}
+\section{Part 1: In-Class Lab (3 hours)}
 
 \subsection{Setup and Repository}
 \begin{enumerate}
@@ -100,244 +111,302 @@ You will build a comprehensive register monitoring system that simulates post-si
     \item Create a new branch: \texttt{git checkout -b day2-development}
 \end{enumerate}
 
-\subsection{Task 1: Register Simulation Framework (60 minutes)}
+\subsection{Task 1: Your First Functions (45 minutes)}
 
-\textbf{File:} \texttt{register\_sim.c}
+\textbf{File:} \texttt{simple\_functions.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Create functions to simulate hardware register reads/writes
-    \item Implement register address mapping (0x1000-0x1FFF range)
-    \item Add register value simulation with realistic patterns
-    \item Include error injection capabilities for testing
+    \item Create simple functions that perform basic calculations
+    \item Learn to call functions from main()
+    \item Practice functions with no parameters and simple return values
+    \item Understand function scope and local variables
 \end{itemize}
 
 \textbf{Starter Code Template:}
 \begin{lstlisting}[language=C]
 #include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <time.h>
 
-#define REG_BASE_ADDR 0x1000
-#define MAX_REGISTERS 256
-#define INVALID_REGISTER 0xDEADBEEF
+// TODO: Create a function that prints a welcome message
+void print_welcome() {
+    // TODO: Print "Welcome to Day 2 - Functions and Loops!"
+}
 
-// Global register simulation array
-static uint32_t register_bank[MAX_REGISTERS];
-static int simulation_initialized = 0;
+// TODO: Create a function that returns the maximum voltage limit
+float get_max_voltage() {
+    // TODO: Return 3.6 as the maximum voltage
+}
 
-// TODO: Implement register simulation functions
-uint32_t read_register(uint32_t address);
-void write_register(uint32_t address, uint32_t value);
-void init_register_simulation(void);
-void inject_register_fault(uint32_t address);
+// TODO: Create a function that calculates power (P = V * I)
+float calculate_power(float voltage, float current) {
+    // TODO: Calculate and return power
+}
 
 int main() {
-    // TODO: Initialize simulation
-    // TODO: Demonstrate register operations
-    // TODO: Test error conditions
+    // TODO: Call print_welcome function
+
+    // TODO: Get max voltage and display it
+
+    // TODO: Test calculate_power with sample values
+    float test_voltage = 3.3;
+    float test_current = 0.5;
+    // TODO: Call calculate_power and display result
+
     return 0;
 }
 \end{lstlisting}
 
-\subsection{Task 2: Conditional Validation Logic (45 minutes)}
+\textbf{Expected Output Example:}
+\begin{verbatim}
+Welcome to Day 2 - Functions and Loops!
+Maximum voltage limit: 3.60V
+Testing power calculation:
+Voltage: 3.30V, Current: 0.50A
+Power consumption: 1.65W
+\end{verbatim}
 
-\textbf{File:} \texttt{register\_validator.c}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Implement register value validation with multiple criteria
-    \item Use if-else chains for different validation scenarios
-    \item Add switch statements for error code handling
-    \item Create validation functions that return detailed status
-\end{itemize}
-
-\textbf{Validation Scenarios:}
+\textbf{Step-by-Step Guide:}
 \begin{enumerate}
-    \item \textbf{Range Check:} Value within expected min/max bounds
-    \item \textbf{Pattern Check:} Specific bit patterns (e.g., alternating bits)
-    \item \textbf{Consistency Check:} Related registers have consistent values
-    \item \textbf{Change Detection:} Register values change as expected
+    \item Complete the \texttt{print\_welcome()} function first
+    \item Add the \texttt{get\_max\_voltage()} function - just return 3.6
+    \item Implement \texttt{calculate\_power()} - multiply voltage by current
+    \item In main(), call each function and display the results
+    \item Test with different voltage and current values
 \end{enumerate}
 
-\subsection{Task 3: Automated Test Loops (60 minutes)}
+\subsection{Task 2: Simple Loop Practice (45 minutes)}
 
-\textbf{File:} \texttt{test\_automation.c}
+\textbf{File:} \texttt{loop\_practice.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Use for loops to test consecutive register ranges
-    \item Implement while loops for condition-based testing
-    \item Create nested loops for multi-dimensional test matrices
-    \item Add loop control for early termination on critical failures
+    \item Practice basic for loops with counting
+    \item Learn simple while loops for repetitive tasks
+    \item Use loops to process multiple values
+    \item Understand loop control and termination
 \end{itemize}
 
-\textbf{Test Automation Features:}
-\begin{lstlisting}[language=C]
-// Example test automation structure
-typedef struct {
-    uint32_t start_address;
-    uint32_t end_address;
-    uint32_t expected_pattern;
-    int max_retries;
-    int stop_on_first_failure;
-} test_config_t;
+\textbf{Loop Exercises:}
+\begin{enumerate}
+    \item \textbf{Counting Loop:} Print numbers 1 to 10
+    \item \textbf{Voltage Testing:} Test 5 different voltage values in a loop
+    \item \textbf{Sum Calculator:} Add up numbers from 1 to N
+    \item \textbf{Pattern Printing:} Print simple patterns using loops
+\end{enumerate}
 
-int run_register_sweep(test_config_t *config);
-int run_stress_test(int iterations, int delay_ms);
-int run_pattern_test(uint32_t pattern, int register_count);
+\textbf{Starter Code Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+    // TODO: Exercise 1 - Count from 1 to 10
+    printf("=== Counting Exercise ===\n");
+    for (int i = 1; i <= 10; i++) {
+        // TODO: Print the number
+    }
+
+    // TODO: Exercise 2 - Test multiple voltages
+    printf("\n=== Voltage Testing ===\n");
+    float voltages[] = {1.8, 2.5, 3.3, 3.6, 4.0};
+    // TODO: Use a loop to test each voltage
+
+    // TODO: Exercise 3 - Calculate sum
+    printf("\n=== Sum Calculator ===\n");
+    int sum = 0;
+    // TODO: Add numbers 1 to 5 using a loop
+
+    return 0;
+}
 \end{lstlisting}
 
-\subsection{Task 4: Function-Based Test Architecture (60 minutes)}
+\subsection{Task 3: Basic Arrays and Functions (60 minutes)}
 
-\textbf{File:} \texttt{test\_functions.c}
+\textbf{File:} \texttt{array\_functions.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Create modular test functions for different validation types
-    \item Implement parameter passing for configurable tests
-    \item Use return values to indicate test results
-    \item Design function interfaces for easy integration
+    \item Learn to declare and initialize arrays
+    \item Create functions that work with arrays
+    \item Use loops to process array elements
+    \item Practice passing arrays to functions
+\end{itemize}
+
+\textbf{Array Exercises:}
+\begin{enumerate}
+    \item \textbf{Array Declaration:} Create arrays of test values
+    \item \textbf{Array Processing:} Use loops to check each element
+    \item \textbf{Function with Arrays:} Pass arrays to validation functions
+    \item \textbf{Array Statistics:} Calculate average, min, max values
+\end{enumerate}
+
+\textbf{Starter Code Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+// TODO: Create a function to check if voltage is valid
+int is_voltage_valid(float voltage) {
+    // TODO: Return 1 if voltage is between 1.8 and 3.6, 0 otherwise
+}
+
+// TODO: Create a function to find average of array
+float calculate_average(float values[], int size) {
+    // TODO: Calculate and return average
+}
+
+int main() {
+    // TODO: Declare array of test voltages
+    float test_voltages[] = {1.8, 2.5, 3.3, 3.6, 4.0};
+    int array_size = 5;
+
+    // TODO: Test each voltage using a loop and function
+    printf("=== Voltage Validation ===\n");
+
+    // TODO: Calculate and display average
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Task 4: Simple Calculator Functions (60 minutes)}
+
+\textbf{File:} \texttt{calculator\_functions.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Create functions for basic mathematical operations
+    \item Practice functions with multiple parameters
+    \item Use return values to send results back to main()
+    \item Build a simple menu-driven calculator
 \end{itemize}
 
 \textbf{Required Functions:}
 \begin{lstlisting}[language=C]
-// Core test functions
-int test_single_register(uint32_t addr, uint32_t expected);
-int test_register_range(uint32_t start, uint32_t end, uint32_t pattern);
-int test_register_readwrite(uint32_t addr);
-int test_register_persistence(uint32_t addr, uint32_t value, int delay_ms);
+#include <stdio.h>
 
-// Utility functions
-void print_test_summary(int passed, int failed, int total);
-void log_test_result(const char* test_name, int result, const char* details);
-uint32_t generate_test_pattern(int pattern_type);
-\end{lstlisting>
+// TODO: Create basic math functions
+float add_numbers(float a, float b) {
+    // TODO: Return a + b
+}
 
-\subsection{Task 5: GDB Debugging Session (45 minutes)}
+float multiply_numbers(float a, float b) {
+    // TODO: Return a * b
+}
+
+float calculate_power_consumption(float voltage, float current) {
+    // TODO: Return voltage * current (P = V * I)
+}
+
+int is_safe_temperature(float temp) {
+    // TODO: Return 1 if temp < 85.0, 0 otherwise
+}
+
+void print_menu() {
+    // TODO: Print calculator menu options
+}
+
+int main() {
+    // TODO: Create simple calculator with menu
+    // TODO: Use functions to perform calculations
+    // TODO: Display results clearly
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Task 5: Basic Debugging with Printf (30 minutes)}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Compile programs with debug symbols: \texttt{gcc -g -Wall}
-    \item Use GDB to step through test functions
-    \item Set breakpoints at critical validation points
-    \item Inspect variables during test execution
-    \item Document debugging findings in \texttt{DEBUG\_LOG.md}
+    \item Learn to use printf statements for debugging
+    \item Practice finding and fixing simple bugs
+    \item Understand how to trace program execution
+    \item Document debugging process in simple terms
 \end{itemize}
 
 \textbf{Debugging Exercises:}
 \begin{enumerate}
-    \item Intentionally introduce a bug in register validation
-    \item Use GDB to locate and understand the bug
-    \item Fix the bug and verify the solution
-    \item Document the debugging process step-by-step
+    \item Add printf statements to trace function calls
+    \item Use printf to display variable values
+    \item Find and fix a simple calculation error
+    \item Practice reading compiler error messages
 \end{enumerate}
 
-\textbf{GDB Commands to Practice:}
-\begin{verbatim}
-gdb ./test_program
-(gdb) break main
-(gdb) break test_single_register
-(gdb) run
-(gdb) next
-(gdb) step
-(gdb) print variable_name
-(gdb) info locals
-(gdb) backtrace
-(gdb) continue
-\end{verbatim}
-
-\section{Part 2: Homework Extension (2 hours)}
-
-\subsection{Task 6: Advanced Loop Patterns}
-
-\textbf{File:} \texttt{advanced\_loops.c}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Implement nested loops for multi-chip testing
-    \item Add loop optimization for performance-critical tests
-    \item Create dynamic loop bounds based on runtime conditions
-    \item Implement loop unrolling for speed optimization
-\end{itemize}
-
-\textbf{Advanced Loop Examples:}
+\textbf{Simple Debugging Example:}
 \begin{lstlisting}[language=C]
-// Multi-chip testing with nested loops
-int test_multiple_chips(int chip_count, int registers_per_chip) {
-    int total_failures = 0;
+#include <stdio.h>
 
-    for (int chip = 0; chip < chip_count; chip++) {
-        printf("Testing chip %d...\n", chip);
+float calculate_power(float voltage, float current) {
+    printf("DEBUG: voltage = %.2f, current = %.2f\n", voltage, current);
+    float power = voltage * current;
+    printf("DEBUG: calculated power = %.2f\n", power);
+    return power;
+}
 
-        for (int reg = 0; reg < registers_per_chip; reg++) {
-            uint32_t addr = get_chip_register_address(chip, reg);
-
-            // Test with multiple patterns
-            for (int pattern = 0; pattern < 4; pattern++) {
-                uint32_t test_value = generate_pattern(pattern);
-                if (!test_register_pattern(addr, test_value)) {
-                    total_failures++;
-                    if (is_critical_failure(addr, test_value)) {
-                        printf("Critical failure on chip %d, stopping tests\n", chip);
-                        goto cleanup; // Emergency exit
-                    }
-                }
-            }
-        }
-    }
-
-cleanup:
-    return total_failures;
+int main() {
+    printf("DEBUG: Starting program\n");
+    float result = calculate_power(3.3, 0.5);
+    printf("Final result: %.2fW\n", result);
+    printf("DEBUG: Program finished\n");
+    return 0;
 }
 \end{lstlisting}
 
-\subsection{Task 7: Error Recovery and Resilience}
+\section{Part 2: Optional Extensions (For Advanced Students)}
 
-\textbf{File:} \texttt{error\_recovery.c}
+\textbf{Note:} These tasks are completely optional and designed for students who finish early or want extra challenges. Focus on completing Part 1 first!
 
-\textbf{Requirements:}
+\subsection{Extension 1: Enhanced Error Handling (Optional)}
+
+\textbf{For students who want to explore input validation:}
 \begin{itemize}
-    \item Implement retry mechanisms for transient failures
-    \item Add graceful degradation for partial system failures
-    \item Create error classification and handling strategies
-    \item Design recovery procedures for different error types
+    \item Add basic input validation for non-numeric entries
+    \item Implement simple retry mechanism for invalid inputs
+    \item Add helpful error messages
 \end{itemize}
 
-\textbf{Error Recovery Framework:}
+\textbf{Simple Example:}
 \begin{lstlisting}[language=C]
-typedef enum {
-    ERROR_NONE = 0,
-    ERROR_TRANSIENT,
-    ERROR_PERMANENT,
-    ERROR_CRITICAL,
-    ERROR_UNKNOWN
-} error_type_t;
+#include <stdio.h>
 
-typedef struct {
-    error_type_t type;
-    uint32_t error_code;
-    char description[128];
-    int retry_count;
-    int max_retries;
-} error_info_t;
+int main() {
+    float voltage;
+    int valid_input = 0;
 
-int handle_test_error(error_info_t *error);
-int retry_with_backoff(int (*test_func)(void), int max_retries);
-void implement_circuit_breaker(const char* test_name, int failure_threshold);
+    while (!valid_input) {
+        printf("Enter voltage: ");
+        if (scanf("%f", &voltage) == 1) {
+            valid_input = 1;
+        } else {
+            printf("Please enter a valid number.\n");
+            // Clear input buffer
+            while (getchar() != '\n');
+        }
+    }
+
+    // Continue with validation...
+    return 0;
+}
 \end{lstlisting}
 
-\subsection{Task 8: Performance Optimization}
+\subsection{Extension 2: Multi-Parameter Validator (Optional)}
 
-\textbf{File:} \texttt{performance\_tests.c}
+\textbf{File:} \texttt{multi\_validator.c}
 
-\textbf{Requirements:}
+\textbf{For students who want to combine concepts:}
 \begin{itemize}
-    \item Measure test execution times
-    \item Optimize loops for speed vs. thoroughness trade-offs
-    \item Implement parallel testing concepts (simulation)
-    \item Create performance benchmarks and comparisons
+    \item Combine voltage, power, and temperature validation
+    \item Create a simple scoring system
+    \item Display overall chip health status
+\end{itemize}
+
+\subsection{Extension 3: Creative Enhancements (Optional)}
+
+\textbf{Ideas for exploration:}
+\begin{itemize}
+    \item Add colorful output using ANSI codes
+    \item Create ASCII art displays for results
+    \item Add more chip parameters to validate
+    \item Research real chip specifications and use them
 \end{itemize}
 
 \section{Submission Requirements}
@@ -354,31 +423,10 @@ void implement_circuit_breaker(const char* test_name, int failure_threshold);
 \subsection{Documentation Requirements}
 \begin{itemize}
     \item \textbf{Function Documentation:} Comment each function's purpose, parameters, and return values
-    \item \textbf{DEBUG\_LOG.md:} Detailed debugging session documentation
-    \item \textbf{PERFORMANCE.md:} Performance analysis and optimization notes
     \item \textbf{README.md:} Updated with Day 2 functionality and usage instructions
+    \item \textbf{Simple comments:} Add comments explaining your logic in each program
+    \item \textbf{Testing notes:} Document what test cases you tried
 \end{itemize}
-
-\subsection{GDB Documentation Format}
-\textbf{DEBUG\_LOG.md should include:}
-\begin{verbatim}
-# Day 2 Debugging Session Log
-
-## Bug 1: Off-by-one error in register loop
-**Problem:** Loop accessing invalid memory address
-**GDB Commands Used:**
-- break test_register_range
-- run
-- print start_address
-- print end_address
-- next (stepped through loop)
-
-**Solution:** Changed loop condition from <= to <
-**Verification:** Re-ran test, confirmed fix
-
-## Bug 2: Uninitialized variable
-[Similar format for each bug found and fixed]
-\end{verbatim}
 
 \section{Grading Rubric}
 
@@ -387,18 +435,20 @@ void implement_circuit_breaker(const char* test_name, int failure_threshold);
 \hline
 \textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
 \hline
-Task 1: Register Simulation & 15 & Correct implementation, realistic behavior \\
-Task 2: Conditional Logic & 15 & Proper if-else and switch usage \\
-Task 3: Loop Automation & 20 & Effective loop design, proper control flow \\
-Task 4: Function Architecture & 20 & Modular design, clear interfaces \\
-Task 5: GDB Debugging & 15 & Thorough debugging documentation \\
-Task 6: Advanced Loops & 10 & Complex loop patterns, optimization \\
-Task 7: Error Recovery & 10 & Robust error handling strategies \\
-Task 8: Performance & 10 & Timing analysis, optimization efforts \\
-Code Quality & 15 & Style, efficiency, maintainability \\
-Documentation & 10 & Clear, comprehensive documentation \\
+Task 1: Simple Functions & 25 & Function creation, calling, return values \\
+Task 2: Loop Practice & 25 & Basic for/while loops, loop control \\
+Task 3: Arrays \& Functions & 25 & Array processing, function parameters \\
+Task 4: Calculator Functions & 20 & Multiple functions, menu system \\
+Task 5: Printf Debugging & 15 & Debug output, problem solving \\
+Code Quality & 15 & Comments, style, variable naming \\
+Documentation & 10 & README, clear explanations \\
+GitHub Usage & 10 & Proper commits, submission \\
 \hline
-\textbf{Total} & \textbf{140} & \textbf{Extra credit for advanced features} \\
+\textbf{Subtotal} & \textbf{145} & \textbf{Base assignment} \\
+\hline
+Optional Extensions & +15 & Extra credit for advanced features \\
+\hline
+\textbf{Total Possible} & \textbf{160} & \textbf{With extra credit} \\
 \hline
 \end{tabular}
 \end{center}
@@ -407,19 +457,19 @@ Documentation & 10 & Clear, comprehensive documentation \\
 
 \subsection{Required Test Cases}
 \begin{enumerate}
-    \item \textbf{Single Register Tests:} Valid values, boundary conditions, invalid addresses
-    \item \textbf{Range Tests:} Sequential registers, non-sequential patterns, large ranges
-    \item \textbf{Loop Tests:} Normal execution, early termination, error conditions
-    \item \textbf{Function Tests:} Parameter validation, return value verification, edge cases
-    \item \textbf{Error Tests:} Fault injection, recovery verification, resilience testing
+    \item \textbf{Function Tests:} Test each function with sample inputs
+    \item \textbf{Loop Tests:} Verify loops count correctly and terminate properly
+    \item \textbf{Array Tests:} Check array processing with different values
+    \item \textbf{Calculator Tests:} Test mathematical operations with various inputs
+    \item \textbf{Edge Cases:} Test with boundary values (0, negative numbers, etc.)
 \end{enumerate}
 
-\subsection{Performance Benchmarks}
+\subsection{Simple Testing Guidelines}
 \begin{itemize}
-    \item Time to test 100 consecutive registers
-    \item Memory usage during large test runs
-    \item Comparison of optimized vs. unoptimized loops
-    \item Error recovery overhead measurements
+    \item Test each function as you write it
+    \item Use printf to verify intermediate results
+    \item Try different input values to ensure correctness
+    \item Make sure your programs compile without warnings
 \end{itemize}
 
 \section{Common Challenges and Solutions}

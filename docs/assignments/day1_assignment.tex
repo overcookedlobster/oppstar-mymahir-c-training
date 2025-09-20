@@ -79,36 +79,51 @@
 \subsection{Learning Objectives}
 By completing this assignment, you will:
 \begin{itemize}
-    \item Write C programs using variables, operators, and basic I/O
-    \item Compile programs using GCC with appropriate flags
-    \item Handle user input validation and error checking
-    \item Create validation programs relevant to post-silicon testing
-    \item Use GitHub for version control and submission
+    \item Write your first C programs using variables, operators, and basic I/O
+    \item Learn to compile programs using GCC
+    \item Practice basic input/output with \texttt{printf} and \texttt{scanf}
+    \item Understand basic conditional statements and comparisons
+    \item Create simple validation programs relevant to post-silicon testing
+    \item Submit work using GitHub Classroom (Git basics covered in previous session)
+\end{itemize}
+
+\subsection{Prerequisites}
+Before starting this assignment, you should:
+\begin{itemize}
+    \item Have GCC compiler installed and tested (see Setup Guide)
+    \item Have a text editor or IDE ready (VS Code, CLion, or simple text editor)
+    \item Have Git configured (covered in previous session)
+    \item Understand basic mathematical operations (+, -, *, /)
+    \item Be comfortable with basic command line navigation
 \end{itemize}
 
 \subsection{Assignment Context}
-You will build a chip parameter validation system that simulates real-world post-silicon validation scenarios. This system will check voltage levels, calculate power consumption, and validate operating parameters against specifications.
+You will build simple programs that check basic parameters, similar to what engineers do in chip validation. We'll start very simple with just checking if a number is in a range, then gradually add more features. The focus is on learning C fundamentals through practical, engineering-relevant examples.
 
 \section{Part 1: In-Class Lab (3.5 hours)}
 
 \subsection{Setup and Repository}
 \begin{enumerate}
-    \item Accept the GitHub Classroom assignment invitation
-    \item Clone your personal repository: \texttt{git clone [your-repo-url]}
-    \item Navigate to the project directory
+    \item Accept the GitHub Classroom assignment invitation (link provided in class)
+    \item Clone your personal repository with starter code: \texttt{git clone [your-repo-url]}
+    \item Navigate to the project directory: \texttt{cd day1-assignment-[your-username]}
     \item Verify GCC installation: \texttt{gcc --version}
+    \item Explore the starter files provided in your repository
 \end{enumerate}
 
-\subsection{Task 1: Basic Voltage Validator (45 minutes)}
+\textbf{Note:} Your repository comes with starter code templates and example files to help you get started!
+
+\subsection{Task 1: Basic Voltage Validator (60 minutes)}
 
 \textbf{File:} \texttt{voltage\_validator.c}
 
 \textbf{Requirements:}
 \begin{itemize}
     \item Prompt user for supply voltage input
-    \item Validate voltage is within acceptable range (1.8V - 3.6V)
-    \item Display clear PASS/FAIL results with explanations
-    \item Handle invalid input gracefully
+    \item Read the voltage using \texttt{scanf}
+    \item Check if voltage is within acceptable range (1.8V - 3.6V)
+    \item Display clear PASS/FAIL results
+    \item Use simple if-else statements for validation
 \end{itemize}
 
 \textbf{Starter Code Template:}
@@ -117,14 +132,23 @@ You will build a chip parameter validation system that simulates real-world post
 
 int main() {
     // TODO: Declare variables for voltage and limits
+    float voltage;
+    float min_voltage = 1.8;
+    float max_voltage = 3.6;
 
     // TODO: Display program header and instructions
+    printf("=== Chip Voltage Validator ===\n");
 
     // TODO: Get voltage input from user
+    printf("Enter supply voltage (V): ");
+    scanf("%f", &voltage);
 
     // TODO: Validate voltage range
-
-    // TODO: Display results with clear messaging
+    if (voltage >= min_voltage && voltage <= max_voltage) {
+        // TODO: Display PASS message
+    } else {
+        // TODO: Display FAIL message
+    }
 
     return 0;
 }
@@ -138,6 +162,31 @@ Voltage: 3.30V
 Valid range: 1.8V - 3.6V
 Result: PASS - Voltage within acceptable range
 \end{verbatim}
+
+\textbf{Step-by-Step Guide:}
+\begin{enumerate}
+    \item Complete the TODO comments in the starter code
+    \item Test with the example input (3.3V) - should show PASS
+    \item Test with invalid input (1.0V) - should show FAIL
+    \item Make sure your output matches the expected format
+    \item Compile and fix any errors before moving to Task 2
+\end{enumerate}
+
+\textbf{Step-by-Step Guide:}
+\begin{enumerate}
+    \item Complete the TODO comments in the starter code
+    \item Add printf statements for PASS and FAIL cases
+    \item Test with values like 2.5V (should pass) and 4.0V (should fail)
+    \item Make sure your output matches the expected format
+\end{enumerate}
+
+\textbf{Helpful Tips:}
+\begin{itemize}
+    \item Use \texttt{\%.2f} in printf to display 2 decimal places
+    \item The \texttt{\&} symbol in scanf is required for reading variables
+    \item Test your program multiple times with different values
+    \item Don't worry about advanced error handling for now - focus on the basic logic
+\end{itemize}
 
 \subsection{Task 2: Power Consumption Calculator (45 minutes)}
 
@@ -160,24 +209,24 @@ Result: PASS - Voltage within acceptable range
     \item Excessive: > 5W (FAIL)
 \end{itemize}
 
-\subsection{Task 3: Multi-Parameter Validator (60 minutes)}
+\subsection{Task 3: Simple Temperature Checker (45 minutes)}
 
-\textbf{File:} \texttt{chip\_validator.c}
+\textbf{File:} \texttt{temperature\_checker.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Combine voltage and power validation
-    \item Add temperature validation (< 85°C)
-    \item Add clock frequency validation (1MHz - 100MHz for MicroBlaze-V)
-    \item Provide comprehensive pass/fail summary
-    \item Calculate and display overall system health score
+    \item Input: chip temperature in Celsius
+    \item Check if temperature is safe (< 85°C)
+    \item Display temperature status with clear messages
+    \item Use simple if-else logic for validation
 \end{itemize}
 
-\textbf{Health Score Calculation:}
+\textbf{Temperature Status Messages:}
 \begin{itemize}
-    \item Each parameter: 25 points if PASS, 0 if FAIL
-    \item Total possible: 100 points
-    \item Display percentage and grade (A: 90-100, B: 80-89, C: 70-79, F: <70)
+    \item Cool: < 50°C - "Chip running cool"
+    \item Normal: 50°C - 70°C - "Normal operating temperature"
+    \item Warm: 70°C - 85°C - "Running warm but acceptable"
+    \item Hot: > 85°C - "FAIL: Temperature too high!"
 \end{itemize}
 
 \subsection{Task 4: Compilation and Testing (30 minutes)}
@@ -199,85 +248,66 @@ Result: PASS - Voltage within acceptable range
     \item Non-numeric input handling
 \end{enumerate}
 
-\section{Part 2: Homework Extension (2 hours)}
+\section{Part 2: Optional Extensions (For Advanced Students)}
 
-\subsection{Task 5: Enhanced Error Handling}
+\textbf{Note:} These tasks are completely optional and designed for students who finish early or want extra challenges. Focus on completing Part 1 first!
 
-\textbf{Requirements:}
+\subsection{Extension 1: Enhanced Error Handling (Optional)}
+
+\textbf{For students who want to explore input validation:}
 \begin{itemize}
-    \item Add input validation for non-numeric entries
-    \item Implement retry mechanism for invalid inputs
-    \item Add range checking with specific error messages
-    \item Create user-friendly error recovery
+    \item Add basic input validation for non-numeric entries
+    \item Implement simple retry mechanism for invalid inputs
+    \item Add helpful error messages
 \end{itemize}
 
-\textbf{Example Enhanced Error Handling:}
+\textbf{Simple Example:}
 \begin{lstlisting}[language=C]
 #include <stdio.h>
 
-int get_valid_voltage(float *voltage) {
-    int attempts = 0;
-    const int max_attempts = 3;
+int main() {
+    float voltage;
+    int valid_input = 0;
 
-    while (attempts < max_attempts) {
+    while (!valid_input) {
         printf("Enter supply voltage (1.8V - 3.6V): ");
 
-        if (scanf("%f", voltage) != 1) {
-            printf("Error: Please enter a valid number.\n");
+        if (scanf("%f", &voltage) == 1) {
+            if (voltage >= 1.8 && voltage <= 3.6) {
+                valid_input = 1;
+                printf("Valid voltage: %.2fV\n", voltage);
+            } else {
+                printf("Error: Voltage must be between 1.8V and 3.6V\n");
+            }
+        } else {
+            printf("Error: Please enter a valid number\n");
             // Clear input buffer
             while (getchar() != '\n');
-        } else if (*voltage < 1.8 || *voltage > 3.6) {
-            printf("Error: Voltage %.2fV is out of range.\n", *voltage);
-        } else {
-            return 1; // Success
-        }
-
-        attempts++;
-        printf("Attempt %d of %d failed. ", attempts, max_attempts);
-        if (attempts < max_attempts) {
-            printf("Please try again.\n");
         }
     }
 
-    printf("Maximum attempts exceeded.\n");
-    return 0; // Failure
+    return 0;
 }
 \end{lstlisting}
 
-\subsection{Task 6: Configuration File Support}
+\subsection{Extension 2: Multi-Parameter Validator (Optional)}
 
-\textbf{File:} \texttt{config\_validator.c}
-
-\textbf{Requirements:}
+\textbf{For students who want to combine multiple checks:}
 \begin{itemize}
-    \item Read validation parameters from \texttt{config.txt}
-    \item Support customizable voltage, power, and temperature limits
-    \item Allow different chip profiles (MicroBlaze-V, STM32, etc.)
-    \item Implement configuration file parsing
+    \item Combine voltage, power, and temperature validation in one program
+    \item Calculate an overall "health score" for the chip
+    \item Display a summary report
 \end{itemize}
 
-\textbf{Sample config.txt:}
-\begin{verbatim}
-# Chip Validation Configuration
-CHIP_TYPE=MicroBlaze-V
-MIN_VOLTAGE=1.8
-MAX_VOLTAGE=3.6
-MAX_POWER=5.0
-MAX_TEMPERATURE=85.0
-MIN_FREQUENCY=1000000
-MAX_FREQUENCY=100000000
-\end{verbatim}
+\subsection{Extension 3: Creative Enhancements (Optional)}
 
-\subsection{Task 7: Batch Testing Mode}
-
-\textbf{File:} \texttt{batch\_validator.c}
-
-\textbf{Requirements:}
+\textbf{Ideas for creative students:}
 \begin{itemize}
-    \item Read test data from \texttt{test\_data.csv}
-    \item Process multiple chip measurements automatically
-    \item Generate summary statistics (pass rate, average values)
-    \item Output results to \texttt{results.txt}
+    \item Add ASCII art for PASS/FAIL results
+    \item Create a simple menu system
+    \item Add color output (if your terminal supports it)
+    \item Implement a simple logging system
+    \item Add unit conversion (Fahrenheit to Celsius, etc.)
 \end{itemize}
 
 \section{Submission Requirements}
@@ -314,18 +344,19 @@ MAX_FREQUENCY=100000000
 \hline
 \textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
 \hline
-Task 1: Basic Validator & 15 & Correct logic, proper I/O, compilation \\
-Task 2: Power Calculator & 15 & Accurate calculations, validation logic \\
-Task 3: Multi-Parameter & 20 & Integration, health scoring, comprehensive testing \\
-Task 4: Compilation & 10 & Clean compilation, proper GCC usage \\
-Task 5: Error Handling & 15 & Robust input validation, user experience \\
-Task 6: Configuration & 10 & File parsing, parameter customization \\
-Task 7: Batch Processing & 10 & Automation, statistics, file I/O \\
+Task 1: Voltage Validator & 25 & Correct logic, proper I/O, compilation \\
+Task 2: Power Calculator & 25 & Accurate calculations, validation logic \\
+Task 3: Temperature Checker & 25 & Temperature ranges, clear output \\
+Task 4: Compilation \& Testing & 15 & Clean compilation, proper testing \\
 Code Quality & 15 & Comments, style, variable naming \\
-Documentation & 10 & README, testing docs, clarity \\
-GitHub Usage & 5 & Commit quality, PR submission \\
+Documentation & 10 & README, clear explanations \\
+GitHub Usage & 10 & Proper commits, submission \\
 \hline
-\textbf{Total} & \textbf{125} & \textbf{Extra credit available for advanced features} \\
+\textbf{Subtotal} & \textbf{125} & \textbf{Base assignment} \\
+\hline
+Optional Extensions & +15 & Extra credit for advanced features \\
+\hline
+\textbf{Total Possible} & \textbf{140} & \textbf{With extra credit} \\
 \hline
 \end{tabular}
 \end{center}
@@ -351,8 +382,6 @@ GitHub Usage & 5 & Commit quality, PR submission \\
 
 \subsection{For Homework}
 \begin{itemize}
-    \item Post questions in the course Slack channel
-    \item Attend virtual office hours (schedule TBD)
     \item Review course materials and lecture slides
     \item Use online C programming resources (document sources)
 \end{itemize}

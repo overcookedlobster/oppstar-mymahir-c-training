@@ -81,324 +81,486 @@
 \subsection{Learning Objectives}
 By completing this assignment, you will:
 \begin{itemize}
-    \item Master pointers and memory addressing for hardware register access
-    \item Use arrays and structures to model complex chip architectures
-    \item Implement bit manipulation for register control and status checking
-    \item Apply AI tools responsibly for code assistance and optimization
-    \item Create comprehensive chip state monitoring systems
+    \item Learn basic string handling and manipulation in C
+    \item Understand and use simple structures to organize data
+    \item Practice basic file input and output operations
+    \item Implement simple error handling and validation
+    \item Build programs that combine strings, structures, and file I/O
+\end{itemize}
+
+\subsection{Prerequisites}
+Before starting this assignment, you should have completed Day 1-2 and be comfortable with:
+\begin{itemize}
+    \item Basic C syntax, variables, and I/O operations
+    \item Simple functions with parameters and return values
+    \item Basic loops (for and while) and arrays
+    \item Compiling and testing C programs
+    \item Basic Git operations for version control
 \end{itemize}
 
 \subsection{Assignment Context}
-You will build a sophisticated chip state monitoring system that uses pointers to simulate direct hardware register access, structures to model chip components, and bit manipulation to control and monitor hardware states. This assignment introduces AI-assisted development with critical evaluation requirements.
+You will build simple programs that work with text data and organize information using structures. We'll start with basic string operations, then learn to group related data using structures, and finally add file operations to save and load data. The focus is on practical data handling skills used in engineering applications.
 
-\section{Part 1: In-Class Lab (3.5 hours)}
+\section{Part 1: In-Class Lab (3 hours)}
 
-\subsection{Setup and AI Tool Introduction}
+\subsection{Setup and Repository}
 \begin{enumerate}
-    \item Accept the Day 3 GitHub Classroom assignment
-    \item Set up your preferred AI coding assistant (GitHub Copilot, ChatGPT, etc.)
-    \item Create \texttt{AI\_USAGE\_LOG.md} to document all AI assistance
-    \item Create a new branch: \texttt{git checkout -b day3-pointers-structures}
+    \item Accept the Day 3 GitHub Classroom assignment (link provided in class)
+    \item Clone your personal repository: \texttt{git clone [your-repo-url]}
+    \item Navigate to the project directory: \texttt{cd day3-assignment-[username]}
+    \item Verify your Day 1-2 work is committed and pushed
+    \item Create a new branch: \texttt{git checkout -b day3-strings-structures}
 \end{enumerate}
 
-\subsection{Task 1: Pointer-Based Register Access (60 minutes)}
+\textbf{Note:} Your repository comes with starter code templates and example files to help you get started!
 
-\textbf{File:} \texttt{pointer\_registers.c}
+\subsection{Task 1: Basic String Handling (45 minutes)}
+
+\textbf{File:} \texttt{string\_basics.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Simulate memory-mapped register access using pointers
-    \item Implement safe pointer operations with null checking
-    \item Create pointer arithmetic for register bank traversal
-    \item Add pointer-based register read/write functions
+    \item Learn to work with strings and character arrays
+    \item Practice basic string functions like strlen and strcpy
+    \item Create simple string processing functions
+    \item Handle chip names and part numbers as strings
 \end{itemize}
 
 \textbf{Starter Code Template:}
 \begin{lstlisting}[language=C]
 #include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include <string.h>
 
-#define REGISTER_BANK_SIZE 256
-#define BASE_REGISTER_ADDR 0x40000000
+// TODO: Create a function to display chip information
+void display_chip_info(char chip_name[], char part_number[]) {
+    // TODO: Print chip name and part number nicely formatted
+}
 
-// Simulated register bank (in real hardware, this would be memory-mapped)
-static uint32_t register_bank[REGISTER_BANK_SIZE];
+// TODO: Create a function to check if chip name is valid
+int is_valid_chip_name(char name[]) {
+    // TODO: Return 1 if name length is between 3 and 15 characters, 0 otherwise
+}
 
-// TODO: Implement pointer-based register access functions
-uint32_t* get_register_pointer(uint32_t address);
-uint32_t read_register_via_pointer(uint32_t address);
-void write_register_via_pointer(uint32_t address, uint32_t value);
-int validate_register_pointer(uint32_t* reg_ptr);
+// TODO: Create a function to create a chip ID from name and number
+void create_chip_id(char name[], char part[], char result[]) {
+    // TODO: Combine name and part with a dash (e.g., "STM32-F407")
+}
 
-// TODO: Implement pointer arithmetic functions
-void bulk_register_write(uint32_t start_addr, uint32_t* values, int count);
-void bulk_register_read(uint32_t start_addr, uint32_t* buffer, int count);
-uint32_t* find_register_by_value(uint32_t value, uint32_t start_addr, int range);
+int main() {
+    // TODO: Declare string variables for chip information
+    char chip_name[20];
+    char part_number[20];
+    char chip_id[40];
+
+    // TODO: Get chip information from user
+    printf("Enter chip name: ");
+    scanf("%s", chip_name);
+
+    printf("Enter part number: ");
+    scanf("%s", part_number);
+
+    // TODO: Validate and display information
+
+    return 0;
+}
 \end{lstlisting}
 
-\textbf{Safety Requirements:}
-\begin{itemize}
-    \item Always check pointers for NULL before dereferencing
-    \item Validate address ranges before pointer operations
-    \item Implement bounds checking for array access
-    \item Add error handling for invalid pointer operations
-\end{itemize}
+\textbf{Expected Output Example:}
+\begin{verbatim}
+Enter chip name: STM32
+Enter part number: F407
+=== Chip Information ===
+Chip Name: STM32
+Part Number: F407
+Full Chip ID: STM32-F407
+Name Length: 5 characters
+Status: Valid chip name
+\end{verbatim}
 
-\subsection{Task 2: Chip State Structures (60 minutes)}
+\subsection{Task 2: Simple Chip Structures (60 minutes)}
 
 \textbf{File:} \texttt{chip\_structures.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Define comprehensive chip state structures
-    \item Implement structure initialization and manipulation
-    \item Create arrays of structures for multi-chip systems
-    \item Add structure-based validation functions
+    \item Learn to define simple structures to group related data
+    \item Practice initializing and using structure members
+    \item Create functions that work with structures
+    \item Understand how structures help organize information
 \end{itemize}
 
-\textbf{Required Structures:}
+\textbf{Simple Structure Definition:}
 \begin{lstlisting}[language=C]
-#include <stdint.h>
-#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
+// TODO: Define a simple chip structure
 typedef struct {
-    uint32_t control_register;
-    uint32_t status_register;
-    uint32_t error_register;
-    uint32_t config_register;
-} register_set_t;
-
-typedef struct {
-    char chip_id[16];
-    char part_number[32];
-    uint32_t serial_number;
-    float temperature;
+    char name[20];
+    char part_number[20];
     float voltage;
-    register_set_t registers;
-    bool is_initialized;
-    bool has_errors;
-    uint32_t error_count;
-    uint64_t uptime_seconds;
-} chip_state_t;
+    float temperature;
+    int is_working;  // 1 for working, 0 for not working
+} chip_info_t;
 
-typedef struct {
-    chip_state_t chips[MAX_CHIPS];
-    int active_chip_count;
-    int total_error_count;
-    float average_temperature;
-    char system_status[64];
-} system_state_t;
+// TODO: Create a function to initialize a chip structure
+void init_chip(chip_info_t* chip, char name[], char part[], float voltage) {
+    // TODO: Copy name and part number, set voltage, set temperature to 0
+    // TODO: Set is_working to 1 (working)
+}
 
-// TODO: Implement structure manipulation functions
-void init_chip_state(chip_state_t* chip, const char* id, const char* part_num);
-void update_chip_temperature(chip_state_t* chip, float new_temp);
-void update_chip_registers(chip_state_t* chip, register_set_t* new_regs);
-int validate_chip_state(const chip_state_t* chip);
-void print_chip_summary(const chip_state_t* chip);
+// TODO: Create a function to display chip information
+void display_chip(chip_info_t* chip) {
+    // TODO: Print all chip information in a nice format
+}
+
+// TODO: Create a function to check if chip is safe
+int is_chip_safe(chip_info_t* chip) {
+    // TODO: Return 1 if voltage is 1.8-3.6V and temp < 85°C, 0 otherwise
+}
+
+int main() {
+    // TODO: Create a chip structure variable
+    chip_info_t my_chip;
+
+    // TODO: Initialize the chip with sample data
+    init_chip(&my_chip, "STM32", "F407", 3.3);
+    my_chip.temperature = 45.5;
+
+    // TODO: Display chip information
+    display_chip(&my_chip);
+
+    // TODO: Check if chip is safe
+    if (is_chip_safe(&my_chip)) {
+        printf("Chip is operating safely\n");
+    } else {
+        printf("WARNING: Chip parameters out of range!\n");
+    }
+
+    return 0;
+}
 \end{lstlisting}
 
-\subsection{Task 3: Bit Manipulation Operations (60 minutes)}
-
-\textbf{File:} \texttt{bit\_operations.c}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Implement comprehensive bit manipulation macros and functions
-    \item Create register control functions using bit operations
-    \item Add bit pattern validation and testing
-    \item Implement bit field extraction and insertion
-\end{itemize}
-
-\textbf{Bit Manipulation Framework:}
-\begin{lstlisting}[language=C]
-#include <stdint.h>
-
-// Basic bit manipulation macros
-#define SET_BIT(reg, bit)       ((reg) |= (1U << (bit)))
-#define CLEAR_BIT(reg, bit)     ((reg) &= ~(1U << (bit)))
-#define TOGGLE_BIT(reg, bit)    ((reg) ^= (1U << (bit)))
-#define CHECK_BIT(reg, bit)     (((reg) >> (bit)) & 1U)
-
-// Advanced bit manipulation macros
-#define SET_BITS(reg, mask)     ((reg) |= (mask))
-#define CLEAR_BITS(reg, mask)   ((reg) &= ~(mask))
-#define GET_FIELD(reg, mask, shift) (((reg) & (mask)) >> (shift))
-#define SET_FIELD(reg, mask, shift, value) \
-    ((reg) = ((reg) & ~(mask)) | (((value) << (shift)) & (mask)))
-
-// TODO: Implement bit manipulation functions
-void demonstrate_bit_operations(void);
-uint32_t create_test_pattern(int pattern_type);
-int validate_bit_pattern(uint32_t value, uint32_t expected_pattern, uint32_t mask);
-void analyze_register_bits(uint32_t register_value, const char* register_name);
-
-// TODO: Implement register control functions
-void enable_chip_power(chip_state_t* chip);
-void disable_chip_power(chip_state_t* chip);
-bool is_chip_ready(const chip_state_t* chip);
-uint32_t get_error_flags(const chip_state_t* chip);
-void clear_error_flags(chip_state_t* chip, uint32_t flags_to_clear);
-\end{lstlisting}
-
-\subsection{Task 4: AI-Assisted Development Session (45 minutes)}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Use AI tools to help implement complex algorithms
-    \item Document all AI interactions in \texttt{AI\_USAGE\_LOG.md}
-    \item Critically evaluate AI suggestions before implementation
-    \item Improve AI-generated code with your own enhancements
-\end{itemize}
-
-\textbf{AI Assistance Tasks:}
-\begin{enumerate}
-    \item Ask AI to generate a function for calculating CRC checksums of register values
-    \item Request AI help with optimizing bit manipulation operations
-    \item Get AI suggestions for error handling in pointer operations
-    \item Ask AI to create test cases for your structure validation functions
-\end{enumerate}
-
-\textbf{AI Usage Documentation Format:}
+\textbf{Expected Output Example:}
 \begin{verbatim}
-# AI Usage Log - Day 3
-
-## AI Interaction 1: CRC Checksum Function
-**AI Tool:** ChatGPT-4
-**Prompt:** "Generate a C function to calculate CRC-32 checksum of
-register values"
-**AI Response:** [Include the generated code]
-**Evaluation:**
-- Pros: Correct algorithm implementation, good comments
-- Cons: No input validation, uses malloc unnecessarily
-**My Improvements:**
-- Added input validation
-- Replaced malloc with static buffer
-- Added error handling
-**Final Decision:** Accepted with modifications
+=== Chip Information ===
+Name: STM32
+Part Number: F407
+Voltage: 3.30V
+Temperature: 45.50°C
+Status: Working
+Chip is operating safely
 \end{verbatim}
 
-\subsection{Task 5: Comprehensive Chip Monitor (45 minutes)}
+\subsection{Task 3: Basic File Operations (60 minutes)}
+
+\textbf{File:} \texttt{file\_operations.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Learn to read data from simple text files
+    \item Practice writing data to files
+    \item Handle basic file errors (file not found, etc.)
+    \item Save and load chip information to/from files
+\end{itemize}
+
+\textbf{File Operations Template:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <string.h>
+
+// Simple chip structure (same as Task 2)
+typedef struct {
+    char name[20];
+    char part_number[20];
+    float voltage;
+    float temperature;
+    int is_working;
+} chip_info_t;
+
+// TODO: Create a function to save chip info to file
+int save_chip_to_file(chip_info_t* chip, char filename[]) {
+    // TODO: Open file for writing
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Could not open file for writing\n");
+        return 0;  // Failed
+    }
+
+    // TODO: Write chip information to file
+    fprintf(file, "%s\n", chip->name);
+    fprintf(file, "%s\n", chip->part_number);
+    fprintf(file, "%.2f\n", chip->voltage);
+    fprintf(file, "%.2f\n", chip->temperature);
+    fprintf(file, "%d\n", chip->is_working);
+
+    fclose(file);
+    return 1;  // Success
+}
+
+// TODO: Create a function to load chip info from file
+int load_chip_from_file(chip_info_t* chip, char filename[]) {
+    // TODO: Open file for reading and load data
+}
+
+int main() {
+    chip_info_t my_chip;
+
+    // TODO: Create sample chip data
+    strcpy(my_chip.name, "STM32");
+    strcpy(my_chip.part_number, "F407");
+    my_chip.voltage = 3.3;
+    my_chip.temperature = 45.5;
+    my_chip.is_working = 1;
+
+    // TODO: Save chip to file
+    if (save_chip_to_file(&my_chip, "chip_data.txt")) {
+        printf("Chip data saved successfully!\n");
+    }
+
+    // TODO: Load chip from file and display
+    chip_info_t loaded_chip;
+    if (load_chip_from_file(&loaded_chip, "chip_data.txt")) {
+        printf("Chip data loaded successfully!\n");
+        // Display loaded chip info
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Task 4: Simple Error Handling (45 minutes)}
+
+\textbf{File:} \texttt{error\_handling.c}
+
+\textbf{Requirements:}
+\begin{itemize}
+    \item Learn to check for and handle common errors
+    \item Practice using return codes to indicate success/failure
+    \item Add basic input validation to your programs
+    \item Create helpful error messages for users
+\end{itemize}
+
+\textbf{Error Handling Examples:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <string.h>
+
+// Simple chip structure
+typedef struct {
+    char name[20];
+    float voltage;
+    float temperature;
+} chip_info_t;
+
+// TODO: Create a function that validates chip data
+int validate_chip_data(chip_info_t* chip) {
+    // TODO: Check if name is not empty
+    if (strlen(chip->name) == 0) {
+        printf("Error: Chip name cannot be empty\n");
+        return 0;  // Invalid
+    }
+
+    // TODO: Check voltage range
+    if (chip->voltage < 1.8 || chip->voltage > 3.6) {
+        printf("Error: Voltage %.2fV is out of range (1.8V - 3.6V)\n",
+               chip->voltage);
+        return 0;  // Invalid
+    }
+
+    // TODO: Check temperature range
+    if (chip->temperature < -40 || chip->temperature > 85) {
+        printf("Error: Temperature %.1f°C is out of range (-40°C - 85°C)\n",
+               chip->temperature);
+        return 0;  // Invalid
+    }
+
+    return 1;  // Valid
+}
+
+// TODO: Create a function that safely gets user input
+int get_chip_voltage(float* voltage) {
+    printf("Enter chip voltage (1.8V - 3.6V): ");
+    if (scanf("%f", voltage) != 1) {
+        printf("Error: Please enter a valid number\n");
+        return 0;  // Failed
+    }
+    return 1;  // Success
+}
+
+int main() {
+    chip_info_t my_chip;
+
+    // TODO: Get chip information with error checking
+    printf("Enter chip name: ");
+    scanf("%s", my_chip.name);
+
+    if (!get_chip_voltage(&my_chip.voltage)) {
+        printf("Failed to get voltage. Exiting.\n");
+        return 1;
+    }
+
+    printf("Enter temperature: ");
+    scanf("%f", &my_chip.temperature);
+
+    // TODO: Validate all data before proceeding
+    if (validate_chip_data(&my_chip)) {
+        printf("All chip data is valid!\n");
+        printf("Chip: %s, %.2fV, %.1f°C\n",
+               my_chip.name, my_chip.voltage, my_chip.temperature);
+    } else {
+        printf("Please correct the errors and try again.\n");
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Task 5: Comprehensive Chip Monitor (30 minutes)}
 
 \textbf{File:} \texttt{chip\_monitor.c}
 
 \textbf{Requirements:}
 \begin{itemize}
-    \item Integrate all previous tasks into a complete monitoring system
-    \item Use pointers to access chip structures efficiently
-    \item Implement bit manipulation for status monitoring
-    \item Add comprehensive error detection and reporting
+    \item Combine all previous tasks into a simple monitoring program
+    \item Use structures to organize chip information
+    \item Add basic menu system for user interaction
+    \item Practice integrating strings, structures, and file operations
 \end{itemize}
 
-\section{Part 2: Homework Extension (2 hours)}
-
-\subsection{Task 6: Advanced Pointer Techniques}
-
-\textbf{File:} \texttt{advanced\_pointers.c}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Implement function pointers for dynamic test selection
-    \item Create pointer arrays for efficient chip management
-    \item Add pointer-to-pointer usage for dynamic memory management
-    \item Implement callback functions for event handling
-\end{itemize}
-
-\textbf{Advanced Pointer Examples:}
+\textbf{Simple Integration Example:}
 \begin{lstlisting}[language=C]
-// Function pointer for different validation strategies
-typedef int (*validation_func_t)(const chip_state_t* chip);
+#include <stdio.h>
+#include <string.h>
 
-// Array of validation function pointers
-validation_func_t validation_strategies[] = {
-    validate_power_levels,
-    validate_temperature_range,
-    validate_register_consistency,
-    validate_error_states
-};
-
-// Callback function type for chip events
-typedef void (*chip_event_callback_t)(chip_state_t* chip, int event_type);
-
-// TODO: Implement advanced pointer functions
-int run_validation_strategy(chip_state_t* chip, int strategy_index);
-void register_chip_callback(chip_state_t* chip, chip_event_callback_t callback);
-chip_state_t** create_chip_array(int count);
-void destroy_chip_array(chip_state_t** chips, int count);
-\end{lstlisting}
-
-\subsection{Task 7: Memory Safety and Debugging}
-
-\textbf{File:} \texttt{memory\_safety.c}
-
-\textbf{Requirements:}
-\begin{itemize}
-    \item Implement comprehensive memory safety checks
-    \item Add memory leak detection and prevention
-    \item Create debugging utilities for pointer operations
-    \item Implement memory usage monitoring
-\end{itemize}
-
-\textbf{Memory Safety Framework:}
-\begin{lstlisting}[language=C]
-// Memory debugging utilities
+// Use the chip structure from previous tasks
 typedef struct {
-    void* ptr;
-    size_t size;
-    const char* file;
-    int line;
-    bool is_freed;
-} memory_allocation_t;
+    char name[20];
+    char part_number[20];
+    float voltage;
+    float temperature;
+    int is_working;
+} chip_info_t;
 
-// TODO: Implement memory safety functions
-void* safe_malloc(size_t size, const char* file, int line);
-void safe_free(void* ptr, const char* file, int line);
-void check_memory_leaks(void);
-void print_memory_usage_report(void);
+// TODO: Create a simple menu function
+void print_menu() {
+    printf("\n=== Chip Monitor Menu ===\n");
+    printf("1. Enter chip information\n");
+    printf("2. Display chip information\n");
+    printf("3. Save chip to file\n");
+    printf("4. Load chip from file\n");
+    printf("5. Exit\n");
+    printf("Choose an option: ");
+}
 
-// Macros for safe memory operations
-#define SAFE_MALLOC(size) safe_malloc(size, __FILE__, __LINE__)
-#define SAFE_FREE(ptr) safe_free(ptr, __FILE__, __LINE__)
+int main() {
+    chip_info_t my_chip;
+    int choice;
+    char filename[50];
+
+    printf("Welcome to Simple Chip Monitor!\n");
+
+    do {
+        print_menu();
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                // TODO: Get chip information from user
+                break;
+            case 2:
+                // TODO: Display chip information
+                break;
+            case 3:
+                // TODO: Save chip to file
+                break;
+            case 4:
+                // TODO: Load chip from file
+                break;
+            case 5:
+                printf("Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
 \end{lstlisting}
 
-\subsection{Task 8: AI-Enhanced Optimization}
+\section{Part 2: Optional Extensions (For Advanced Students)}
 
-\textbf{File:} \texttt{ai\_optimized\_code.c}
+\textbf{Note:} These tasks are completely optional and designed for students who finish early or want extra challenges. Focus on completing Part 1 first!
 
-\textbf{Requirements:}
+\subsection{Extension 1: Multiple Chip Management (Optional)}
+
+\textbf{For students who want to work with arrays of structures:}
 \begin{itemize}
-    \item Use AI to suggest performance optimizations
-    \item Implement AI-suggested algorithms with critical evaluation
-    \item Compare performance before and after AI optimizations
-    \item Document the optimization process and results
+    \item Create an array of chip structures
+    \item Add functions to manage multiple chips
+    \item Calculate statistics across all chips (average temperature, etc.)
+\end{itemize}
+
+\textbf{Simple Example:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+#define MAX_CHIPS 5
+
+typedef struct {
+    char name[20];
+    float voltage;
+    float temperature;
+} chip_info_t;
+
+int main() {
+    chip_info_t chips[MAX_CHIPS];
+    int chip_count = 0;
+
+    // TODO: Add functions to manage multiple chips
+    // add_chip(), display_all_chips(), find_hottest_chip()
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Extension 2: Enhanced File Operations (Optional)}
+
+\textbf{For students who want to explore more file I/O:}
+\begin{itemize}
+    \item Save multiple chips to a single file
+    \item Read chip data from CSV format
+    \item Add backup and restore functionality
+\end{itemize}
+
+\subsection{Extension 3: Creative Enhancements (Optional)}
+
+\textbf{Ideas for exploration:}
+\begin{itemize}
+    \item Add colorful output for different chip statuses
+    \item Create ASCII art displays for chip information
+    \item Add more chip parameters (frequency, power consumption)
+    \item Implement a simple search function for chip names
 \end{itemize}
 
 \section{Submission Requirements}
 
 \subsection{Code Quality Standards}
 \begin{itemize}
-    \item \textbf{Memory Safety:} All pointer operations must be safe and validated
+    \item \textbf{String Safety:} Proper string handling with bounds checking
     \item \textbf{Structure Design:} Logical organization of data with appropriate types
-    \item \textbf{Bit Operations:} Efficient and correct bit manipulation implementations
-    \item \textbf{Error Handling:} Comprehensive error checking and recovery
-    \item \textbf{AI Integration:} Thoughtful use of AI with critical evaluation
+    \item \textbf{File Operations:} Proper file handling with error checking
+    \item \textbf{Error Handling:} Basic error checking and user-friendly messages
+    \item \textbf{Code Style:} Clear variable names and consistent formatting
 \end{itemize}
 
 \subsection{Documentation Requirements}
 \begin{itemize}
-    \item \textbf{AI\_USAGE\_LOG.md:} Complete documentation of all AI assistance
-    \item \textbf{MEMORY\_ANALYSIS.md:} Memory usage analysis and safety measures
-    \item \textbf{BIT\_OPERATIONS\_GUIDE.md:} Documentation of bit manipulation functions
-    \item \textbf{README.md:} Updated with Day 3 functionality and AI usage notes
-\end{itemize}
-
-\subsection{AI Usage Requirements}
-\begin{itemize}
-    \item Document every AI interaction with prompts and responses
-    \item Provide critical evaluation of AI suggestions
-    \item Show improvements made to AI-generated code
-    \item Explain decisions to accept or reject AI recommendations
-    \item Demonstrate understanding of all AI-assisted code
+    \item \textbf{Function Comments:} Comment each function's purpose and parameters
+    \item \textbf{README.md:} Updated with Day 3 functionality and usage instructions
+    \item \textbf{Testing Notes:} Document what test cases you tried
+    \item \textbf{Simple Comments:} Add comments explaining your logic
 \end{itemize}
 
 \section{Grading Rubric}
@@ -408,65 +570,41 @@ void print_memory_usage_report(void);
 \hline
 \textbf{Component} & \textbf{Points} & \textbf{Criteria} \\
 \hline
-Task 1: Pointer Operations & 20 & Safe pointer usage, correct implementation \\
-Task 2: Structure Design & 20 & Well-designed structures, proper usage \\
-Task 3: Bit Manipulation & 20 & Correct bit operations, comprehensive coverage \\
-Task 4: AI Integration & 15 & Thoughtful AI usage, critical evaluation \\
-Task 5: System Integration & 15 & Effective combination of all concepts \\
-Task 6: Advanced Pointers & 10 & Function pointers, advanced techniques \\
-Task 7: Memory Safety & 10 & Comprehensive safety measures \\
-Task 8: AI Optimization & 10 & Performance improvements, analysis \\
-Code Quality & 15 & Safety, efficiency, maintainability \\
-Documentation & 15 & AI logs, technical documentation \\
+Task 1: String Handling & 25 & String functions, basic manipulation \\
+Task 2: Simple Structures & 25 & Structure definition, initialization, usage \\
+Task 3: File Operations & 25 & File I/O, error handling \\
+Task 4: Error Handling & 20 & Input validation, error messages \\
+Task 5: Integration & 15 & Menu system, combining concepts \\
+Code Quality & 15 & Comments, style, variable naming \\
+Documentation & 10 & README, clear explanations \\
+GitHub Usage & 10 & Proper commits, submission \\
 \hline
-\textbf{Total} & \textbf{150} & \textbf{Extra credit for innovative features} \\
+\textbf{Subtotal} & \textbf{145} & \textbf{Base assignment} \\
+\hline
+Optional Extensions & +15 & Extra credit for advanced features \\
+\hline
+\textbf{Total Possible} & \textbf{160} & \textbf{With extra credit} \\
 \hline
 \end{tabular}
 \end{center}
 
-\section{Memory Safety Checklist}
+\section{Common Challenges and Solutions}
 
-\subsection{Pointer Safety}
-\begin{itemize}
-    \item[$\square$] Always check pointers for NULL before dereferencing
-    \item[$\square$] Validate array bounds before pointer arithmetic
-    \item[$\square$] Initialize all pointers to NULL or valid addresses
-    \item[$\square$] Set pointers to NULL after freeing memory
-    \item[$\square$] Use const pointers where data shouldn't be modified
-\end{itemize}
+\subsection{String Handling Issues}
+\textbf{Problem:} String buffer overflows or incorrect string operations
+\textbf{Solution:} Always check string lengths, use strncpy instead of strcpy when needed
 
-\subsection{Memory Management}
-\begin{itemize}
-    \item[$\square$] Every malloc has a corresponding free
-    \item[$\square$] No double-free operations
-    \item[$\square$] No use-after-free operations
-    \item[$\square$] Memory allocation failure handling
-    \item[$\square$] Memory leak detection and prevention
-\end{itemize}
+\subsection{Structure Initialization}
+\textbf{Problem:} Forgetting to initialize structure members
+\textbf{Solution:} Always initialize all members when creating structures
 
-\section{Common Pitfalls and Solutions}
+\subsection{File Operation Errors}
+\textbf{Problem:} Files not opening or data not saving correctly
+\textbf{Solution:} Always check if file operations succeed, handle errors gracefully
 
-\subsection{Pointer Pitfalls}
-\begin{itemize}
-    \item \textbf{Null Pointer Dereference:} Always check \texttt{if (ptr != NULL)}
-    \item \textbf{Dangling Pointers:} Set to NULL after freeing
-    \item \textbf{Buffer Overflows:} Check array bounds in loops
-    \item \textbf{Pointer Arithmetic Errors:} Be careful with pointer increment/decrement
-\end{itemize}
-
-\subsection{Structure Pitfalls}
-\begin{itemize}
-    \item \textbf{Uninitialized Members:} Always initialize all structure members
-    \item \textbf{Padding Issues:} Be aware of structure alignment and padding
-    \item \textbf{Deep vs Shallow Copy:} Understand when to copy pointers vs. data
-\end{itemize}
-
-\subsection{Bit Manipulation Pitfalls}
-\begin{itemize}
-    \item \textbf{Signed vs Unsigned:} Use unsigned types for bit operations
-    \item \textbf{Shift Overflow:} Don't shift by more than type width
-    \item \textbf{Operator Precedence:} Use parentheses in complex expressions
-\end{itemize}
+\subsection{Input Validation}
+\textbf{Problem:} Program crashes with invalid user input
+\textbf{Solution:} Check scanf return values, validate input ranges
 
 \section{Testing and Validation}
 
